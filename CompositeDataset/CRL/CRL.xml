@@ -7,18 +7,19 @@
     <timeout>https://cpee.org/services/timeout.php</timeout>
     <subprocess>https://cpee.org/flow/start/url/</subprocess>
   </endpoints>
-  <attributes>
+    <attributes>
     <guarded>none</guarded>
-    <info>CRL</info>
     <modeltype>CPEE</modeltype>
     <theme>extended</theme>
-    <creator>Christine Ashcreek</creator>
     <guarded_id/>
+    <creator>Christine Ashcreek</creator>
     <author>Christine Ashcreek</author>
+    <info>CRL</info>
     <model_uuid>612fc473-e64f-479f-95e7-c7f662238abb</model_uuid>
     <model_version/>
-    <design_dir>Staff.dir/Loebbi.dir/Compliance.dir/CompositeDataSet.dir</design_dir>
     <design_stage>development</design_stage>
+    <design_dir>Staff.dir/Loebbi.dir/Compliance.dir/CompositeDataSet.dir</design_dir>
+    <requirements>{"R1"=&gt;"parallel('send automated email', 'check credit worthiness')", "R2"=&gt;"precedence('evaluate loan risk', 'customer bank privilege check') and precedence('evaluate loan risk', 'check credit worthiness') and leads_to('customer bank privilege check', 'check credit worthiness')", "R3"=&gt;"executed_by('customer bank privilege check', 'credit broker') or executed_by('customer bank privilege check', 'supervisor') and executed_by('check credit worthiness', 'data.post_processing_resource') and executed_by_return('customer bank privilege check') != executed_by_return('credit worthiness check')", "R4"=&gt;"executed_by('evaluate loan risk', 'manager') and executed_by('officially sign loan contract', 'manager')", "R5"=&gt;"max_time_between('officially sign loan contract', 'perform loan settlement', 604800)", "R6"=&gt;"data_value_alternative_eventually_follows('data.loan_amount &gt; 1000000', 'assign post processing to supervisor')", "R7"=&gt;"not data_value_alternative_eventually_follows('data.customer_status == gold &amp;&amp; data.loan_amount &lt; 1000000','evaluate loan risk','global')"}</requirements>
   </attributes>
   <description>
     <description xmlns="http://cpee.org/ns/description/1.0">

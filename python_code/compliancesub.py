@@ -37,6 +37,7 @@ from verificationAST import verify
 hash_t = HashTable(20)
 hash_t.load_disk("TrackedUIDsHashmap.json")
 
+
 class Model(BaseModel):
     cpee: str
     instance_url: str
@@ -74,22 +75,21 @@ async def Subscriber(request: Request):
         with open(logfilename, 'w'):
             pass
         hash_t.insert(notification["instance-uuid"], notification)
-        logger = logging.getLogger(f"request_logger_{uuid.uuid4().hex}")
-        logger.setLevel(logging.INFO)
 
         # Start Logging 
         file_handler = logging.FileHandler(logfilename)
-        file_handler.setFormatter(logging.Formatter('%(message)s'))
-        logger.addHandler(file_handler)
-        logger.propagate = False
+        file_handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+        root_logger = logging.getLogger()
+        #logger.addHandler(file_handler)
+        #logger.propagate = False 
         # Below is an example default logging configuration for other logging options
         #logging.basicConfig(
             ## The commented in version is for storing log files in /var/www/, for local logging change these to the handler below
-        #    filename=logfilename,
-        #    filemode='a',
-        #    level=logging.INFO,
+            #filename=logfilename,
+            #filemode='a',
+            #level=logging.INFO,
             ## The following Format is recommended for debugging
-            #format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        #    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         #    format='%(message)s',
             ## Handler for local logging below
             #handlers=[
@@ -97,6 +97,10 @@ async def Subscriber(request: Request):
             #]
         #)
         #logger.filename = logfilename
+        root_logger.addHandler(file_handler)
+        root_logger.setLevel(logging.INFO)
+        logger = logging.getLogger(__name__)
+        logger.setLevel(logging.INFO)
         try:
             req = notification["content"]["attributes"]["requirements"]
         except:
@@ -137,6 +141,8 @@ async def Subscriber(request: Request):
         logger.info(f"Currently missing activities for the process are: {logger.get_missing_activities()}")
         logger.reset_activities()
         logger.reset_missing_activities()
+        root_logger.removeHandler(file_handler)
+        file_handler.close()
     return
 
 def run_server():

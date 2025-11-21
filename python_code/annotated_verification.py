@@ -294,20 +294,26 @@ def timed_alternative(tree, a, b, time):
         return False
 
 # Time, between two syncs, deprecated, after fighting with it for a while, I decided this is not a requirement pattern that actually happens, so it is left unfinished
-def min_time_between(tree, a, b, time):
+def min_time_between(tree, a, b, time, c = None):
     a_sync = False
     if leads_to(tree, a, b):
         apath = exists(tree, a)
         bpath = exists(tree, b)
-        for sync in sync_exists(tree):
-            if directly_follows_must(tree, apath, sync[0]) or directly_follows_must(tree, sync[0], apath):
-                logger.info(f'identified a sync directly before or after Activity "{a}"')
-                a_sync = True
-                a_time = sync[1]
-            elif a_sync and directly_follows_must(tree, sync[0], bpath):
-                logger.info(f"identified a second sync that leads to bpath)")
-        logger.info(f'no syncs which are directly before or after "{a}" and "{b}" were identified in order to achieve the min_time_between requirement')
-        return False
+        if not c:
+            logger.info(f'No alternative was passed, so voter is not connected')
+            for sync in sync_exists(tree):
+                if directly_follows_must(tree, apath, sync[0]) or directly_follows_must(tree, sync[0], apath):
+                    logger.info(f'identified a sync directly before or after Activity "{a}"')
+                    a_sync = True
+                    a_time = sync[1]
+                elif a_sync and directly_follows_must(tree, sync[0], bpath):
+                    logger.info(f"identified a second sync that leads to bpath)")
+            logger.info(f'no syncs which are directly before or after "{a}" and "{b}" were identified in order to achieve the min_time_between requirement')
+            return False
+        else:
+            ### Set up voter here
+            logger.info(f'Voter is set up to enforce the min time between requirement')
+            return True
     else:
         logger.info(f'Activities "{a}" and "{b}" are not in a leads_to relationship, so the min_time_between requirement is False')
         return False 
@@ -347,40 +353,50 @@ def by_due_date_explicit(tree, a, timestamp):
         return False
 
 ## checks both annotated and explicit, returns true if either
-def by_due_date(tree, a, timestamp):
-    annotated = by_due_date_annotated(tree, a, timestamp)
-    explicit = by_due_date_explicit(tree, a, timestamp)
-    logger.info(f'The due date is enforced through annotation: {annotated}. The due date is enforced explicitly: {explicit}. Overall this means the due date is {annotated or explicit}')
-    if explicit:
-        return True
-    elif annotated:
-        logger.warning('Assurance level is reduced, since the due date is only enforced through annotation')
-        return True
+def by_due_date(tree, a, timestamp, c = None):
+    if not c:
+        annotated = by_due_date_annotated(tree, a, timestamp)
+        explicit = by_due_date_explicit(tree, a, timestamp)
+        logger.info(f'The due date is enforced through annotation: {annotated}. The due date is enforced explicitly: {explicit}. Overall this means the due date is {annotated or explicit}')
+        if explicit:
+            return True
+        elif annotated:
+            logger.warning('Assurance level is reduced, since the due date is only enforced through annotation')
+            return True
+        else:
+            return False
     else:
-        return False
+        ### Here we set up the voter
+        logger.info(f'The due date is enforced through a voter that replaces with the alternative at run time')
+        return True
 
 ## There are technically many ways to implement this and accordingly many ways this could be checked, we enforcce here a very visually pleasing way of enforcing this, which is a event based gateway with a timeout. If said timeout finishes first it would mean that the max time between has passed. This is just one of many ways such as adding syncs before and after a and b, but this would be much less checkable and also have several ways of implementing
-def max_time_between(tree, a, b, time):
+def max_time_between(tree, a, b, time, c = None):
     apath = exists(tree, a)
     bpath = exists(tree, b)
     if apath is not None:
         if bpath is not None:
-            for timeout in timeouts_exists(tree):
-                print(timeout)
-                if parallel_cancel(tree, timeout[0], bpath) is not None:
-                    if timeout[1] is not None:
-                        if not timeout[1].isdigit(): 
-                            logger.warning('timeout in the parallel with cancel uses a dataobject timestamp or is not passed a digit')
-                            return True 
+            if not c:
+                for timeout in timeouts_exists(tree):
+                    print(timeout)
+                    if parallel_cancel(tree, timeout[0], bpath) is not None:
+                        if timeout[1] is not None:
+                            if not timeout[1].isdigit(): 
+                                logger.warning('timeout in the parallel with cancel uses a dataobject timestamp or is not passed a digit')
+                                return True 
+                            else:
+                                logger.info(f'Identified a timeout in a parrallel with cancel relationship with "{b}"')
+                                return time == int(timeout[1])## only works as long as all times are parsed as seconds
                         else:
-                            logger.info(f'Identified a timeout in a parrallel with cancel relationship with "{b}"')
-                            return time == int(timeout[1])## only works as long as all times are parsed as seconds
-                    else:
-                        logger.info('timeout in the parallel with cancel is not passed a argument or 0')
-                        return False
-                    ## A timeout is in an event based gateway with the second one, can be explicitly checked
-            logger.info('No timeout was found to enforce the max time between requirement')
-            return False
+                            logger.info('timeout in the parallel with cancel is not passed a argument or 0')
+                            return False
+                        ## A timeout is in an event based gateway with the second one, can be explicitly checked
+                logger.info('No timeout was found to enforce the max time between requirement')
+                return False
+            else:
+                ### Here we set up the voter
+                logger.info(f'The due date is enforced through a voter that replaces the alternative at run time')
+                return True
         else:
             logger.add_missing_activity(b)
             logger.info(f'Activity "{b}" is missing in the process')
