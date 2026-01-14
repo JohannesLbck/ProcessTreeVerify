@@ -15,9 +15,14 @@
 
 import logging
 import re
+from share import config
+from hashmap import constraints_t 
 import xml.etree.ElementTree as ET
 from util import * 
 ## Check util which is an interface to all other methods if you want all method names
+
+## Load the Hashmap for run time voting
+
 
 ## This contains the verification using explicit, annotated verification, meaning the activities are identified by labels and resources
 ## are explicity annotated
@@ -293,26 +298,26 @@ def timed_alternative(tree, a, b, time):
         logger.info(f'Activity "{a}" is missing so the timed_alternative relationship is False')
         return False
 
-# Time, between two syncs, deprecated, after fighting with it for a while, I decided this is not a requirement pattern that actually happens, so it is left unfinished
+## Min Time between two activities, enforced via Voting
 def min_time_between(tree, a, b, time, c = None):
     a_sync = False
     if leads_to(tree, a, b):
         apath = exists(tree, a)
         bpath = exists(tree, b)
+        data = {
+            "Pattern": "min_time_between",
+            "A": apath.attrib["id"],
+            "B": bpath.attrib["id"],
+            "time": time,
+            "alternative": c,
+            "A_time": None
+        }
+        constraints_t.insert(config.get_id(), data)
         if not c:
-            logger.info(f'No alternative was passed, so voter is not connected')
-            for sync in sync_exists(tree):
-                if directly_follows_must(tree, apath, sync[0]) or directly_follows_must(tree, sync[0], apath):
-                    logger.info(f'identified a sync directly before or after Activity "{a}"')
-                    a_sync = True
-                    a_time = sync[1]
-                elif a_sync and directly_follows_must(tree, sync[0], bpath):
-                    logger.info(f"identified a second sync that leads to bpath)")
-            logger.info(f'no syncs which are directly before or after "{a}" and "{b}" were identified in order to achieve the min_time_between requirement')
-            return False
+            logger.info(f'{a} and {b} were found without an alternative, so the voter will wait before {b} if necessary')
+            return True 
         else:
-            ### Set up voter here
-            logger.info(f'Voter is set up to enforce the min time between requirement')
+            logger.info(f'{a} and {b} were found, so {c} will be executed by the voter before {b} if possible')
             return True
     else:
         logger.info(f'Activities "{a}" and "{b}" are not in a leads_to relationship, so the min_time_between requirement is False')

@@ -19,6 +19,7 @@ import os
 import signal
 import sys
 import json
+from share import config
 import re
 import uuid
 import logging
@@ -28,14 +29,12 @@ from fastapi import FastAPI, File, UploadFile, Request, Form
 from pydantic import BaseModel
 from multiprocessing import Process
 from fastapi.responses import HTMLResponse, JSONResponse
-from hashmap import HashTable
+from hashmap import hash_t, constraints_t 
 from util import exists_by_label, get_ancestors, compare_ele, add_start_end, combine_sub_trees
 from tester import run_tests
 from reqparser import parse_requirements
 from verificationAST import verify
 
-hash_t = HashTable(20)
-hash_t.load_disk("TrackedUIDsHashmap.json")
 
 
 class Model(BaseModel):
@@ -113,6 +112,8 @@ async def Subscriber(request: Request):
         except:
             logger.info("No save attribute was passed, previous version will only be stored in memory and not written to disk")
             #logger.info("If a save attribute was passed, and this message still shows, there is a internal server error")
+        config.set_id(notification["instance"])
+        print(f"What is {config.get_id()}")
         requirements = parse_requirements(req)
         xml = ET.fromstring(notification["content"]["description"])
         xml = add_start_end(xml)
@@ -143,6 +144,7 @@ async def Subscriber(request: Request):
         logger.reset_missing_activities()
         root_logger.removeHandler(file_handler)
         file_handler.close()
+        constraints_t.save_disk("../../Voter/Constraints.json")
     return
 
 def run_server():

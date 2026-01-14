@@ -22,10 +22,11 @@ class AssuranceLogger(logging.Logger):
     is a bit more useful. Shared states are achieved using class-level attributes.
     """
     # Class-level shared state
-    LogName = ""
     assurance_level = 100  # Shared assurance level
     activities = set()  # Shared activities set
     missing_activities = set()  # Shared missing activities set
+    instance_Id = None 
+
 
     def __init__(self, name, level=logging.NOTSET):
         super().__init__(name, level)
@@ -40,12 +41,12 @@ class AssuranceLogger(logging.Logger):
         super().warning(msg, *args, **kwargs)  # Call the original `warning` method
 
     @classmethod
-    def get_LogName(cls):
-        return cls.LogName
-    
+    def get_id(cls):
+        return cls.instance_Id
+
     @classmethod
-    def set_LogName(cls, name):
-        cls.LogName = name
+    def set_id(cls, Id):
+        cls.instance_Id = Id
 
     @classmethod
     def get_assurance_level(cls):
