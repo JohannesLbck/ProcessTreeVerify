@@ -22,13 +22,26 @@ import json
 import re
 import logging
 import assurancelogger 
+
 import xml.etree.ElementTree as ET
+
 from util import exists_by_label, get_ancestors, compare_ele, add_start_end, combine_sub_trees
 from tester import run_tests
 from reqparser import parse_requirements
 from verificationAST import verify
 
 logger = logging.getLogger("Top Level")
+
+logging.basicConfig(
+            level=logging.INFO,
+            # The following Format is recommended for debugging
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            ## Handler for local logging below
+            handlers=[
+                logging.StreamHandler(),
+            ]
+        )
+
 
 parser = argparse.ArgumentParser()
 

@@ -14,6 +14,7 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import xml.etree.ElementTree as ET
+
 import re
 import logging
 from utils.control_util import get_shared_ancestors
@@ -205,9 +206,7 @@ def extract_dobjects(condition):
 
 ## This method returns a list of all the activities (as paths) which influence the result of evaluating a condition ( All calls that write to the dataobjects that appear in a condition)
 def condition_impacts(tree, condition):
-    print(condition)
     tobjects = extract_dobjects(condition)
-    print(tobjects)
     dobjects = data_objects(tree)
     impacts = []
     for call in dobjects:

@@ -14,6 +14,20 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import xml.etree.ElementTree as ET
 
+
+def siblings(a, b, parentmap):
+    parent = parentmap[a] 
+    if parent is None or parent is not parentmap[b]:
+        return False
+
+    children = list(parent)
+    try:
+        idx = children.index(a)
+        return idx + 1 < len(children) and children[idx + 1] is b
+    except ValueError:
+        return False
+
+
 ## find ele by label
 def exists_by_label(root, mlabel):
     namespace = {"ns0": "http://cpee.org/ns/description/1.0"}

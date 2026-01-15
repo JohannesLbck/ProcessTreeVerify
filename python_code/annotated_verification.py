@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 ## Existence: Checks if an activity a exists in the xml tree and returns the element or None, identifes by label, to identify using resource/data see below
 def exists(tree, a):#
     if isinstance(a, ET.Element):
-        return a
+        return a   
     elif a == "End Activity" or a == "end activity":
         return tree.find(".//ns0:end_activity", namespace)
     elif a == "Start Activity" or a == "start activity":
@@ -482,26 +482,66 @@ def condition(tree, condition):
         return False
 ## One aspect to note, is that this function works trivially with terminates, because there can always only be a single terminate per branch
 def condition_directly_follows(tree, condition , a):
-    branch = condition_finder(tree, condition)
-    if branch is None:
-        logger.info(f'No branch with condition: "{condition}" was found')
-        return False
-    apath = exists(branch, a)
-    onbranch = False
-    counter = 0
-    if apath is None:
-        logger.info(f'Activity "{a}" did not exist in the branch of condition: "{condition}"')
-        return False
-    ## This is highly inefficient (3 Iterations instead of 1) but it works and is easy to understand)
-    elements = [elem for elem in branch.iter() if elem.tag.endswith('call') or elem.tag.endswith("terminate")]
-    for ele in elements:
-        if counter == 1:
-            logger.info(f'Activity "{a}" did not directly follow the data condition "{condition}"')
+    impacts = condition_impacts(tree, condition)
+    if len(impacts) > 1:
+        for i in len(impacts):
+            try:
+                if directly_follows(impacts[i], impacts[i+1]):
+                    impacts.pop(i)
+            except:
+                continue
+        logger.info(f'Found {len(impacts)} calls that influence condition "{condition}. Checking for a directly following branch for each')
+    if len(impacts) < 2:
+        branch = condition_finder(tree, condition)
+        if branch is None:
+            logger.info(f'No branch with condition: "{condition}" was found')
             return False
-        if ele == apath:
-            logger.info(f'Activity "{a}" directly followed the data_condition "{condition}"')
+        apath = exists(branch, a)
+        onbranch = False
+        counter = 0
+        if apath is None:
+            logger.info(f'Activity "{a}" did not exist in the branch of condition: "{condition}"')
+            return False
+        ## This is highly inefficient (3 Iterations instead of 1) but it works and is easy to understand)
+        elements = [elem for elem in branch.iter() if elem.tag.endswith('call') or elem.tag.endswith("terminate")]
+        for ele in elements:
+            if counter == 1:
+                logger.info(f'Activity "{a}" did not directly follow the data condition "{condition}"')
+                return False
+            if ele == apath:
+                parent_map = {c:p for p in tree.iter() for c in p}
+                logger.info(f'Activity "{a}" directly followed the data_condition "{condition}"')
+                if len(impacts) < 0:
+                    logger.info(f'Found no activity that impacts the condition, so the branch has to be the first branch to directly follow')
+                    return siblings(exists("Start Activity"), parent_map[branch], parent_map)
+                else:
+                    logger.info(f'Comparing if the branch directly follows after the condition is impacted')
+                    return siblings(impacts[0], parent_map[branch], parent_map)
+            counter += 1
+    else:
+        branches = multi_condition_finder(tree, condition)
+        if len(branches) == 0:
+            logger.info(f'No branch with condition: "{condition}" was found')
             return True
-        counter += 1
+        else:
+            if not len(impacts) == len(branches):
+                logger.warning(f'There is not a branch condition for every time the condition can change so immediatelly follows is violated')
+                return False
+            logger.info(f'Checking for all data impact and branch pairs')
+            for i in len(impacts):
+                logger.info(f'Pair {i}:')
+
+                counter = 0
+                elements = [elem for elem in branches[i].iter() if elem.tag.endswith('call') or elem.tag.endswith("terminate")]
+                for ele in elements:
+                    if counter == 1:
+                        logger.info(f'Activity "{a}" did not directly follow the data condition "{condition}"')
+                        return False
+                    if ele == apath:
+                        logger.info(f'Activity "{a}" directly followed the data_condition "{condition}"')
+                        logger.info(f'Comparing if the branch directly follows after the condition is impacted')
+                        return siblings(impacts[i], parent_map[branches[i]], parent_map)
+                    counter += 1
     logger.error(f"IF we got here something went wrong, in the condition_directly_follows function")
     return False
 
@@ -510,9 +550,17 @@ def condition_directly_follows(tree, condition , a):
 def condition_eventually_follows(tree, condition, a, scope = "branch"):
     branch = condition_finder(tree, condition)
     if branch is not None:
+        condition_impacts(tree, condition)
         apath = exists(branch,a)
         if apath is not None:
             logger.info(f'Activity "{a}" was found on branch following condition "{condition}"')
+            impacts = condition_impacts(tree, condition)
+            logger.info(f'Found {len(impacts)} calls that influence condition "{condition}. Checking if both are prior to branch"')
+            for call in impacts:
+                if not leads_to(tree, call, branch):
+                    logger.warning(f"Found a call {call} that is not prior to the identified branch, so compliance can be violated if said call can cause the condition to evaluate to true")
+                    return False
+            logger.info(f"All calls that influence the condition are prior to the condition, so eventually follows is satisfied")
             return True
         else:
             if scope == "branch":
