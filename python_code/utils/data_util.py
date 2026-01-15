@@ -145,3 +145,78 @@ def condition_finder(tree, condition):
     logger.info(f"Found no branch which matches to {condition}")
     return None
 
+def multi_condition_finder(tree, condition):
+    condition = condition.replace(" ", "")
+    for tag in data_decision_tags:
+        branches = []
+        for target in tree.findall(tag, namespace):
+            try:
+                condition_xml=target.attrib["condition"]
+            except:
+                logger.error(f'Branch with no condition was found, your model has a syntax error')
+            condition_xml = condition_xml.replace(" ", "")
+            if target.tag == "{http://cpee.org/ns/description/1.0}alternative":
+                ## These are complicated since they potentially reduce assurance due to the default branch
+                #print(f'condition: {condition}')
+                #print(f'condition_xml: {condition_xml}')
+                #print(f'not condition_xml: not{condition_xml}')
+                if condition.strip() == condition_xml.strip(): ## High Assurance
+                    branches.append(target)
+                elif condition.strip() in condition_xml.strip(): ## Low Assurance
+                    logger.warning(f"Condition mapped via in compared to ==, lower assurances")
+                    branches.append(target)
+                elif condition.strip() in f"not{condition_xml}": ## Low Assurance
+                    logger.warning(f"Branch default was found which matches to {condition}, lower assurance")
+                    target = get_default_branch(tree, target)
+                    branches.append(target)
+            if condition in condition_xml:
+                logger.info(f"Branch was found which matches to {condition}")
+                branches.append(target)
+    logger.info(f"Found no branch which matches to {condition}")
+    return branches 
+
+
+## This method returns a list of all data object identifiers (strings) from a condition
+def extract_dobjects(condition):
+    ## Remove Brackets
+    #s = "(4+5) == Integer and boolean" <- TestString
+    s = condition
+    ## Split by operators
+    s = s.replace("(","").replace(")","")
+    tokens = re.split(r"\s*(and|or|>=|<=|==|>|<|\+|-)\s*", s)
+    ## Remove Integers
+    OPERATORS = {"and", "or", "<", ">", "==", ">=", "<=", "+", "-"}
+    number_re = re.compile(r"^\d+(\.\d+)?$")
+    variables = [
+        t for t in tokens
+        if t not in OPERATORS and not number_re.match(t)
+    ] 
+    ## Remove true, false, ""
+    quoted_re = re.compile(r"""^\s*(['"]).*\1\s*$""")
+
+    dobjects = [
+        re.sub(r"^.*\.", "", v.strip())   # <-- injected normalization
+        for v in variables
+        if not quoted_re.match(v)
+        and v.strip().lower() not in {"true", "false"}
+    ]
+
+    return dobjects
+
+## This method returns a list of all the activities (as paths) which influence the result of evaluating a condition ( All calls that write to the dataobjects that appear in a condition)
+def condition_impacts(tree, condition):
+    print(condition)
+    tobjects = extract_dobjects(condition)
+    print(tobjects)
+    dobjects = data_objects(tree)
+    impacts = []
+    for call in dobjects:
+        for obj in call[2]:
+            if call[0] in impacts:
+                continue
+            for data in tobjects:
+                if obj == data:
+                    impacts.append(call[0])
+                    continue
+    return impacts
+

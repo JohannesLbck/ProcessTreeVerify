@@ -114,6 +114,7 @@ def directly_follows_must(root, ele1, ele2):
 ## like if they are the last activtiy in a exclusive branch and the first after the exclusive
 def directly_follows_can(root, ele1, ele2):
     namespace = {"ns0": "http://cpee.org/ns/description/1.0"}
+    ancestors1, ancestors2, shared_ancestors = get_shared_ancestors(root, ele1, ele2)
     shared_ex_branch = 0
     exclusive = 0
     parallel = 0
