@@ -124,7 +124,7 @@ Returns the first resource executing activity `a`.
 ## Time Methods
 
 ### timed_alternative(tree, a, b, time)
-Checks if activities `a` and `b` are in a timed alternative relationship with the given timeout.
+Checks if activities `a` and `b` are in a timed alternative relationship with the given timeout. This ensures that if `a` takes too long to be executed, `b` is executed as an alternative. For example if a process should terminate if an activity `a` takes too long, then `b` is a terminate.
 
 **Parameters:**
 - `tree`: The XML tree.
