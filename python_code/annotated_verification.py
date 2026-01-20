@@ -122,8 +122,8 @@ def leads_to(tree, a, b):
                 return True
                 ancestors_a, ancestors_b, shared = get_shared_ancestors(tree, apath, bpath)
                 if any(elem.tag.endswith("choose") for elem in ancestors_b):
-                    LCA = shared[0].tag
-                    if LCA.endswith("alternative") or LCA.endswith("otherwise") or LCA.endswith("parallel_branch"):
+                    MCA = shared[-1].tag
+                    if MCA.endswith("alternative") or MCA.endswith("otherwise") or MCA.endswith("parallel_branch"):
                         logger.info(f'Activity "{a}" and Activity "{b}" are on the same branch in the correct order')
                         return True
                     logger.info(f'Activity "{a} was found before "{b}, but it is in a different exclusive branch, so leads_to can not be guaranteed in every trace')
