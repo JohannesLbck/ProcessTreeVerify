@@ -60,14 +60,14 @@ def get_shared_ancestors(root, ele1, ele2):
     for ancestor in ancestors1:
         if ancestor in ancestors2:
             shared_ancestors.append(ancestor)
-
+    
     return ancestors1, ancestors2, shared_ancestors
 
 
 ## This method is idenpendent of the annotation style, this code is absolutly disgusting, I search through the entire tree
 ## 3 times which should really only take one search, but whatever, I dont like , this method assumes that the ele 
 ## exists in the tree
-def compare_ele(root, ele1, ele2):
+def compare_ele_old(root, ele1, ele2):
     namespace = {"ns0": "http://cpee.org/ns/description/1.0"}
     ancestors1, ancestors2, shared_ancestors = get_shared_ancestors(root, ele1, ele2)
     shared_ex_branch = 0 
@@ -93,6 +93,26 @@ def compare_ele(root, ele1, ele2):
                 return 1 
             elif element == ele2:
                 return 2
+
+def compare_ele(root, ele1, ele2):
+    namespace = {"ns0": "http://cpee.org/ns/description/1.0"}
+    ancestors1, ancestors2, shared = get_shared_ancestors(root, ele1, ele2)
+    shared_ex_branch = 0
+    exclusive = 0
+    parallel = 0
+    shared_par_branch = 0
+    LCA = shared[0].tag
+    if LCA.endswith("choose"):
+        return 0
+    elif LCA.endswith("parallel"):
+        return -1
+    else:
+        for element in root.iter():
+            if element == ele1:
+                return 1
+            elif element == ele2:
+                return 2
+
 
 ## Some explanation here is required, so directly follows is not always checkable, say for example for the
 ## last activity in an exclusive which could either be directly before the one after the exclusive, but also

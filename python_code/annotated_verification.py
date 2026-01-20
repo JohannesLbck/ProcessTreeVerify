@@ -118,8 +118,16 @@ def leads_to(tree, a, b):
                 logger.info(f'Activity "{a}" and Activity "{b}" are in parrallel')
                 return False
             elif compare == 1:
-                logger.info(f'Activity "{a}" is before Activity "{b}"')
+                logger.info(f'Activity "{a}" is before Activity "{b}, checking if {b} is on a different exclusive branch"')
                 return True
+                ancestors_a, ancestors_b, shared = get_shared_ancestors(tree, apath, bpath)
+                if any(elem.tag.endswith("choose") for elem in ancestors_b):
+                    LCA = shared[0].tag
+                    if LCA.endswith("alternative") or LCA.endswith("otherwise") or LCA.endswith("parallel_branch"):
+                        logger.info(f'Activity "{a}" and Activity "{b}" are on the same branch in the correct order')
+                        return True
+                    logger.info(f'Activity "{a} was found before "{b}, but it is in a different exclusive branch, so leads_to can not be guaranteed in every trace')
+                    return False
             elif compare == 2:
                 logger.info(f'Activity "{b}" is before Activity "{a}"')
                 return False
@@ -149,7 +157,18 @@ def precedence(tree, a, b):
                 logger.info(f'Activity "{a}" was found before "{b}", so precedence "{a}" requires "{b}" before is False')
                 return False 
             elif compare == 2:
-                logger.info(f'Activity "{b}" was found before "{a}", so precedence "{a}" requires "{b}" before is True')
+                logger.info(f'Activity "{b}" was found before "{a}". Ensuring that {b} is not on an exclusive branch which could lead to violations in some traces')
+                ancestors_a, ancestors_b, shared = get_shared_ancestors(tree, a_ele, b_ele)
+                print(shared)
+                if any(elem.tag.endswith("choose") for elem in ancestors_b):
+                    LCA = shared[0].tag
+                    if LCA.endswith("alternative") or LCA.endswith("otherwise"):
+                        logger.info(f'Activity "{a}" and Activity "{b} are on the same branch in the correct order')
+                        return True
+                    logger.info(f'Activity "{b} was found before "{a}, but it is in a different exclusive branch, so precedence can not be guaranteed in every trace')
+                    
+                    return False
+                logger.info(f'Activity "{b}" was found before "{a}", and "{b}" is not on an exclusive branch, so precedence "{a}" requires "{b}" before is True')
                 return True
         else:
             logger.add_missing_activity(b)
