@@ -402,7 +402,6 @@ def max_time_between(tree, a, b, time, c = None):
         if bpath is not None:
             if not c:
                 for timeout in timeouts_exists(tree):
-                    print(timeout)
                     if parallel_cancel(tree, timeout[0], bpath) is not None:
                         if timeout[1] is not None:
                             if not timeout[1].isdigit(): 
