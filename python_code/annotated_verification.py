@@ -568,7 +568,6 @@ def condition_directly_follows(tree, condition , a):
 def condition_eventually_follows(tree, condition, a, scope = "branch"):
     branch = condition_finder(tree, condition)
     if branch is not None:
-        condition_impacts(tree, condition)
         apath = exists(branch,a)
         if apath is not None:
             logger.info(f'Activity "{a}" was found on branch following condition "{condition}"')
