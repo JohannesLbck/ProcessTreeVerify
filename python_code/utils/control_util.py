@@ -185,7 +185,7 @@ def directly_follows_can(root, ele1, ele2):
 ## Checks if two activities are in an parrallel relationship where one branch can cancel the other, assumes that a and b exist
 ## this used to be event based gateway, but in practice you can implement the only method that uses this (max time between) with any parallels where the branches cancel. whether it cacnels after first or last is not relevant.
 ## It is kept this way, since this feels like the more natural way to check and it means the process developer is not strongly restricted, which is a design goal (see documentation)
-def parallel_cancel(tree, a, b):
+def cancel_first(tree, a, b):
     ancestors1, ancestors2, shared_ancestors = get_shared_ancestors(tree, a, b)
     shared_branch = 0
     parallel = 0
@@ -194,8 +194,22 @@ def parallel_cancel(tree, a, b):
             shared_branch += 1 
         elif ancestor.tag.endswith("parallel"):
             if shared_branch <= parallel:
-                if ancestor.attrib.get("wait")== "1":  #and ancestor.attrib.get("cancel") == "first"
+                if ancestor.attrib.get("wait")== "1" and ancestor.attrib.get("cancel") == "first":
                     return ancestor
             parallel += 1
     return None 
+
+def cancel_last(tree, a, b):
+    ancestors1, ancestors2, shared_ancestors = get_shared_ancestors(tree, a, b)
+    shared_branch = 0
+    parallel = 0
+    for ancestor in shared_ancestors:
+        if ancestor.tag.endswith("parallel_branch"):
+            shared_branch += 1
+        elif ancestor.tag.endswith("parallel"):
+            if shared_branch <= parallel:
+                if ancestor.attrib.get("wait")== "1" and ancestor.attrib.get("cancel") == "last":
+                    return ancestor
+            parallel += 1
+    return None
 

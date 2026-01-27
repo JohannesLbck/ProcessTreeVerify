@@ -295,7 +295,7 @@ def timed_alternative(tree, a, b, time):
         b_ele = exists(tree, b)
         if b_ele is not None:
             for timeout in timeouts_exists(tree):
-                  parallel = parallel_cancel(tree, timeout[0], a_ele)
+                  parallel = cancel_first(tree, timeout[0], a_ele)
                   if parallel is not None:
                       if timeout[1] is not None:
                           if not timeout[1].isdigit():
@@ -402,7 +402,7 @@ def max_time_between(tree, a, b, time, c = None):
         if bpath is not None:
             if not c:
                 for timeout in timeouts_exists(tree):
-                    if parallel_cancel(tree, timeout[0], bpath) is not None:
+                    if cancel_last(tree, timeout[0], bpath) is not None:
                         if timeout[1] is not None:
                             if not timeout[1].isdigit(): 
                                 logger.warning('timeout in the parallel with cancel uses a dataobject timestamp or is not passed a digit')
