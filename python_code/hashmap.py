@@ -87,8 +87,8 @@ class HashTable:
         return "".join(str(item) for item in self.hash_table)
 
 
-constraints_t = HashTable(20)
-constraints_t.load_disk("../../Voter/Constraints.json")
+#constraints_t = HashTable(20)
+#constraints_t.load_disk("../../Voter/Constraints.json")
 
 hash_t= HashTable(20)
 hash_t.load_disk("TrackedUIDsHashmap.json")
