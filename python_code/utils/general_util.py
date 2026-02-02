@@ -20,6 +20,34 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+def transform_log(log, cpee_instance = "local testing"):
+    instance = None
+    event_log = []
+    for msg in log:
+        timestamp, module, pattern, data= msg.split(" - ", 3)
+        if data.startswith("Verifying Requirement "):
+            instance = data.split(":", 1)[0].split()[-1]
+            lifecycle = "start"
+        elif data.startswith("Requirement "):
+            lifecycle = "complete"
+        else:
+            lifecycle = "unknown"
+        if instance is None:
+            instance = "preprocessing"
+        event = {
+            "concept:instance": instance,
+            "concept:name": pattern,
+            "id:id": module,
+            "ptv:activity_uuid": hash(instance+pattern+module),
+            "cpee:instance": cpee_instance, 
+            "lifecycle:transition": lifecycle,
+            "ptv:lifecycle:transition": lifecycle,
+            "data": data, 
+            "time:timestamp": timestamp,          
+        }
+        event_log.append({"event": event})
+    return event_log
+
 def add_start_end(tree):
     new_first_sibling = ET.Element("{http://cpee.org/ns/description/1.0}start_activity")
     new_first_sibling.text = "Inserted Start Activity"

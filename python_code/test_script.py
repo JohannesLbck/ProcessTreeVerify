@@ -24,21 +24,21 @@ import logging
 import assurancelogger 
 import xml.etree.ElementTree as ET
 
-
-from util import exists_by_label, get_ancestors, compare_ele, add_start_end, combine_sub_trees
+from LogHandler import LogHandler
+from util import transform_log, exists_by_label, get_ancestors, compare_ele, add_start_end, combine_sub_trees
 from tester import run_tests
 from reqparser import parse_requirements
 from verificationAST import verify
 
 logger = logging.getLogger("Top Level")
-
+log = []
+handler = LogHandler(log)
 logging.basicConfig(
             level=logging.INFO,
             # The following Format is recommended for debugging
-            format='%(asctime)s - %(name)s - %(funcName)s - %(message)s',
+            format='%(asctime)s.%(msecs)03d - %(name)s - %(funcName)s - %(message)s',
             ## Handler for local logging below
-            handlers=[
-                logging.StreamHandler(),
+            handlers=[handler 
             ]
         )
 
@@ -77,3 +77,5 @@ for counter, req in enumerate(requirements):
     logger.reset_assurance_level()
 logger.info(f"Currently required activities for the process are: {logger.get_activities()}")
 logger.info(f"Currently missing activities for the process are: {logger.get_missing_activities()}")
+xes_log = transform_log(log)
+print(xes_log)

@@ -1,0 +1,549 @@
+<testset xmlns="http://cpee.org/ns/properties/2.0">
+  <executionhandler>ruby</executionhandler>
+  <dataelements/>
+  <endpoints>
+    <timeout>https://cpee.org/services/timeout.php</timeout>
+    <subprocess>https://cpee.org/flow/start/url/</subprocess>
+  </endpoints>
+  <attributes>
+    <guarded>none</guarded>
+    <modeltype>CPEE</modeltype>
+    <theme>extended</theme>
+    <guarded_id/>
+    <info>Running Example</info>
+    <creator>Christine Ashcreek</creator>
+    <author>Christine Ashcreek</author>
+    <model_uuid>bfba4641-d676-4cf1-9d12-95d6181231d6</model_uuid>
+    <model_version/>
+    <design_stage>development</design_stage>
+    <requirements>{"R1"=&gt;"precedence('obtain consent', 'provide information')"}</requirements> 
+    <design_dir>Staff.dir/Loebbi.dir/Compliance.dir</design_dir>
+  </attributes>
+  <description>
+    <description xmlns="http://cpee.org/ns/description/1.0">
+      <call id="a2" endpoint="">
+        <parameters>
+          <label>provide information</label>
+          <method>:post</method>
+          <arguments/>
+        </parameters>
+        <annotations>
+          <_generic/>
+          <_timing>
+            <_timing_weight/>
+            <_timing_avg/>
+            <explanations/>
+          </_timing>
+          <_shifting>
+            <_shifting_type>Duration</_shifting_type>
+          </_shifting>
+          <_context_data_analysis>
+            <probes/>
+            <ips/>
+          </_context_data_analysis>
+          <report>
+            <url/>
+          </report>
+          <_notes>
+            <_notes_general/>
+          </_notes>
+        </annotations>
+        <documentation>
+          <input/>
+          <output/>
+          <implementation>
+            <description/>
+          </implementation>
+        </documentation>
+        <code>
+          <prepare/>
+          <finalize output="result"/>
+          <update output="result"/>
+          <rescue output="result"/>
+        </code>
+      </call>
+      <call id="a1" endpoint="">
+        <parameters>
+          <label>obtain consent</label>
+          <method>:post</method>
+          <arguments/>
+        </parameters>
+        <code>
+          <prepare/>
+          <finalize output="result">data.consented = result["result"]</finalize>
+          <update output="result"/>
+          <rescue output="result"/>
+        </code>
+        <annotations>
+          <_generic/>
+          <_timing>
+            <_timing_weight/>
+            <_timing_avg/>
+            <explanations/>
+          </_timing>
+          <_shifting>
+            <_shifting_type>Duration</_shifting_type>
+          </_shifting>
+          <_context_data_analysis>
+            <probes/>
+            <ips/>
+          </_context_data_analysis>
+          <report>
+            <url/>
+          </report>
+          <_notes>
+            <_notes_general/>
+          </_notes>
+        </annotations>
+        <documentation>
+          <input/>
+          <output/>
+          <implementation>
+            <description/>
+          </implementation>
+          <code>
+            <description/>
+          </code>
+        </documentation>
+      </call>
+      <choose mode="exclusive">
+        <alternative condition="data.consented">
+          <_probability>
+            <_probability_min/>
+            <_probability_max/>
+            <_probability_avg/>
+          </_probability>
+          <parallel wait="1" cancel="last">
+            <parallel_branch>
+              <call id="a3" endpoint="">
+                <parameters>
+                  <label>retract consent</label>
+                  <method>:post</method>
+                  <arguments/>
+                </parameters>
+                <annotations>
+                  <_generic/>
+                  <_timing>
+                    <_timing_weight/>
+                    <_timing_avg/>
+                    <explanations/>
+                  </_timing>
+                  <_shifting>
+                    <_shifting_type>Duration</_shifting_type>
+                  </_shifting>
+                  <_context_data_analysis>
+                    <probes/>
+                    <ips/>
+                  </_context_data_analysis>
+                  <report>
+                    <url/>
+                  </report>
+                  <_notes>
+                    <_notes_general/>
+                  </_notes>
+                </annotations>
+                <documentation>
+                  <input/>
+                  <output/>
+                  <implementation>
+                    <description/>
+                  </implementation>
+                </documentation>
+              </call>
+              <terminate/>
+            </parallel_branch>
+            <parallel_branch>
+              <call id="a4" endpoint="">
+                <parameters>
+                  <label>conduct interview and questionnaire</label>
+                  <method>:post</method>
+                  <arguments/>
+                </parameters>
+                <code>
+                  <prepare/>
+                  <finalize output="result">data.assessment_status = result["result"]</finalize>
+                  <update output="result"/>
+                  <rescue output="result"/>
+                </code>
+                <annotations>
+                  <_generic>
+                    <Resource>physician, trained assistant</Resource>
+                  </_generic>
+                  <_timing>
+                    <_timing_weight/>
+                    <_timing_avg/>
+                    <explanations/>
+                  </_timing>
+                  <_shifting>
+                    <_shifting_type>Duration</_shifting_type>
+                  </_shifting>
+                  <_context_data_analysis>
+                    <probes/>
+                    <ips/>
+                  </_context_data_analysis>
+                  <report>
+                    <url/>
+                  </report>
+                  <_notes>
+                    <_notes_general/>
+                  </_notes>
+                </annotations>
+                <documentation>
+                  <input/>
+                  <output/>
+                  <implementation>
+                    <description/>
+                  </implementation>
+                  <code>
+                    <description/>
+                  </code>
+                </documentation>
+              </call>
+              <call id="a5" endpoint="">
+                <parameters>
+                  <label>direct questions</label>
+                  <method>:post</method>
+                  <arguments/>
+                </parameters>
+                <code>
+                  <prepare/>
+                  <finalize output="result">data.assessment_status = result["result"]</finalize>
+                  <update output="result"/>
+                  <rescue output="result"/>
+                </code>
+                <annotations>
+                  <_generic>
+                    <Resource>physician</Resource>
+                  </_generic>
+                  <_timing>
+                    <_timing_weight/>
+                    <_timing_avg/>
+                    <explanations/>
+                  </_timing>
+                  <_shifting>
+                    <_shifting_type>Duration</_shifting_type>
+                  </_shifting>
+                  <_context_data_analysis>
+                    <probes/>
+                    <ips/>
+                  </_context_data_analysis>
+                  <report>
+                    <url/>
+                  </report>
+                  <_notes>
+                    <_notes_general/>
+                  </_notes>
+                </annotations>
+                <documentation>
+                  <input/>
+                  <output/>
+                  <implementation>
+                    <description/>
+                  </implementation>
+                  <code>
+                    <description/>
+                  </code>
+                </documentation>
+              </call>
+              <choose mode="exclusive">
+                <alternative condition="data.assessment_status == &quot;rejected&quot;">
+                  <call id="a6" endpoint="">
+                    <parameters>
+                      <label>inform of rejection</label>
+                      <method>:post</method>
+                      <arguments/>
+                    </parameters>
+                    <annotations>
+                      <_generic/>
+                      <_timing>
+                        <_timing_weight/>
+                        <_timing_avg/>
+                        <explanations/>
+                      </_timing>
+                      <_shifting>
+                        <_shifting_type>Duration</_shifting_type>
+                      </_shifting>
+                      <_context_data_analysis>
+                        <probes/>
+                        <ips/>
+                      </_context_data_analysis>
+                      <report>
+                        <url/>
+                      </report>
+                      <_notes>
+                        <_notes_general/>
+                      </_notes>
+                    </annotations>
+                    <documentation>
+                      <input/>
+                      <output/>
+                      <implementation>
+                        <description/>
+                      </implementation>
+                    </documentation>
+                  </call>
+                  <terminate/>
+                  <_probability>
+                    <_probability_min/>
+                    <_probability_max/>
+                    <_probability_avg/>
+                  </_probability>
+                </alternative>
+                <otherwise>
+                  <call id="a7" endpoint="subprocess">
+                    <parameters>
+                      <label>prepare for venepuncture</label>
+                      <method>:post</method>
+                      <arguments>
+                        <behavior>wait_running</behavior>
+                        <url/>
+                        <init/>
+                        <endpoints/>
+                        <attributes/>
+                        <customization/>
+                      </arguments>
+                    </parameters>
+                    <annotations>
+                      <_generic>
+                        <Resource>data.assigned_resource</Resource>
+                      </_generic>
+                      <_timing>
+                        <_timing_weight/>
+                        <_timing_avg/>
+                        <explanations/>
+                      </_timing>
+                      <_shifting>
+                        <_shifting_type>Duration</_shifting_type>
+                      </_shifting>
+                      <_context_data_analysis>
+                        <probes/>
+                        <ips/>
+                      </_context_data_analysis>
+                      <report>
+                        <url/>
+                      </report>
+                      <_notes>
+                        <_notes_general/>
+                      </_notes>
+                    </annotations>
+                    <documentation>
+                      <input/>
+                      <output/>
+                      <implementation>
+                        <description/>
+                      </implementation>
+                    </documentation>
+                  </call>
+                  <call id="a8" endpoint="">
+                    <parameters>
+                      <label>venepuncture</label>
+                      <method>:post</method>
+                      <arguments/>
+                    </parameters>
+                    <annotations>
+                      <_generic>
+                        <Resource>data.assigned_resource</Resource>
+                      </_generic>
+                      <_timing>
+                        <_timing_weight/>
+                        <_timing_avg/>
+                        <explanations/>
+                      </_timing>
+                      <_shifting>
+                        <_shifting_type>Duration</_shifting_type>
+                      </_shifting>
+                      <_context_data_analysis>
+                        <probes/>
+                        <ips/>
+                      </_context_data_analysis>
+                      <report>
+                        <url/>
+                      </report>
+                      <_notes>
+                        <_notes_general/>
+                      </_notes>
+                    </annotations>
+                    <documentation>
+                      <input/>
+                      <output/>
+                      <implementation>
+                        <description/>
+                      </implementation>
+                    </documentation>
+                  </call>
+                  <call id="a9" endpoint="">
+                    <parameters>
+                      <label>collect blood</label>
+                      <method>:post</method>
+                      <arguments/>
+                    </parameters>
+                    <annotations>
+                      <_generic>
+                        <Resource/>
+                      </_generic>
+                      <_timing>
+                        <_timing_weight/>
+                        <_timing_avg/>
+                        <explanations/>
+                      </_timing>
+                      <_shifting>
+                        <_shifting_type>Duration</_shifting_type>
+                      </_shifting>
+                      <_context_data_analysis>
+                        <probes/>
+                        <ips/>
+                      </_context_data_analysis>
+                      <report>
+                        <url/>
+                      </report>
+                      <_notes>
+                        <_notes_general/>
+                      </_notes>
+                    </annotations>
+                    <documentation>
+                      <input/>
+                      <output/>
+                      <implementation>
+                        <description/>
+                      </implementation>
+                    </documentation>
+                  </call>
+                  <parallel wait="1" cancel="first">
+                    <parallel_branch>
+                      <call id="a10" endpoint="">
+                        <parameters>
+                          <label>monitor patient</label>
+                          <method>:post</method>
+                          <arguments/>
+                        </parameters>
+                        <annotations>
+                          <_generic/>
+                          <_timing>
+                            <_timing_weight/>
+                            <_timing_avg/>
+                            <explanations/>
+                          </_timing>
+                          <_shifting>
+                            <_shifting_type>Duration</_shifting_type>
+                          </_shifting>
+                          <_context_data_analysis>
+                            <probes/>
+                            <ips/>
+                          </_context_data_analysis>
+                          <report>
+                            <url/>
+                          </report>
+                          <_notes>
+                            <_notes_general/>
+                          </_notes>
+                        </annotations>
+                        <documentation>
+                          <input/>
+                          <output/>
+                          <implementation>
+                            <description/>
+                          </implementation>
+                        </documentation>
+                      </call>
+                    </parallel_branch>
+                    <parallel_branch>
+                      <call id="a11" endpoint="timeout">
+                        <parameters>
+                          <label>The following activities happen after 15 minutes</label>
+                          <method>:post</method>
+                          <arguments>
+                            <timeout>900</timeout>
+                          </arguments>
+                        </parameters>
+                        <annotations>
+                          <_generic/>
+                          <_timing>
+                            <_timing_weight/>
+                            <_timing_avg/>
+                            <explanations/>
+                          </_timing>
+                          <_shifting>
+                            <_shifting_type>Duration</_shifting_type>
+                          </_shifting>
+                          <_context_data_analysis>
+                            <probes/>
+                            <ips/>
+                          </_context_data_analysis>
+                          <report>
+                            <url/>
+                          </report>
+                          <_notes>
+                            <_notes_general/>
+                          </_notes>
+                        </annotations>
+                        <documentation>
+                          <input/>
+                          <output/>
+                          <implementation>
+                            <description/>
+                          </implementation>
+                        </documentation>
+                      </call>
+                      <call id="a12" endpoint="">
+                        <parameters>
+                          <label>assess donor</label>
+                          <method>:post</method>
+                          <arguments/>
+                        </parameters>
+                        <annotations>
+                          <_generic>
+                            <Resource>physician</Resource>
+                          </_generic>
+                          <_timing>
+                            <_timing_weight/>
+                            <_timing_avg/>
+                            <explanations/>
+                          </_timing>
+                          <_shifting>
+                            <_shifting_type>Duration</_shifting_type>
+                          </_shifting>
+                          <_context_data_analysis>
+                            <probes/>
+                            <ips/>
+                          </_context_data_analysis>
+                          <report>
+                            <url/>
+                          </report>
+                          <_notes>
+                            <_notes_general/>
+                          </_notes>
+                        </annotations>
+                        <documentation>
+                          <input/>
+                          <output/>
+                          <implementation>
+                            <description/>
+                          </implementation>
+                        </documentation>
+                      </call>
+                    </parallel_branch>
+                  </parallel>
+                </otherwise>
+              </choose>
+            </parallel_branch>
+          </parallel>
+        </alternative>
+        <otherwise>
+          <terminate/>
+        </otherwise>
+      </choose>
+    </description>
+  </description>
+  <transformation>
+    <description type="copy"/>
+    <dataelements type="none"/>
+    <endpoints type="none"/>
+  </transformation>
+  <subscriptions xmlns="http://riddl.org/ns/common-patterns/notifications-producer/2.0">
+    <subscription xmlns="http://riddl.org/ns/common-patterns/notifications-producer/2.0" id="_compliance" url="https://power.bpm.cit.tum.de/compliance/Subscriber">
+      <topic id="description">
+        <event>change</event>
+      </topic>
+    </subscription>
+  </subscriptions>
+</testset>
