@@ -25,19 +25,21 @@ import uuid
 import logging
 import assurancelogger 
 import xml.etree.ElementTree as ET
+import requests
+import yaml
 
 from LogHandler import LogHandler
 from fastapi import FastAPI, File, UploadFile, Request, Form
 from pydantic import BaseModel
 from multiprocessing import Process
 from fastapi.responses import HTMLResponse, JSONResponse
-from hashmap import hash_t, constraints_t 
-from util import exists_by_label, get_ancestors, compare_ele, add_start_end, combine_sub_trees
+from hashmap import hash_t
+from util import exists_by_label,transform_log, get_ancestors, compare_ele, add_start_end, combine_sub_trees
 from tester import run_tests
 from reqparser import parse_requirements
 from verificationAST import verify
 
-url = ""
+url = "https://cpee.org/comp-log/receiver/"
 
 headers = {
         "Content-Type": "application/x-yaml"
@@ -67,15 +69,12 @@ async def main():
     """
     return HTMLResponse(content=content)
 
-@app.get("/test")
-async def test():
-    return {"msg": "ok"}
+log = []
 @app.post("/Subscriber")
 async def Subscriber(request: Request):
     async with request.form() as form:
         notification = json.loads(form["notification"])
         hash_t.insert(notification["instance-uuid"], notification)
-        log = []
         # Start Logging 
         handler = LogHandler(log)
         logger = logging.getLogger(__name__)
@@ -108,12 +107,9 @@ async def Subscriber(request: Request):
         typ3 = form["type"]
         topic = form["topic"]
         event = form["event"]
-        # This runs several smaller tests, Commented out but kept in for future development, no guarantee that the current version of run_tests is bug free
-        #run_tests(xml)
         verified_requirements = []
         for counter, req in enumerate(requirements):
             logger.info(f"Verifying Requirement R{counter}: {req}")
-            print(req)
             result, assurance = verify(req, tree=xml)
             ## Message with Assurance Level
             message = f"Requirement R{counter} is {bool(result)} with assurance level {assurance}"
@@ -126,9 +122,15 @@ async def Subscriber(request: Request):
         logger.info(f"Currently missing activities for the process are: {logger.get_missing_activities()}")
         logger.reset_activities()
         logger.reset_missing_activities()
-        constraints_t.save_disk("../../Voter/Constraints.json")
-        xes_log = transform_log(log, notification["instance-uuid"]))
-        response = requests.post(url, data = yaml_payload.encode("utf-8"), headers=headers)
+        xes_log = transform_log(log, notification["instance-uuid"])
+        log.clear()
+        yaml_log= yaml.dump_all(
+            xes_log,
+            sort_keys=False,
+            default_flow_style=False
+        )
+        print(yaml_log)
+        response = requests.post(url, data = yaml_log.encode("utf-8"), headers=headers)
         print("Status:", response.status_code)
         print("Response:", response.text)
     return
@@ -138,14 +140,14 @@ def run_server():
     if pid != 0:
         return
     print('Starting ' + str(os.getpid()))
-    print(os.getpid(), file=open('compliancesub.pid', 'w'))
-    uvicorn.run("compliancesub:app", port=9321, log_level="info")
+    print(os.getpid(), file=open('subscriber.pid', 'w'))
+    uvicorn.run("subscriber:app", port=9321, log_level="info")
 
 if __name__ == "__main__":
-    if os.path.exists('compliancesub.pid'):
-      with open("compliancesub.pid","r") as f: pid =f.read()
+    if os.path.exists('subscriber.pid'):
+      with open("subscriber.pid","r") as f: pid =f.read()
       print('Killing ' + str(int(pid)))
-      os.remove('compliancesub.pid')
+      os.remove('subscriber.pid')
       os.kill(int(pid),signal.SIGINT)
     else:
       proc = Process(target=run_server, args=(), daemon=True)
