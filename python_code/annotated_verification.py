@@ -368,7 +368,7 @@ def by_due_date_explicit(tree, a, timestamp):
             if int(call[1]) <= int(timestamp):
                 condition = f"data.{call[2]}"
                 logger.info(f'found a due date activity that enforces the date requirement, check for alternative branch with condition: "{condition}" that eventually leads to "{a}"')
-                return condition_eventually_follows(tree, condition, a)
+                return condition_directly_follows(tree, condition, a)
         logger.info(f'no due date activity was found to enforce the due date requirement')
         return False
     else:
