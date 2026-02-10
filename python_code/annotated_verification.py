@@ -288,6 +288,30 @@ def executed_by_return(tree, a):
 
 ## Time
 
+# Recurring: checks if an activity is in a loop that contains a timeout activity with time t after a
+def recurring(tree, a, t):
+    a_ele = exists(tree, a)
+    if a_ele is not None:
+        loop_ele = loop(tree, a)
+        if loop_ele is not None:
+            for timeout in timeouts_exists(loop_ele):
+                if timeout[1] is not None:
+                    if not timeout[1].isdigit():
+                        logger.warning('timeout in the loop uses a dataobject timestamp or is not passed a digit, correct dataobject is assumed, but this is a dynamic data requirement')
+                        return leads_to(loop_ele, a_ele, timeout[0])
+                    else:
+                        logger.info(f'Identified a timeout in a loop with "{a}"')
+                        if t == int(timeout[1]):
+                            logger.info(f'Verifying existence of "{a} in {loop_ele}')
+                            return leads_to(loop_ele, a_ele, timeout[0])
+            logger.info('No timeout was found to enforce the recurring requirement')
+            return False
+        else:
+            logger.info(f'Activity "{a}" is not in a loop and accordingly can not be recurring')
+            return False
+    else:
+        logger.info(f'Activity "{a}" is missing in the process, so the recurring requirement is trivially false')
+
 # timed_alternative: checks if two activities are in a cancel branch relationship, with a timeout before the time_alternative b, if either is missing its false
 def timed_alternative(tree, a, b, time):
     a_ele = exists(tree, a)
