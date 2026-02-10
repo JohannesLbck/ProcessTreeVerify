@@ -3,7 +3,7 @@
 	"R2": "executed_by(send_exist('customer_brochures'), 'customer_advisor')",
 	"R3": "leads_to('conclude custody account', send_exist('custody_account_contract'))",
 	"R4": "executed_by('conduct investment advice', 'securities customer advisor')",
-    "R5": "executed_by('conduct customer identification & legitimation', 'customer advisor') and executed_by('conduct customer identification & legitimation', 'money laundering officer')",
-    "R6": "precedence('conclude custody account', 'conduct customer identification & legitimation')",
-    "R7": "data_value_alternative_eventually_follows('not data.customer.status == \"new\"', 'update customer data')"
+    "R5": "executed_by('conduct customer identification & legitimation', 'customer advisor') and executed_by('legitimiation of suspected customer', 'money laundering officer')",
+    "R6": "precedence('conclude custody account', 'conduct customer identification & legitimation') or precedence('conclude custody account', 'legitimation of suspected customer') and executed_by('conclude custody account', 'customer advisor') and condition_eventually_follows('data.customer_status == \"untrusted\"', 'legitimation of suspected customer')",
+    "R7": "condition_eventually_follows('not data.customer.status == \"new\"', 'update customer data')"
 }

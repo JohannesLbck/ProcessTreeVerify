@@ -1,5 +1,6 @@
 {
-	"R1": "data_value_alternative_eventually_follows('data.state == \"new\"', 'identity check')",
+	"R1": "condition_eventually_follows('data.state == \"new\"', 'identity check')",
 	"R2": "exists('initiate account')",
-	"R3": "data_value_alternative_eventually_follows('data.special_allowance', 'Accept Empty Initial Balance')"
+	"R3": "condition_directly_follows('data.balance < 0 and not data.special_allowance', 'send warning')",
+	"R4": "condition_eventually_follows('data.special_allowance', 'Accept Empty Initial Balance')"
 }

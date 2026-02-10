@@ -1,4 +1,4 @@
 {
-	"R1": "loop('check document management system')",
+	"R1": "recurring('check for new document in DMS', '10518984 ') and activity_receives('check for new document in DMS', 'checklist completed and signed by Tax Manager and Financial Controller')",
 	"R2": "leads_to('create resolution proposal', 'analyse reports') and activity_receives('create resolution proposal', 'resolution_proposal') and activity_receives('generate consultative report', 'report_cb') and activity_receives('generate legal report', 'report_ld') and exists('analyse reports') and executed_by_return('analyse reports') == executed_by_return('create resolution proposal')"
 }

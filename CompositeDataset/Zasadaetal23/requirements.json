@@ -1,9 +1,9 @@
 {
-	"R1": "The customer data must be received before the individual risk assessment can  take place",
+	"R1": "The customer data must be received before the individual risk assessment can take place",
 	"R2": "The customer advisor must provide the two obligatory brochures WpHG Customer  Information and the Basic Information Securities and Capital Investment",
 	"R3": "After concluding the custody account contract, the customer legitimation and the  account documents need to be send to market support.",
-	"R4": "The investment advice needs to be conducted by a customer advisor with a  securities competence of level C or above.",
-        "R5": "The customer identification and legitimation must be handled by the customer advisor, while suspected cases of money laundering must be checked by an antimoney-laundering officer.",
-        "R6": "Before concluding a custody-account contract, the customer advisor needs to wait  until the suspected case of anti-money laundering is resolved.",
-        "R7": "The customer information must be updated with every future customer contact."
+	"R4": "The investment advice needs to be conducted by a customer advisor with a securities competence of level C or above.",
+    "R5": "The customer identification and legitimation must be handled by the customer advisor, while suspected cases of money laundering must be checked by an antimoney-laundering officer.",
+    "R6": "Before concluding a custody-account contract, the customer advisor needs to wait until the suspected case of anti-money laundering is resolved.",
+    "R7": "The customer information must be updated with every future customer contact."
 }

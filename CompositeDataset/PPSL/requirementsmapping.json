@@ -1,6 +1,6 @@
 {
 	"R1": "precedence('Close Bill', 'Report Order')",
-	"R2": "precedence('Ship', 'Test Quality')",
+	"R2": "precedence('Ship', 'Test Quality') and leads_to('production step', 'Test Quality')",
 	"R3": "precedence('Close Bill', 'Report Payment') or precedence('Close Bill', 'Report Rejected Order') and leads_to('Receive Payment', 'Report Payment')",
 	"R4": "leads_to('Fill Order', 'Ship') and leads_to('Fill Order', 'Send Invoice')"
 }

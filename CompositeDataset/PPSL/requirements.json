@@ -2,5 +2,5 @@
 	"R1": "Before an order is being closed, records of the received orders have to be made.",
 	"R2": "After each production action a quality check has to be performed prior to delivery.",
 	"R3": "Before an order is being closed, either records of payments made or records of the fact that the order was rejected have to be taken. Each payment received shall be reported.",
-	"R4": "When an order is filled, a product has to be shipped and an invoice has to be sent.",
+	"R4": "When an order is filled, a product has to be shipped and an invoice has to be sent."
 }

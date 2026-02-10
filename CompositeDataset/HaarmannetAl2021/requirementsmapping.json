@@ -1,7 +1,7 @@
 {
-	"R1": "data_value_alternative_directly_follows('data.status == \"rejected\"', 'terminate')",
+	"R1": "condition_directly_follows('data.status == \"rejected\"', 'terminate')",
 	"R2": "precedence('close case', 'finalize translation')",
-	"R3": "not data_value_alternative_eventually_follows('data.alignment.status == \"unverified\"', 'update translation memory automatically')",
+	"R3": "not condition_eventually_follows('data.alignment.status == \"unverified\"', 'update translation memory automatically')",
 	"R4": "leads_to_absence('translate segment', 'create segments')",
-	"R5": "data_value_alternative_eventually_follows('data.status ==\"accepted\"', 'update translation memory manually', 'global') or data_value_alternative_eventually_follows('data.status == \"accepted\"','update_translation memory automatically', 'global')"
+	"R5": "condition_eventually_follows('data.status ==\"accepted\"', 'update translation memory manually', 'global') or condition_eventually_follows('data.status == \"accepted\"','update_translation memory automatically', 'global')"
 }

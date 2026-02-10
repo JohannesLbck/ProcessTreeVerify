@@ -1,5 +1,5 @@
 {
-	"R1": "not data_alternative_eventually_follows('not data.authenticated, 'Unlock screen', 'global')",
+	"R1": "not condition_eventually_follows('not data.authenticated, 'Unlock screen', 'global')",
 	"R2": "exists('activate screeen lock')",
 	"R3": "exists('automatic screen lock') and timed_alternative('automatic screen lock', 'user input', 60')"
 }

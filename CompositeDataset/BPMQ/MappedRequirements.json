@@ -1,8 +1,8 @@
 {
 	"R1": "exists('obtain respondent bank annual report') and exists('analyze respondent bank annual report')",
-	"R2": "data_value_alternative_eventually_follows('not data.evaluation', 'add respondent bank to blacklist')",
-	"R3": "data_value_alternative_directly_follows('data.risk', 'terminate')",
-	"R4": "data_value_alternative_eventually_follows('data.evaluation_extra', 'conduct due diligence study')",
-	"R5": "data_value_alternative_eventually_follows('data.respondent_bank_rating == \"rejected\" ' , 'terminate')",
+	"R2": "condition_eventually_follows('not data.evaluation', 'add respondent bank to blacklist')",
+	"R3": "condition_directly_follows('data.risk', 'terminate')",
+	"R4": "condition_eventually_follows('data.evaluation_extra', 'conduct due diligence study')",
+	"R5": "condition_eventually_follows('data.respondent_bank_rating == \"rejected\" ' , 'terminate')",
 	"R6": "precedence('open bank account', 'check respondent bank certificate')"
 }
