@@ -27,6 +27,7 @@ import assurancelogger
 import xml.etree.ElementTree as ET
 import requests
 import yaml
+import uuid
 
 from LogHandler import LogHandler
 from fastapi import FastAPI, File, UploadFile, Request, Form
@@ -42,7 +43,8 @@ from verificationAST import verify
 url = "https://cpee.org/comp-log/receiver/"
 
 headers = {
-        "Content-Type": "application/x-yaml"
+        "Content-Type": "application/x-yaml",
+        "Content-ID": "events"
         }
 
 class Model(BaseModel):
@@ -72,8 +74,10 @@ async def main():
 log = []
 @app.post("/Subscriber")
 async def Subscriber(request: Request):
+    call_id = str(uuid.uuid4())
     async with request.form() as form:
         notification = json.loads(form["notification"])
+        print(notification)
         hash_t.insert(notification["instance-uuid"], notification)
         # Start Logging 
         handler = LogHandler(log)
@@ -122,12 +126,13 @@ async def Subscriber(request: Request):
         logger.info(f"Currently missing activities for the process are: {logger.get_missing_activities()}")
         logger.reset_activities()
         logger.reset_missing_activities()
-        xes_log = transform_log(log, notification["instance-uuid"])
+        xes_log = transform_log(log, call_id, notification["instance-uuid"])
         log.clear()
         yaml_log= yaml.dump_all(
             xes_log,
             sort_keys=False,
-            default_flow_style=False
+            default_flow_style=False,
+            explicit_start=True
         )
         print(yaml_log)
         response = requests.post(url, data = yaml_log.encode("utf-8"), headers=headers)

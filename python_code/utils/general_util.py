@@ -20,7 +20,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def transform_log(log, cpee_instance = "local testing"):
+def transform_log(log, call_id = "local testing", cpee_instance = "local testing"):
     instance = None
     event_log = []
     for msg in log:
@@ -38,6 +38,7 @@ def transform_log(log, cpee_instance = "local testing"):
             "concept:instance": instance,
             "concept:name": pattern,
             "id:id": module,
+            "ptv:call_uuid": call_id,
             "ptv:activity_uuid": hash(instance+pattern+module),
             "cpee:instance": cpee_instance, 
             "lifecycle:transition": lifecycle,
