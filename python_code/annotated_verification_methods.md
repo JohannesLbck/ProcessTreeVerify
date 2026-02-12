@@ -189,6 +189,16 @@ Enforces a maximum time between activities `a` and `b`, optionally with alternat
 
 **Returns:** Boolean.
 
+### recurring(tree, a, t)
+Checks if activity `a` recurs at the specified time t interval within a loop.
+
+**Parameters:**
+- `tree`: The XML tree.
+- `a`: Activity label.
+- `t`: Time interval for recurrence.
+
+**Returns:** Boolean.
+
 ## Data Methods
 
 ### send_exist(tree, data)
