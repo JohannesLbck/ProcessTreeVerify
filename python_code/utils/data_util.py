@@ -24,22 +24,13 @@ data_decision_tags= [ ".//ns0:loop", ".//ns0:alternative"]
 
 logger = logging.getLogger(__name__)
 
-
-def rescue_dataobjects(tree):
-    return_list = []
-    for call in tree.findall(".//ns0:call", namespace):
-        if not call.attrib['endpoint'] == 'timeout':
-            objects = activity_data_checks(tree, call)
-            for occurence in objects["rescue"]:
-                return_list.append(occurence)
-    return return_list
-
 ## Data_objects, Finds all dataobjects, returns a list of triples with each triple being (path, sends, receives) labels can appear multiple times if they appear multiple times in the process
 def data_objects(tree):
     return_list = []
     for call in tree.findall(".//ns0:call", namespace):
         send_list = []
         receive_list = []
+        rescue_list = []
         if not call.attrib['endpoint'] == 'timeout':
             objects = activity_data_checks(tree, call)
             for occurence in objects["prepare"]:
@@ -48,7 +39,9 @@ def data_objects(tree):
                 send_list.append(occurence)
             for occurence in objects["finalize"]:
                 receive_list.append(occurence)
-            return_list.append((call, send_list, receive_list))
+            for occurence in objects["rescue"]:
+                rescue_list.append(occurence)
+            return_list.append((call, send_list, receive_list, rescue_list))
     return return_list 
 
 def parse_data_access(input_string):
@@ -223,7 +216,7 @@ def condition_impacts(tree, condition):
     dobjects = data_objects(tree)
     impacts = []
     for call in dobjects:
-        for obj in call[2]:
+        for obj in call[2]+call[3]:
             if call[0] in impacts:
                 continue
             for data in tobjects:

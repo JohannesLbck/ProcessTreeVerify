@@ -77,7 +77,6 @@ async def Subscriber(request: Request):
     call_id = str(uuid.uuid4())
     async with request.form() as form:
         notification = json.loads(form["notification"])
-        print(notification)
         hash_t.insert(notification["instance-uuid"], notification)
         # Start Logging 
         handler = LogHandler(log)
@@ -100,7 +99,6 @@ async def Subscriber(request: Request):
             logger.info("No save attribute was passed, previous version will only be stored in memory and not written to disk")
             #logger.info("If a save attribute was passed, and this message still shows, there is a internal server error")
         config.set_id(notification["instance"])
-        print(f"What is {config.get_id()}")
         requirements = parse_requirements(req)
         xml = ET.fromstring(notification["content"]["description"])
         xml = add_start_end(xml)
@@ -134,7 +132,7 @@ async def Subscriber(request: Request):
             default_flow_style=False,
             explicit_start=True
         )
-        print(yaml_log)
+        #print(yaml_log)
         response = requests.post(url, data = yaml_log.encode("utf-8"), headers=headers)
         print("Status:", response.status_code)
         print("Response:", response.text)

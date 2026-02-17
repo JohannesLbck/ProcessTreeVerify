@@ -37,6 +37,7 @@ VERIFICATION_FUNCTIONS = {
     "by_due_date_annotated": by_due_date_annotated,
     "by_due_date_explicit": by_due_date_explicit,
     "by_due_date": by_due_date,
+    "recurring": recurring,
     "max_time_between": max_time_between,
     "data_value_alternative": condition,
     "data_value_alternative_directly_follows": condition_directly_follows,
@@ -47,6 +48,8 @@ VERIFICATION_FUNCTIONS = {
     "data_leads_to_absence": data_leads_to_absence,
     "loop": loop,
     "timed_alternative": timed_alternative,
+    "failure_directly_follows": failure_directly_follows,
+    "failure_eventually_follows": failure_eventually_follows,
 }
 
 logger = logging.getLogger(__name__)

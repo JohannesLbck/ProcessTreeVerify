@@ -15,7 +15,6 @@
 
 import logging
 import re
-from python_code.utils.data_util import rescue_dataobjects
 from share import config
 #from hashmap import constraints_t # Future Work :) 
 import xml.etree.ElementTree as ET
@@ -109,8 +108,8 @@ def directly_follows(tree, a, b):
 def leads_to(tree, a, b):
     apath = exists(tree, a)
     bpath = exists(tree, b)
-    if apath:
-        if bpath:
+    if apath is not None:
+        if bpath is not None:
             compare = compare_ele(tree, apath, bpath)
             if compare == 0:
                 logger.info(f'Activity "{a}" and Activity "{b}" are on different exclusive branches')
@@ -160,7 +159,6 @@ def precedence(tree, a, b):
             elif compare == 2:
                 logger.info(f'Activity "{b}" was found before "{a}". Ensuring that {b} is not on an exclusive branch which could lead to violations in some traces')
                 ancestors_a, ancestors_b, shared = get_shared_ancestors(tree, a_ele, b_ele)
-                print(shared)
                 if any(elem.tag.endswith("choose") for elem in ancestors_b):
                     LCA = shared[0].tag
                     if LCA.endswith("alternative") or LCA.endswith("otherwise"):
@@ -554,9 +552,9 @@ def condition_directly_follows(tree, condition , a):
             if ele == apath:
                 parent_map = {c:p for p in tree.iter() for c in p}
                 logger.info(f'Activity "{a}" directly followed the data_condition "{condition}"')
-                if len(impacts) < 0:
+                if len(impacts) == 0:
                     logger.info(f'Found no activity that impacts the condition, so the branch has to be the first branch to directly follow')
-                    return siblings(exists("Start Activity"), parent_map[branch], parent_map)
+                    return siblings(exists(tree, "Start Activity"), parent_map[branch], parent_map)
                 else:
                     logger.info(f'Comparing if the branch directly follows after the condition is impacted')
                     return siblings(impacts[0], parent_map[branch], parent_map)
@@ -595,7 +593,8 @@ def failure_eventually_follows(tree, a, b):
     bpath = exists(tree, b)
     if apath is not None:
         if bpath is not None:
-            for data_object in rescue_dataobjects(apath):
+            dataobjects = activity_data_checks(tree,apath)
+            for data_object in dataobjects["rescue"]:
                 condition = f"data.{data_object}"
                 logger.info(f'Found a dataobject "{data_object}" that is used in a rescue of "{a}", checking if there is a branch with condition: "{condition}" that eventually leads to "{b}"')
                 if condition_eventually_follows(tree, condition, b):
@@ -618,7 +617,8 @@ def failure_directly_follows(tree, a, b):
     bpath = exists(tree, b)
     if apath is not None:
         if bpath is not None:
-            for data_object in rescue_dataobjects(apath):
+            dataobjects = activity_data_checks(tree, apath)
+            for data_object in dataobjects["rescue"]:
                 condition = f"data.{data_object}"
                 logger.info(f'Found a dataobject "{data_object}" that is used in a rescue of "{a}", checking if there is a branch with condition: "{condition}" that directly leads to "{b}"')
                 if condition_directly_follows(tree, condition, b):
