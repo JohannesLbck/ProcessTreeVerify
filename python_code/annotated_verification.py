@@ -588,6 +588,14 @@ def condition_directly_follows(tree, condition , a):
     return False
 
 
+## activity failure eventually follows: If an activity a fails then b has to be executed. Checks for existence of a and b and then checks if a has a dataobject rescue that then has to exist in a condition towards a branch b
+def activity_failure_eventually_follows():
+    pass
+
+def activity_failure_directly_follows():
+    pass
+
+
 ## Eventually follows a data condition. The default here is to check in the same branch (see scope = "branch") if the scope is said to global it checks anywhere after the branch as well 
 def condition_eventually_follows(tree, condition, a, scope = "branch"):
     branch = condition_finder(tree, condition)
