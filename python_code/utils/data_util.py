@@ -24,6 +24,16 @@ data_decision_tags= [ ".//ns0:loop", ".//ns0:alternative"]
 
 logger = logging.getLogger(__name__)
 
+
+def rescue_dataobjects(tree):
+    return_list = []
+    for call in tree.findall(".//ns0:call", namespace):
+        if not call.attrib['endpoint'] == 'timeout':
+            objects = activity_data_checks(tree, call)
+            for occurence in objects["rescue"]:
+                return_list.append(occurence)
+    return return_list
+
 ## Data_objects, Finds all dataobjects, returns a list of triples with each triple being (path, sends, receives) labels can appear multiple times if they appear multiple times in the process
 def data_objects(tree):
     return_list = []
@@ -97,7 +107,10 @@ def activity_data_checks(tree, target):
     finalize = target.find(".//ns0:finalize", namespace)
     if finalize is not None:
         finalize = finalize.text
-    return { "prepare": parse_data_access(prepare), "arguments": parse_data_access(arguments_text), "finalize": parse_data_access(finalize)}
+    rescue = target.find(".//ns0:rescue", namespace)
+    if rescue is not None:
+        rescue = rescue.text
+    return { "prepare": parse_data_access(prepare), "arguments": parse_data_access(arguments_text), "finalize": parse_data_access(finalize), "rescue": parse_data_access(rescue)}
 
 def get_default_branch(tree, target):
     target_found = False

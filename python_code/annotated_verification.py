@@ -15,6 +15,7 @@
 
 import logging
 import re
+from python_code.utils.data_util import rescue_dataobjects
 from share import config
 #from hashmap import constraints_t # Future Work :) 
 import xml.etree.ElementTree as ET
@@ -589,11 +590,50 @@ def condition_directly_follows(tree, condition , a):
 
 
 ## activity failure eventually follows: If an activity a fails then b has to be executed. Checks for existence of a and b and then checks if a has a dataobject rescue that then has to exist in a condition towards a branch b
-def activity_failure_eventually_follows():
-    pass
+def failure_eventually_follows(tree, a, b):
+    apath = exists(tree, a)
+    bpath = exists(tree, b)
+    if apath is not None:
+        if bpath is not None:
+            for data_object in rescue_dataobjects(apath):
+                condition = f"data.{data_object}"
+                logger.info(f'Found a dataobject "{data_object}" that is used in a rescue of "{a}", checking if there is a branch with condition: "{condition}" that eventually leads to "{b}"')
+                if condition_eventually_follows(tree, condition, b):
+                    logger.info(f'Activity "{b}" eventually follows the failure of "{a}" through the dataobject "{data_object}"')
+                    return True
+            logger.info(f'No dataobject in rescue of "{a}" is used in a branch condition, so failure eventually follows can not be guaranteed')
+            return False
+        else:
+            logger.add_missing_activity(b)
+            logger.info(f'Activity "{b}" is missing in the process, so failure eventually follows can not be guaranteed')
+            return False
+    else:
+        logger.add_missing_activity(a)
+        logger.info(f'Activity "{a}" is missing in the process, so failure eventually follows is trivially true')
+        return True
 
-def activity_failure_directly_follows():
-    pass
+## activity failure directly follows: If an activity a fails then b has to be executed directly after. Checks for existence of a and b and then checks if a has a dataobject rescue that then has to exist in a condition towards a branch b that directly follows
+def failure_directly_follows(tree, a, b):
+    apath = exists(tree, a)
+    bpath = exists(tree, b)
+    if apath is not None:
+        if bpath is not None:
+            for data_object in rescue_dataobjects(apath):
+                condition = f"data.{data_object}"
+                logger.info(f'Found a dataobject "{data_object}" that is used in a rescue of "{a}", checking if there is a branch with condition: "{condition}" that directly leads to "{b}"')
+                if condition_directly_follows(tree, condition, b):
+                    logger.info(f'Activity "{b}" directly follows the failure of "{a}" through the dataobject "{data_object}"')
+                    return True
+            logger.info(f'No dataobject in rescue of "{a}" is used in a branch condition, so failure directly follows can not be guaranteed')
+            return False
+        else:
+            logger.add_missing_activity(b)
+            logger.info(f'Activity "{b}" is missing in the process, so failure directly follows can not be guaranteed')
+            return False
+    else:
+        logger.add_missing_activity(a)
+        logger.info(f'Activity "{a}" is missing in the process, so failure directly follows is trivially true')
+        return True
 
 
 ## Eventually follows a data condition. The default here is to check in the same branch (see scope = "branch") if the scope is said to global it checks anywhere after the branch as well 
