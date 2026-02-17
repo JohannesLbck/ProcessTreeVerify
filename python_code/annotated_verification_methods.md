@@ -279,3 +279,25 @@ Checks if the condition does not lead to activity `a`.
 - `a`: Activity label.
 
 **Returns:** Boolean.
+
+## Failure Handling Methods
+
+### failure_eventually_follows(tree, a, b)
+Checks if activity `b` eventually follows when activity `a` fails by examining rescue data objects and their usage in branch conditions.
+
+**Parameters:**
+- `tree`: The XML tree.
+- `a`: Activity label that may fail.
+- `b`: Activity label that should follow the failure.
+
+**Returns:** Boolean.
+
+### failure_directly_follows(tree, a, b)
+Checks if activity `b` directly follows when activity `a` fails by examining rescue data objects and their usage in branch conditions.
+
+**Parameters:**
+- `tree`: The XML tree.
+- `a`: Activity label that may fail.
+- `b`: Activity label that should directly follow the failure.
+
+**Returns:** Boolean.
