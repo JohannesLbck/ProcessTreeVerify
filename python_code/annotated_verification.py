@@ -453,9 +453,10 @@ def max_time_between(tree, a, b, time, c = None):
 
 
 ## Data
-## Send Exist: Checks if any activity in tree sends data data, returns said activity or None, currently returns only the first
+## Send Exist: Checks if any activity in tree sends data data, returns those activity as a list or None
 def send_exist(tree, data):
     dataobjects = data_objects(tree)
+    returnlist = []
     for call in dataobjects:
         for data_object in call[1]:
             if data_object == data:
@@ -463,12 +464,16 @@ def send_exist(tree, data):
                 if label is not None:
                     label = label.text
                 logger.info(f'found activity"{label}" which sends dataobject "{data}"')
-                return call[0]
-    logger.info(f'did not find any activity which sends dataobject "{data}"')
-    return None
-## Receive Exist: Checks if any activity in tree receives data data, returns said activity or None
+                returnlist.append(call[0])
+    if len(returnlist) > 0:
+        return returnlist
+    else:
+        logger.info(f'did not find any activity which sends dataobject "{data}"')
+        return None
+## Receive Exist: Checks if any activity in tree receives data data, returns those activities or None
 def receive_exist(tree, data):
     dataobjects = data_objects(tree)
+    returnlist = []
     for call in dataobjects:
         for data_object in call[2]:
             if data_object == data:
@@ -476,9 +481,12 @@ def receive_exist(tree, data):
                 if label is not None:
                     label = label.text
                 logger.info(f'found activity at path "{call[0]}" with label "{label}" which receives dataobject {data}')
-                return call[0]
-    logger.info(f'did not find any activity which receives dataobject "{data}"')
-    return None
+                returnlist.append(call[0])
+    if len(returnlist) > 0:
+        return returnlist
+    else
+        logger.info(f'did not find any activity which receives dataobject "{data}"')
+        return None
 def activity_sends(tree, a, data):
     apath = exists(tree, a)
     if apath is not None:
