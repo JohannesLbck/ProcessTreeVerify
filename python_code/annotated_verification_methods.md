@@ -202,22 +202,22 @@ Checks if activity `a` recurs at the specified time t interval within a loop.
 ## Data Methods
 
 ### send_exist(tree, data)
-Checks if any activity sends the given data object and returns the activity element or None.
+Checks if any activity sends the given data object and returns a list of activity elements or None.
 
 **Parameters:**
 - `tree`: The XML tree.
 - `data`: Data object name.
 
-**Returns:** Activity element or None.
+**Returns:** List of activity elements if found, None otherwise.
 
 ### receive_exist(tree, data)
-Checks if any activity receives the given data object and returns the activity element or None.
+Checks if any activity receives the given data object and returns a list of activity elements or None.
 
 **Parameters:**
 - `tree`: The XML tree.
 - `data`: Data object name.
 
-**Returns:** Activity element or None.
+**Returns:** List of activity elements if found, None otherwise.
 
 ### activity_sends(tree, a, data)
 Checks if activity `a` sends the given data object.
