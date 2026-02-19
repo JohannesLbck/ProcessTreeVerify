@@ -484,7 +484,7 @@ def receive_exist(tree, data):
                 returnlist.append(call[0])
     if len(returnlist) > 0:
         return returnlist
-    else
+    else:
         logger.info(f'did not find any activity which receives dataobject "{data}"')
         return None
 def activity_sends(tree, a, data):
