@@ -454,7 +454,7 @@ def max_time_between(tree, a, b, time, c = None):
 
 ## Data
 ## Send Exist: Checks if any activity in tree sends data data, returns those activity as a list or None
-def send_exist(tree, data):
+def send_exist(tree, data, complete = False):
     dataobjects = data_objects(tree)
     returnlist = []
     for call in dataobjects:
@@ -466,12 +466,15 @@ def send_exist(tree, data):
                 logger.info(f'found activity"{label}" which sends dataobject "{data}"')
                 returnlist.append(call[0])
     if len(returnlist) > 0:
-        return returnlist
+        if complete:
+            return returnlist
+        else:
+            return returnlist[0]
     else:
         logger.info(f'did not find any activity which sends dataobject "{data}"')
         return None
 ## Receive Exist: Checks if any activity in tree receives data data, returns those activities or None
-def receive_exist(tree, data):
+def receive_exist(tree, data, complete = False):
     dataobjects = data_objects(tree)
     returnlist = []
     for call in dataobjects:
@@ -483,7 +486,10 @@ def receive_exist(tree, data):
                 logger.info(f'found activity at path "{call[0]}" with label "{label}" which receives dataobject {data}')
                 returnlist.append(call[0])
     if len(returnlist) > 0:
-        return returnlist
+        if complete:
+            return returnlist
+        else:
+            return returnlist[0]
     else:
         logger.info(f'did not find any activity which receives dataobject "{data}"')
         return None
