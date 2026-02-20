@@ -25,8 +25,8 @@ Activity labels, resources and data names are strings. Time values are seconds o
 - `recurring(tree, a, t)`: bool — `a` recurs every `t` in a loop.
 
 ## Data
-- `send_exist(tree, data)`: list|None — list of activities sending `data`.
-- `receive_exist(tree, data)`: list|None — list of activities receiving `data`.
+- `send_exist(tree, data, complete=False)`: element|list|None — activity element(s) sending `data` (first matching if `complete=False`, complete list if `complete=True`).
+- `receive_exist(tree, data, complete=False)`: element|list|None — activity element(s) receiving `data` (first matching if `complete=False`, complete list if `complete=True`).
 - `activity_sends(tree, a, data)`: bool — `a` sends `data`.
 - `activity_receives(tree, a, data)`: bool — `a` receives `data`.
 - `condition_directly_follows(tree, condition, a)`: bool — `a` directly follows when `condition` holds.
