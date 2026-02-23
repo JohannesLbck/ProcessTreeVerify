@@ -146,28 +146,8 @@ Enforces a minimum time between activities `a` and `b`, optionally with alternat
 
 **Returns:** Boolean.
 
-### by_due_date_annotated(tree, a, timestamp)
-Checks if activity `a` has a due date annotation matching or before the timestamp.
-
-**Parameters:**
-- `tree`: The XML tree.
-- `a`: Activity label.
-- `timestamp`: Due date timestamp.
-
-**Returns:** Boolean.
-
-### by_due_date_explicit(tree, a, timestamp)
-Checks if the due date for activity `a` is enforced explicitly in the process.
-
-**Parameters:**
-- `tree`: The XML tree.
-- `a`: Activity label.
-- `timestamp`: Due date timestamp.
-
-**Returns:** Boolean.
-
 ### by_due_date(tree, a, timestamp, c=None)
-Checks due date enforcement via annotation or explicit means, optionally with alternative `c`.
+Checks due date enforcement, first via explicit means then via annotation, optionally with alternative `c`.
 
 **Parameters:**
 - `tree`: The XML tree.
