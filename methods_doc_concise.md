@@ -2,14 +2,14 @@
 Activity labels, resources and data names are strings. Time values are seconds or descriptive strings.
 
 ## Control Flow
-- `exists(tree, a)`: element|None — is activity `a` present?
+- `exists(tree, a)`: element|None — does activity `a` occur?
 - `absence(tree, a)`: bool — `a` absent?
 - `loop(tree, a)`: element|None — `a` in a loop?
-- `directly_follows(tree, a, b)`: bool — `b` follows `a` immediately.
-- `leads_to(tree, a, b)`: bool — `a` occurs before `b` (ordering).
-- `precedence(tree, a, b)`: bool — `b` must occur before `a`.
-- `leads_to_absence(tree, a, b)`: bool — `a` exists and `b` does not occur after it.
-- `precedence_absence(tree, a, b)`: bool — `a` exists and `b` does not occur before it.
+- `directly_follows(tree, a, b)`: bool — if `a` exists, `b` follows immediately.
+- `leads_to(tree, a, b)`: bool — if `a` exists, `b` must occur after it.
+- `precedence(tree, a, b)`: bool — if `a` exists, `b` must occur before it.
+- `leads_to_absence(tree, a, b)`: bool — if `a` exists, `b` does not occur after it.
+- `precedence_absence(tree, a, b)`: bool — if `a` exists, `b` does not occur before it.
 - `parallel(tree, a, b)`: bool — `a` and `b` are parallel.
 
 ## Resource
@@ -21,7 +21,7 @@ Activity labels, resources and data names are strings. Time values are seconds o
 - `timed_alternative(tree, a, b, time)`: bool — `b` acts as timeout alternative to `a`.
 - `min_time_between(tree, a, b, time, c=None)`: bool — enforce minimum delay (optional alternative `c`).
 - `max_time_between(tree, a, b, time, c=None)`: bool — enforce maximum delay (optional alternative `c`).
-- `by_due_date(tree, a, timestamp, c=None)`: bool — unified due-date check (optional alternative `c`).
+- `by_due_date(tree, a, timestamp, c=None)`: bool — due-date check (optional alternative `c`).
 - `recurring(tree, a, t)`: bool — `a` recurs every `t` in a loop.
 
 ## Data
@@ -34,5 +34,5 @@ Activity labels, resources and data names are strings. Time values are seconds o
 - `data_leads_to_absence(tree, condition, a)`: bool — `condition` should not lead to `a`.
 
 ## Failure
-- `failure_eventually_follows(tree, a, b)`: bool — `b` follows if `a` fails (rescue handling).
+- `failure_eventually_follows(tree, a, b)`: bool — `b` follows if `a` fails.
 - `failure_directly_follows(tree, a, b)`: bool — `b` directly follows failure of `a`.
