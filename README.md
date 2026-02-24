@@ -8,7 +8,9 @@ The prompts used for generating ASTs out of Natural Language / Textual Process D
 
 The dataset used for evaluation as XML files is in the CompositeDataset directory which also contains an additional README explaining how the dataset was createtd. The XML files already contain the requirement ASTs so they can be loaded into the CPEE and verified as described in (B). Furthermore they can be directly tested according to (A) using the already loaded models which can be found [here](https://cpee.org/hub/?stage=development&dir=Staff.dir/Loebbi.dir/Compliance.dir/CompositeDataSet.dir/).
 
-The complete Documentation of the PTV can be found in the  [annotated_verification_methods.md](https://github.com/JohannesLbck/ProcessTreeVerify/blob/master/python_code/annotated_verification_methods.md) file.
+The complete Documentation of the PTV can be found in the [annotated_verification_methods.md](https://github.com/JohannesLbck/ProcessTreeVerify/blob/master/python_code/annotated_verification_methods.md) file.
+
+A documentation of the XES-compatible compliance logs [log_doc.md](https://github.com/JohannesLbck/ProcessTreeVerify/blob/master/log_doc.md) file.
 
 ## (A) Testing with existing Processes
 
