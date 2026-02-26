@@ -74,6 +74,9 @@ To actually launch the project follow these steps:
 subscriber.py also contains a little script (def run\_server():) to ensure that the subscriber is started as a daemon. We are unsure how this will work on Windows/Mac so if you encounter any issues on these systems you can remove that codepiece and use the "normal" way to run fastapi rest services using `uvicorn.run subscriber:app port=9321`. If you still encounter any issues on these systems you can contact us or just try out the example scripts presented in Section (C).
 Technially you can also set up a local deployment of the CPEE as well, but this can be somewhat challenging. For instructions on a locally deployed CPEE we refer to the official documentation at [cpee.org].
 
+## Comparative Eval
+Guidance on how to replicate the results of the comparative evaluation is in the ComparativeEval directory ReadMe file.
+
 ## General Guidance & Best Practices
 
 ### Process Modeling Tips
