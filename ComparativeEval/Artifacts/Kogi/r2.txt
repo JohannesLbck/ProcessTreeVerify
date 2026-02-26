@@ -1,0 +1,119 @@
+{
+  "actors": [
+    {
+      "id": "b275a792-664c-4731-98ae-c190560cb117",
+      "text": "Process Model",
+      "type": "istar.Actor",
+      "x": 168,
+      "y": 102,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "cb485441-0387-4326-bf1e-4b3e555dca8e",
+          "text": "Compliance Ensured",
+          "type": "istar.Goal",
+          "x": 535,
+          "y": 351,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "7ab1aa74-b5ec-4e82-8c7c-595f7ee03c1f",
+          "text": "qualified questionnaire and interview",
+          "type": "istar.Goal",
+          "x": 621,
+          "y": 418,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "d8e5bf73-a721-4507-89b8-722433b0649d",
+          "text": "Qualified questionnaire and interview",
+          "type": "istar.Quality",
+          "x": 766,
+          "y": 351,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "cbef10b8-d5cb-4ce1-88ef-142a19118c80",
+          "text": "interview and questionnaire by physician",
+          "type": "istar.Task",
+          "x": 900,
+          "y": 390,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "1f99a9d3-eab2-4185-a16a-cf31ea8dc911",
+          "text": "Interview and questionnaire by trained assistant",
+          "type": "istar.Task",
+          "x": 827,
+          "y": 473,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [],
+  "links": [
+    {
+      "id": "c577618b-c43e-4fd0-b058-29d0b5496483",
+      "type": "istar.AndRefinementLink",
+      "source": "7ab1aa74-b5ec-4e82-8c7c-595f7ee03c1f",
+      "target": "cb485441-0387-4326-bf1e-4b3e555dca8e"
+    },
+    {
+      "id": "f6b3caa1-b078-4ae9-aa45-9ab31d005412",
+      "type": "istar.ContributionLink",
+      "source": "7ab1aa74-b5ec-4e82-8c7c-595f7ee03c1f",
+      "target": "d8e5bf73-a721-4507-89b8-722433b0649d",
+      "label": "make"
+    },
+    {
+      "id": "f34921ee-cd95-481f-92ef-326be966a232",
+      "type": "istar.OrRefinementLink",
+      "source": "1f99a9d3-eab2-4185-a16a-cf31ea8dc911",
+      "target": "7ab1aa74-b5ec-4e82-8c7c-595f7ee03c1f"
+    },
+    {
+      "id": "7725e772-7095-44a9-87ea-70a68bc3a49e",
+      "type": "istar.OrRefinementLink",
+      "source": "cbef10b8-d5cb-4ce1-88ef-142a19118c80",
+      "target": "7ab1aa74-b5ec-4e82-8c7c-595f7ee03c1f"
+    }
+  ],
+  "display": {
+    "7ab1aa74-b5ec-4e82-8c7c-595f7ee03c1f": {
+      "width": 101.4666748046875,
+      "height": 48.5
+    },
+    "cbef10b8-d5cb-4ce1-88ef-142a19118c80": {
+      "width": 130.183349609375,
+      "height": 49.5
+    },
+    "1f99a9d3-eab2-4185-a16a-cf31ea8dc911": {
+      "width": 137.183349609375,
+      "height": 63.5
+    }
+  },
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Tue, 10 Feb 2026 09:46:55 GMT",
+  "diagram": {
+    "width": 1160,
+    "height": 700,
+    "customProperties": {
+      "Description": ""
+    }
+  }
+}

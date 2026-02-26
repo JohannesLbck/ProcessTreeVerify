@@ -1,0 +1,474 @@
+{
+  "actors": [
+    {
+      "id": "b275a792-664c-4731-98ae-c190560cb117",
+      "text": "Process Model",
+      "type": "istar.Actor",
+      "x": 168,
+      "y": 42,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "cb485441-0387-4326-bf1e-4b3e555dca8e",
+          "text": "Compliance Ensured",
+          "type": "istar.Goal",
+          "x": 535,
+          "y": 291,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "34515787-16a7-49cd-96c2-14fd1313f620",
+          "text": "Informed Consent Given",
+          "type": "istar.Goal",
+          "x": 469,
+          "y": 123,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "5a2252f4-901f-46cd-b6e6-dba59ab6a8e8",
+          "text": "Give opportunity to restract consent",
+          "type": "istar.Goal",
+          "x": 883,
+          "y": 228,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "3645c33f-8e76-4a85-8d89-87712198879c",
+          "text": "obtain consent",
+          "type": "istar.Task",
+          "x": 667,
+          "y": 114,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "c443d4ca-0a1a-46ba-af37-7119bdbb6c1c",
+          "text": "allow retract consent",
+          "type": "istar.Task",
+          "x": 961,
+          "y": 159,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "1241c5f0-5332-4941-bca9-077da8c5048f",
+          "text": "provide information",
+          "type": "istar.Task",
+          "x": 847,
+          "y": 109,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "7ab1aa74-b5ec-4e82-8c7c-595f7ee03c1f",
+          "text": "qualified questionnaire and interview",
+          "type": "istar.Goal",
+          "x": 621,
+          "y": 358,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "f16f1267-dc20-4f13-95a3-f5650a252ba7",
+          "text": "Consent",
+          "type": "istar.Quality",
+          "x": 580,
+          "y": 202,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "d8e5bf73-a721-4507-89b8-722433b0649d",
+          "text": "Qualified questionnaire and interview",
+          "type": "istar.Quality",
+          "x": 766,
+          "y": 291,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "cbef10b8-d5cb-4ce1-88ef-142a19118c80",
+          "text": "interview and questionnaire by physician",
+          "type": "istar.Task",
+          "x": 900,
+          "y": 330,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "1f99a9d3-eab2-4185-a16a-cf31ea8dc911",
+          "text": "Interview and questionnaire by trained assistant",
+          "type": "istar.Task",
+          "x": 827,
+          "y": 413,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "3a538f45-b9cd-4d58-80ca-4fe4efb96fc4",
+          "text": "Identify abnormalities after blood donation",
+          "type": "istar.Quality",
+          "x": 368,
+          "y": 477,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "8c619800-bea7-4f33-8ff2-2fd1f7824a94",
+          "text": "monitor and report",
+          "type": "istar.Goal",
+          "x": 500,
+          "y": 383,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "9f8c5ceb-92f1-4d34-907e-11cbece1d866",
+          "text": "monitor patient",
+          "type": "istar.Task",
+          "x": 603,
+          "y": 478,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "9b452a99-1fdb-43e9-9808-7bb2f84e314d",
+          "text": "assess donor",
+          "type": "istar.Task",
+          "x": 470,
+          "y": 472,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "8c1a5fc2-c0fc-4c42-b118-8afc0be2425c",
+          "text": "No swap between venepuncture and preparation",
+          "type": "istar.Goal",
+          "x": 395,
+          "y": 313,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "3ee8920f-f485-469a-91af-41f4b94c1070",
+          "text": "prepare for venepuncture",
+          "type": "istar.Task",
+          "x": 225,
+          "y": 267,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "2805e385-1136-4c17-ab4e-3cc29687b511",
+          "text": "venepuncture",
+          "type": "istar.Task",
+          "x": 225,
+          "y": 326,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "1c378247-a84f-4db4-92db-bf55dd50332c",
+          "text": "no additional stress on donor by swapping physician",
+          "type": "istar.Quality",
+          "x": 248,
+          "y": 390,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "f445e17a-1954-4e5c-a952-3939f2a26614",
+          "text": "unfitting donors are rejected",
+          "type": "istar.Quality",
+          "x": 465,
+          "y": 218,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "8abbaeef-e252-4e63-9b0d-ec9c82a8f49e",
+          "text": "Goal",
+          "type": "istar.Goal",
+          "x": 314,
+          "y": 210,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "9e36961c-a06a-4291-92ca-2d8f33a22131",
+          "text": "direct questions",
+          "type": "istar.Task",
+          "x": 168,
+          "y": 198,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "71c42228-4c12-49cc-bfca-b4ee59415c46",
+          "text": "inform of rejection",
+          "type": "istar.Task",
+          "x": 328,
+          "y": 142,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "e4c0467a-ceec-41ba-af80-b303cc7a5569",
+          "text": "interview and questionnaire by physician",
+          "type": "istar.Task",
+          "x": 233,
+          "y": 45,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "cfee0616-4e18-4ac2-a96a-16e599883c9d",
+          "text": "interview and questionnaire by trained assistant",
+          "type": "istar.Task",
+          "x": 328.5,
+          "y": 42,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [],
+  "links": [
+    {
+      "id": "5f6a01c8-381a-4f94-982c-b8f6f9f32715",
+      "type": "istar.AndRefinementLink",
+      "source": "34515787-16a7-49cd-96c2-14fd1313f620",
+      "target": "cb485441-0387-4326-bf1e-4b3e555dca8e"
+    },
+    {
+      "id": "088a71dc-922e-463d-86e8-93becd7c67cf",
+      "type": "istar.AndRefinementLink",
+      "source": "5a2252f4-901f-46cd-b6e6-dba59ab6a8e8",
+      "target": "cb485441-0387-4326-bf1e-4b3e555dca8e"
+    },
+    {
+      "id": "e87c5052-0858-4478-9eea-75f3bc7f9d1e",
+      "type": "istar.OrRefinementLink",
+      "source": "c443d4ca-0a1a-46ba-af37-7119bdbb6c1c",
+      "target": "5a2252f4-901f-46cd-b6e6-dba59ab6a8e8"
+    },
+    {
+      "id": "3c72c808-05f2-4765-963a-35270be21474",
+      "type": "istar.OrRefinementLink",
+      "source": "3645c33f-8e76-4a85-8d89-87712198879c",
+      "target": "34515787-16a7-49cd-96c2-14fd1313f620"
+    },
+    {
+      "id": "c01d0131-c996-49ac-9256-faefd3a78aaa",
+      "type": "istar.OrRefinementLink",
+      "source": "1241c5f0-5332-4941-bca9-077da8c5048f",
+      "target": "3645c33f-8e76-4a85-8d89-87712198879c"
+    },
+    {
+      "id": "e1c8e2de-748a-4211-a399-54de1655a4af",
+      "type": "istar.ContributionLink",
+      "source": "34515787-16a7-49cd-96c2-14fd1313f620",
+      "target": "f16f1267-dc20-4f13-95a3-f5650a252ba7",
+      "label": "make"
+    },
+    {
+      "id": "f81d4cd7-eafc-41a0-9b8f-fd7854814111",
+      "type": "istar.ContributionLink",
+      "source": "5a2252f4-901f-46cd-b6e6-dba59ab6a8e8",
+      "target": "f16f1267-dc20-4f13-95a3-f5650a252ba7",
+      "label": "make"
+    },
+    {
+      "id": "3e5f31ad-2c5e-4c10-8104-539cccc2a463",
+      "type": "istar.AndRefinementLink",
+      "source": "7ab1aa74-b5ec-4e82-8c7c-595f7ee03c1f",
+      "target": "cb485441-0387-4326-bf1e-4b3e555dca8e"
+    },
+    {
+      "id": "bdcc680c-9aa8-4b66-b62e-32fcdfd34ed4",
+      "type": "istar.ContributionLink",
+      "source": "7ab1aa74-b5ec-4e82-8c7c-595f7ee03c1f",
+      "target": "d8e5bf73-a721-4507-89b8-722433b0649d",
+      "label": "make"
+    },
+    {
+      "id": "3d2c181a-17b7-429d-966f-4f2b08bec7cf",
+      "type": "istar.OrRefinementLink",
+      "source": "1f99a9d3-eab2-4185-a16a-cf31ea8dc911",
+      "target": "7ab1aa74-b5ec-4e82-8c7c-595f7ee03c1f"
+    },
+    {
+      "id": "6bbee8a3-6d7a-443e-a2e7-cf2d79ed09b4",
+      "type": "istar.OrRefinementLink",
+      "source": "cbef10b8-d5cb-4ce1-88ef-142a19118c80",
+      "target": "7ab1aa74-b5ec-4e82-8c7c-595f7ee03c1f"
+    },
+    {
+      "id": "3bd98c10-414e-4735-b0c4-4dcdd79115bc",
+      "type": "istar.ContributionLink",
+      "source": "8c619800-bea7-4f33-8ff2-2fd1f7824a94",
+      "target": "3a538f45-b9cd-4d58-80ca-4fe4efb96fc4",
+      "label": "make"
+    },
+    {
+      "id": "02a14035-e3c7-49f5-9a41-443172daeba5",
+      "type": "istar.AndRefinementLink",
+      "source": "8c619800-bea7-4f33-8ff2-2fd1f7824a94",
+      "target": "cb485441-0387-4326-bf1e-4b3e555dca8e"
+    },
+    {
+      "id": "c8a22dfc-8934-482b-b179-1ec818759f3a",
+      "type": "istar.OrRefinementLink",
+      "source": "9f8c5ceb-92f1-4d34-907e-11cbece1d866",
+      "target": "8c619800-bea7-4f33-8ff2-2fd1f7824a94"
+    },
+    {
+      "id": "1885bce3-32da-4de3-b352-141a00bfe63b",
+      "type": "istar.OrRefinementLink",
+      "source": "9b452a99-1fdb-43e9-9808-7bb2f84e314d",
+      "target": "8c619800-bea7-4f33-8ff2-2fd1f7824a94"
+    },
+    {
+      "id": "239c9eba-04a2-4624-b0af-6d0d4f94cb70",
+      "type": "istar.AndRefinementLink",
+      "source": "3ee8920f-f485-469a-91af-41f4b94c1070",
+      "target": "8c1a5fc2-c0fc-4c42-b118-8afc0be2425c"
+    },
+    {
+      "id": "04d6097c-936b-4c28-949c-35aba6a61626",
+      "type": "istar.AndRefinementLink",
+      "source": "2805e385-1136-4c17-ab4e-3cc29687b511",
+      "target": "8c1a5fc2-c0fc-4c42-b118-8afc0be2425c"
+    },
+    {
+      "id": "fba5892f-f162-4f82-a877-f20a8382d3c8",
+      "type": "istar.AndRefinementLink",
+      "source": "8c1a5fc2-c0fc-4c42-b118-8afc0be2425c",
+      "target": "cb485441-0387-4326-bf1e-4b3e555dca8e"
+    },
+    {
+      "id": "012f6bd4-78ae-42c3-92b2-63916ab97b47",
+      "type": "istar.ContributionLink",
+      "source": "8c1a5fc2-c0fc-4c42-b118-8afc0be2425c",
+      "target": "1c378247-a84f-4db4-92db-bf55dd50332c",
+      "label": "make"
+    },
+    {
+      "id": "6601cba7-4602-468a-b1b9-7313b5d03b05",
+      "type": "istar.ContributionLink",
+      "source": "8abbaeef-e252-4e63-9b0d-ec9c82a8f49e",
+      "target": "f445e17a-1954-4e5c-a952-3939f2a26614",
+      "label": "make"
+    },
+    {
+      "id": "7604fbcf-1f11-42a3-b021-d434eb14581c",
+      "type": "istar.AndRefinementLink",
+      "source": "8abbaeef-e252-4e63-9b0d-ec9c82a8f49e",
+      "target": "8c1a5fc2-c0fc-4c42-b118-8afc0be2425c"
+    },
+    {
+      "id": "ee10c8e6-a6f0-4fad-a8da-bd5e31213123",
+      "type": "istar.AndRefinementLink",
+      "source": "71c42228-4c12-49cc-bfca-b4ee59415c46",
+      "target": "8abbaeef-e252-4e63-9b0d-ec9c82a8f49e"
+    },
+    {
+      "id": "e9fc2ac7-1c14-45c5-b6c6-19d3203a7d76",
+      "type": "istar.AndRefinementLink",
+      "source": "9e36961c-a06a-4291-92ca-2d8f33a22131",
+      "target": "8abbaeef-e252-4e63-9b0d-ec9c82a8f49e"
+    },
+    {
+      "id": "f2eb87e7-12fd-4280-bbe7-e53ec872379a",
+      "type": "istar.OrRefinementLink",
+      "source": "e4c0467a-ceec-41ba-af80-b303cc7a5569",
+      "target": "71c42228-4c12-49cc-bfca-b4ee59415c46"
+    },
+    {
+      "id": "a580924a-e56e-4dec-9b96-c21c3be25529",
+      "type": "istar.OrRefinementLink",
+      "source": "cfee0616-4e18-4ac2-a96a-16e599883c9d",
+      "target": "71c42228-4c12-49cc-bfca-b4ee59415c46"
+    }
+  ],
+  "display": {
+    "34515787-16a7-49cd-96c2-14fd1313f620": {
+      "width": 122.183349609375,
+      "height": 52.5
+    },
+    "5a2252f4-901f-46cd-b6e6-dba59ab6a8e8": {
+      "width": 193.183349609375,
+      "height": 62.5
+    },
+    "3645c33f-8e76-4a85-8d89-87712198879c": {
+      "width": 119.183349609375,
+      "height": 54.5
+    },
+    "7ab1aa74-b5ec-4e82-8c7c-595f7ee03c1f": {
+      "width": 101.4666748046875,
+      "height": 48.5
+    },
+    "cbef10b8-d5cb-4ce1-88ef-142a19118c80": {
+      "width": 130.183349609375,
+      "height": 49.5
+    },
+    "1f99a9d3-eab2-4185-a16a-cf31ea8dc911": {
+      "width": 137.183349609375,
+      "height": 63.5
+    },
+    "3a538f45-b9cd-4d58-80ca-4fe4efb96fc4": {
+      "width": 96.49575805664062,
+      "height": 57.506072998046875
+    },
+    "8c1a5fc2-c0fc-4c42-b118-8afc0be2425c": {
+      "width": 113.4666748046875,
+      "height": 60.5
+    },
+    "1c378247-a84f-4db4-92db-bf55dd50332c": {
+      "width": 130.50599670410156,
+      "height": 88.00912475585938
+    }
+  },
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Tue, 10 Feb 2026 09:31:48 GMT",
+  "diagram": {
+    "width": 1160,
+    "height": 700,
+    "customProperties": {
+      "Description": ""
+    }
+  }
+}

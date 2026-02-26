@@ -1,0 +1,14 @@
+<bpmSpecification>
+	<specificationSets>
+		<specificationSet>
+			<specifications>
+				<specification id="r61" type="AlwaysResponse">
+					<inputElements>
+						<inputElement target="p">c=0</inputElement>
+						<inputElement target="q">p10</inputElement>
+					</inputElements>
+				</specification>
+			</specifications>
+		</specificationSet>
+	</specificationSets>
+</bpmSpecification>

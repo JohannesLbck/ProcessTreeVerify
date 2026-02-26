@@ -1,0 +1,7 @@
+R1 -> R11, R12
+R2 -> No resource notion, no explicit OR notion, no resource notion
+R3 -> No explicit parallel notion, R32
+R4 -> No explicit time notion, no resource notion
+R5 -> No resource notion
+R6 -> R61, R62
+R7 -> No explicit data notion, no explicit data notion

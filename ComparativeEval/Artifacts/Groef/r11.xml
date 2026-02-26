@@ -1,0 +1,14 @@
+<bpmSpecification>
+	<specificationSets>
+		<specificationSet>
+			<specifications>
+				<specification id="r11" type="AlwaysResponse">
+					<inputElements>
+						<inputElement target="p">p3</inputElement>
+						<inputElement target="q">p4</inputElement>
+					</inputElements>
+				</specification>
+			</specifications>
+		</specificationSet>
+	</specificationSets>
+</bpmSpecification>

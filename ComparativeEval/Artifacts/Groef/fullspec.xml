@@ -1,0 +1,38 @@
+<bpmSpecification>
+	<specificationSets>
+		<specificationSet>
+			<specifications>
+				<specification id="r11" type="AlwaysResponse">
+					<inputElements>
+						<inputElement target="p">p3</inputElement>
+						<inputElement target="q">p4</inputElement>
+					</inputElements>
+				</specification>
+				<specification id="r12" type="AlwaysResponse">
+					<inputElements>
+						<inputElement target="p">a=0</inputElement>
+						<inputElement target="q">p5</inputElement>
+					</inputElements>
+				</specification>
+				<specification id="r32" type="AlwaysResponse">
+					<inputElements>
+						<inputElement target="p">b=0</inputElement>
+						<inputElement target="q">p7</inputElement>
+					</inputElements>
+				</specification>
+				<specification id="r61" type="AlwaysResponse">
+					<inputElements>
+						<inputElement target="p">c=0</inputElement>
+						<inputElement target="q">p10</inputElement>
+					</inputElements>
+				</specification>
+				<specification id="r62" type="AlwaysResponse">
+					<inputElements>
+						<inputElement target="p">p10</inputElement>
+						<inputElement target="q">p11</inputElement>
+					</inputElements>
+				</specification>
+			</specifications>
+		</specificationSet>
+	</specificationSets>
+</bpmSpecification>

@@ -123,3 +123,11 @@ BlenderProc/Models/*
 *.pt
 # pid file
 *.pid
+
+# Related Work Repositories
+ComparativeEval/BPMVerification
+ComparativeEval/Kogi-Python
+ComparativeEval/NuSMV-2.7.1-linux64
+
+# Jar files in ComparativeEval
+ComparativeEval/*.jar

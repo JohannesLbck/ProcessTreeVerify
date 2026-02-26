@@ -1,0 +1,95 @@
+{
+  "actors": [
+    {
+      "id": "b275a792-664c-4731-98ae-c190560cb117",
+      "text": "Process Model",
+      "type": "istar.Actor",
+      "x": 168,
+      "y": 42,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "cb485441-0387-4326-bf1e-4b3e555dca8e",
+          "text": "Compliance Ensured",
+          "type": "istar.Goal",
+          "x": 535,
+          "y": 291,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "3a538f45-b9cd-4d58-80ca-4fe4efb96fc4",
+          "text": "Identify abnormalities after blood donation",
+          "type": "istar.Quality",
+          "x": 368,
+          "y": 477,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "8c619800-bea7-4f33-8ff2-2fd1f7824a94",
+          "text": "monitor and report",
+          "type": "istar.Goal",
+          "x": 500,
+          "y": 383,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "9b452a99-1fdb-43e9-9808-7bb2f84e314d",
+          "text": "assess donor",
+          "type": "istar.Task",
+          "x": 470,
+          "y": 472,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [],
+  "links": [
+    {
+      "id": "4ba2617f-5423-40f7-9dac-389e85c697ea",
+      "type": "istar.ContributionLink",
+      "source": "8c619800-bea7-4f33-8ff2-2fd1f7824a94",
+      "target": "3a538f45-b9cd-4d58-80ca-4fe4efb96fc4",
+      "label": "make"
+    },
+    {
+      "id": "22f1de0a-2cb6-4543-8c1f-f896169acd63",
+      "type": "istar.AndRefinementLink",
+      "source": "8c619800-bea7-4f33-8ff2-2fd1f7824a94",
+      "target": "cb485441-0387-4326-bf1e-4b3e555dca8e"
+    },
+    {
+      "id": "18971e28-0065-4b51-a7fb-9b68ab9987f1",
+      "type": "istar.OrRefinementLink",
+      "source": "9b452a99-1fdb-43e9-9808-7bb2f84e314d",
+      "target": "8c619800-bea7-4f33-8ff2-2fd1f7824a94"
+    }
+  ],
+  "display": {
+    "3a538f45-b9cd-4d58-80ca-4fe4efb96fc4": {
+      "width": 96.49575805664062,
+      "height": 57.506072998046875
+    }
+  },
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Tue, 10 Feb 2026 09:47:54 GMT",
+  "diagram": {
+    "width": 1160,
+    "height": 700,
+    "customProperties": {
+      "Description": ""
+    }
+  }
+}

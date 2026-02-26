@@ -1,0 +1,158 @@
+{
+  "actors": [
+    {
+      "id": "b275a792-664c-4731-98ae-c190560cb117",
+      "text": "Process Model",
+      "type": "istar.Actor",
+      "x": 168,
+      "y": 42,
+      "customProperties": {
+        "Description": ""
+      },
+      "nodes": [
+        {
+          "id": "cb485441-0387-4326-bf1e-4b3e555dca8e",
+          "text": "Compliance Ensured",
+          "type": "istar.Goal",
+          "x": 457,
+          "y": 279,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "34515787-16a7-49cd-96c2-14fd1313f620",
+          "text": "Informed Consent Given",
+          "type": "istar.Goal",
+          "x": 469,
+          "y": 123,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "5a2252f4-901f-46cd-b6e6-dba59ab6a8e8",
+          "text": "Give opportunity to restract consent",
+          "type": "istar.Goal",
+          "x": 883,
+          "y": 228,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "3645c33f-8e76-4a85-8d89-87712198879c",
+          "text": "obtain consent",
+          "type": "istar.Task",
+          "x": 667,
+          "y": 114,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "c443d4ca-0a1a-46ba-af37-7119bdbb6c1c",
+          "text": "allow retract consent",
+          "type": "istar.Task",
+          "x": 961,
+          "y": 159,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "1241c5f0-5332-4941-bca9-077da8c5048f",
+          "text": "provide information",
+          "type": "istar.Task",
+          "x": 847,
+          "y": 109,
+          "customProperties": {
+            "Description": ""
+          }
+        },
+        {
+          "id": "f16f1267-dc20-4f13-95a3-f5650a252ba7",
+          "text": "Consent",
+          "type": "istar.Quality",
+          "x": 580,
+          "y": 202,
+          "customProperties": {
+            "Description": ""
+          }
+        }
+      ]
+    }
+  ],
+  "orphans": [],
+  "dependencies": [],
+  "links": [
+    {
+      "id": "c8822ab6-9d13-4dee-891a-430d3ace2d66",
+      "type": "istar.AndRefinementLink",
+      "source": "34515787-16a7-49cd-96c2-14fd1313f620",
+      "target": "cb485441-0387-4326-bf1e-4b3e555dca8e"
+    },
+    {
+      "id": "cc228335-24b1-494a-b01e-0027fa44ed50",
+      "type": "istar.AndRefinementLink",
+      "source": "5a2252f4-901f-46cd-b6e6-dba59ab6a8e8",
+      "target": "cb485441-0387-4326-bf1e-4b3e555dca8e"
+    },
+    {
+      "id": "055461cc-513f-4de2-8b3b-1bbcbbff7e42",
+      "type": "istar.OrRefinementLink",
+      "source": "c443d4ca-0a1a-46ba-af37-7119bdbb6c1c",
+      "target": "5a2252f4-901f-46cd-b6e6-dba59ab6a8e8"
+    },
+    {
+      "id": "04d3c312-556d-49fc-8ab0-ffec42d99647",
+      "type": "istar.OrRefinementLink",
+      "source": "3645c33f-8e76-4a85-8d89-87712198879c",
+      "target": "34515787-16a7-49cd-96c2-14fd1313f620"
+    },
+    {
+      "id": "d034568b-c5e6-4475-aae4-cec0c92b3aaa",
+      "type": "istar.OrRefinementLink",
+      "source": "1241c5f0-5332-4941-bca9-077da8c5048f",
+      "target": "3645c33f-8e76-4a85-8d89-87712198879c"
+    },
+    {
+      "id": "35986c1c-72b8-4718-a0f3-4872e69b93d0",
+      "type": "istar.ContributionLink",
+      "source": "34515787-16a7-49cd-96c2-14fd1313f620",
+      "target": "f16f1267-dc20-4f13-95a3-f5650a252ba7",
+      "label": "make"
+    },
+    {
+      "id": "d7d5942b-c44c-49a2-9305-81388b880752",
+      "type": "istar.ContributionLink",
+      "source": "5a2252f4-901f-46cd-b6e6-dba59ab6a8e8",
+      "target": "f16f1267-dc20-4f13-95a3-f5650a252ba7",
+      "label": "make"
+    }
+  ],
+  "display": {
+    "34515787-16a7-49cd-96c2-14fd1313f620": {
+      "width": 122.183349609375,
+      "height": 52.5
+    },
+    "5a2252f4-901f-46cd-b6e6-dba59ab6a8e8": {
+      "width": 193.183349609375,
+      "height": 62.5
+    },
+    "3645c33f-8e76-4a85-8d89-87712198879c": {
+      "width": 119.183349609375,
+      "height": 54.5
+    }
+  },
+  "tool": "pistar.2.1.0",
+  "istar": "2.0",
+  "saveDate": "Tue, 10 Feb 2026 09:45:40 GMT",
+  "diagram": {
+    "width": 1160,
+    "height": 700,
+    "customProperties": {
+      "Description": ""
+    }
+  }
+}
