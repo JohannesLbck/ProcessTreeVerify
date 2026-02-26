@@ -27,9 +27,10 @@ Obviously, the eval script can also be used with other models/mappings and if us
 
 1. Install NuSMV as described in the BPMVerification ReadMe and on their website
 2. Use the provided CLI tool as described in the BPMVerification ReadMe with the created artifacts
+3. Alternatively, use the benchmark.sh shell script using ./benchmark.sh after making it executable with chmod
 
 ```bash
-java -cp "$CLASSPATH" \
+java -cp "$(printf "%s:" lib/*.jar)" \
     nl.rug.ds.bpm.CommandlineVerifier \
     -p ../Artifacts/Groef/runningexample.pnml \
     -s ../Artifacts/Groef/fullspec.xml \
