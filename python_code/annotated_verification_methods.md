@@ -123,6 +123,8 @@ Returns the first resource executing activity `a`.
 
 ## Time Methods
 
+Times should be passed as seconds if possible. A string is acceptable if the time in the requirement is vague.
+
 ### timed_alternative(tree, a, b, time)
 Checks if activities `a` and `b` are in a timed alternative relationship with the given timeout. This ensures that if `a` takes too long to be executed, `b` is executed as an alternative. For example if a process should terminate if an activity `a` takes too long, then `b` is a terminate.
 
@@ -158,7 +160,7 @@ Checks due date enforcement, first via explicit means then via annotation, optio
 **Returns:** Boolean.
 
 ### max_time_between(tree, a, b, time, c=None)
-Enforces a maximum time between activities `a` and `b`, optionally with alternative `c`.
+Enforces a maximum time between activities `a` and `b`, optionally with alternative `c`. Used if the time between the end events of two activities should not be longer than `time`.
 
 **Parameters:**
 - `tree`: The XML tree.
