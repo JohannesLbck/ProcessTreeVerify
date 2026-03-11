@@ -282,7 +282,8 @@ def executed_by_identify(tree, resource):
 def executed_by(tree, a, resource,):
     apath = exists(tree, a)
     if apath is not None:
-        for a_resource in executed_by_annotated(apath, tree):
+        resources = executed_by_annotated(apath, tree)
+        for a_resource in resources if resources is not None else []:
             if a_resource.strip() == resource.strip():
                 logger.info(f'Activity "{a}" is executed by Resource "{resource}"')
                 return True
@@ -297,7 +298,8 @@ def executed_by(tree, a, resource,):
 def executed_by_return(tree, a):
     apath = exists(tree, a)
     if apath is not None:
-        for resource in executed_by_annotated(apath, tree):
+        resources = executed_by_annotated(apath, tree)
+        for resource in resources if resources is not None else []:
             logger.info(f'Activity "{a}" is executed by resource "{resource}"')
             return resource 
     else:
