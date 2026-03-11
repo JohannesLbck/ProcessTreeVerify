@@ -132,7 +132,7 @@ async def Subscriber(request: Request):
             default_flow_style=False,
             explicit_start=True
         )
-        #print(yaml_log)
+        print(yaml_log)
         response = requests.post(url, data = yaml_log.encode("utf-8"), headers=headers)
         print("Status:", response.status_code)
         print("Response:", response.text)
