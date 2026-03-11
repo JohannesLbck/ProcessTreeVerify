@@ -104,6 +104,27 @@ def directly_follows(tree, a, b):
         logger.info(f'Activity "{a}" is missing in the process')
         return False
 
+def exclusive(tree, a, b):
+    apath = exists(tree, a)
+    bpath = exists(tree, b)
+    if apath is not None:
+        if bpath is not None:
+            compare = compare_ele(tree, apath, bpath)
+            if compare == 0:
+                logger.info(f'Activity "{a}" and Activity "{b}" are on different exclusive branches')
+                return True
+            else:
+                logger.info(f'Activity "{a}" and Activity "{b}" are not on different exclusive branches')
+                return False
+        else:
+            logger.add_missing_activity(b)
+            logger.info(f'Activity "{b}" is missing in the process')
+            return False
+    else:
+        logger.add_missing_activity(a)
+        logger.info(f'Activity "{a}" is missing in the process')
+        return False
+
 ## Leads To: Checks if an activity a exists and if it does if the activity it leads to exists after
 def leads_to(tree, a, b):
     apath = exists(tree, a)
