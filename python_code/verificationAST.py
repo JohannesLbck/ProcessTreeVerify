@@ -50,6 +50,7 @@ VERIFICATION_FUNCTIONS = {
     "timed_alternative": timed_alternative,
     "failure_directly_follows": failure_directly_follows,
     "failure_eventually_follows": failure_eventually_follows,
+    "exclusive": exclusive,
 }
 
 logger = logging.getLogger(__name__)
