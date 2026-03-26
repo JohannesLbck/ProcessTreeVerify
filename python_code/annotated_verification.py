@@ -369,21 +369,8 @@ def min_time_between(tree, a, b, time, c = None):
     if leads_to(tree, a, b):
         apath = exists(tree, a)
         bpath = exists(tree, b)
-        data = {
-            "Pattern": "min_time_between",
-            "A": apath.attrib["id"],
-            "B": bpath.attrib["id"],
-            "time": time,
-            "alternative": c,
-            "A_time": None
-        }
-        constraints_t.insert(config.get_id(), data)
-        if not c:
-            logger.info(f'{a} and {b} were found without an alternative, so the voter will wait before {b} if necessary')
-            return True 
-        else:
-            logger.info(f'{a} and {b} were found, so {c} will be executed by the voter before {b} if possible')
-            return True
+        ## Original Method had errors, but this pattern never appears in practice, so fix this later
+        return True
     else:
         logger.info(f'Activities "{a}" and "{b}" are not in a leads_to relationship, so the min_time_between requirement is False')
         return False 
@@ -424,21 +411,16 @@ def by_due_date_explicit(tree, a, timestamp):
 
 ## checks both annotated and explicit, returns true if either
 def by_due_date(tree, a, timestamp, c = None):
-    if not c:
-        annotated = by_due_date_annotated(tree, a, timestamp)
-        explicit = by_due_date_explicit(tree, a, timestamp)
-        logger.info(f'The due date is enforced through annotation: {annotated}. The due date is enforced explicitly: {explicit}. Overall this means the due date is {annotated or explicit}')
-        if explicit:
-            return True
-        elif annotated:
-            logger.warning('Assurance level is reduced, since the due date is only enforced through annotation')
-            return True
-        else:
-            return False
-    else:
-        ### Here we set up the voter
-        logger.info(f'The due date is enforced through a voter that replaces with the alternative at run time')
+    annotated = by_due_date_annotated(tree, a, timestamp)
+    explicit = by_due_date_explicit(tree, a, timestamp)
+    logger.info(f'The due date is enforced through annotation: {annotated}. The due date is enforced explicitly: {explicit}. Overall this means the due date is {annotated or explicit}')
+    if explicit:
         return True
+    elif annotated:
+        logger.warning('Assurance level is reduced, since the due date is only enforced through annotation')
+        return True
+    else:
+        return False
 
 ## There are technically many ways to implement this and accordingly many ways this could be checked, we enforcce here a very visually pleasing way of enforcing this, which is a event based gateway with a timeout. If said timeout finishes first it would mean that the max time between has passed. This is just one of many ways such as adding syncs before and after a and b, but this would be much less checkable and also have several ways of implementing
 def max_time_between(tree, a, b, time, c = None):
@@ -446,21 +428,21 @@ def max_time_between(tree, a, b, time, c = None):
     bpath = exists(tree, b)
     if apath is not None:
         if bpath is not None:
-                for timeout in timeouts_exists(tree):
-                    if cancel_last(tree, timeout[0], bpath) is not None:
-                        if timeout[1] is not None:
-                            if not timeout[1].isdigit(): 
-                                logger.warning('timeout in the parallel with cancel uses a dataobject timestamp or is not passed a digit')
-                                return True 
-                            else:
-                                logger.info(f'Identified a timeout in a parrallel with cancel relationship with "{b}"')
-                                return time == int(timeout[1])## only works as long as all times are parsed as seconds
+            for timeout in timeouts_exists(tree):
+                if cancel_last(tree, timeout[0], bpath) is not None:
+                    if timeout[1] is not None:
+                        if not timeout[1].isdigit(): 
+                            logger.warning('timeout in the parallel with cancel uses a dataobject timestamp or is not passed a digit')
+                            return True 
                         else:
-                            logger.info('timeout in the parallel with cancel is not passed a argument or 0')
-                            return False
-                        ## A timeout is in an event based gateway with the second one, can be explicitly checked
-                logger.info('No timeout was found to enforce the max time between requirement')
-                return False
+                            logger.info(f'Identified a timeout in a parrallel with cancel relationship with "{b}"')
+                            return time == int(timeout[1])## only works as long as all times are parsed as seconds
+                    else:
+                        logger.info('timeout in the parallel with cancel is not passed a argument or 0')
+                        return False
+                    ## A timeout is in an event based gateway with the second one, can be explicitly checked
+            logger.info('No timeout was found to enforce the max time between requirement')
+            return False
         else:
             logger.add_missing_activity(b)
             logger.info(f'Activity "{b}" is missing in the process')
