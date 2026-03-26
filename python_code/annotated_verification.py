@@ -446,7 +446,6 @@ def max_time_between(tree, a, b, time, c = None):
     bpath = exists(tree, b)
     if apath is not None:
         if bpath is not None:
-            if not c:
                 for timeout in timeouts_exists(tree):
                     if cancel_last(tree, timeout[0], bpath) is not None:
                         if timeout[1] is not None:
@@ -462,10 +461,6 @@ def max_time_between(tree, a, b, time, c = None):
                         ## A timeout is in an event based gateway with the second one, can be explicitly checked
                 logger.info('No timeout was found to enforce the max time between requirement')
                 return False
-            else:
-                ### Here we set up the voter
-                logger.info(f'The due date is enforced through a voter that replaces the alternative at run time')
-                return True
         else:
             logger.add_missing_activity(b)
             logger.info(f'Activity "{b}" is missing in the process')
