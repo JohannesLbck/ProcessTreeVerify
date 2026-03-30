@@ -541,7 +541,7 @@ def condition_directly_follows(tree, condition , a):
     if len(impacts) > 1:
         for i in len(impacts):
             try:
-                if directly_follows(impacts[i], impacts[i+1]):
+                if directly_follows(tree, impacts[i], impacts[i+1]):
                     impacts.pop(i)
             except:
                 continue
