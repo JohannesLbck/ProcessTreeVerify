@@ -140,7 +140,6 @@ def leads_to(tree, a, b):
                 return False
             elif compare == 1:
                 logger.info(f'Activity "{a}" is before Activity "{b}, checking if {b} is on a different exclusive branch"')
-                return True
                 ancestors_a, ancestors_b, shared = get_shared_ancestors(tree, apath, bpath)
                 if any(elem.tag.endswith("choose") for elem in ancestors_b):
                     MCA = shared[-1].tag
