@@ -20,6 +20,7 @@ import signal
 import sys
 import json
 import re
+import yaml
 import logging
 from pprint import pprint
 import assurancelogger 
@@ -49,6 +50,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument('process', help="Path to the process tree .xml file")
 parser.add_argument('-semantic', action='store_true', help="Enable semantic matching for activity label resolution")
+parser.add_argument('-log', action='store_true', help="Enable printing of the entire yaml log")
 args = parser.parse_args()
 
 ## File Loading
@@ -98,4 +100,5 @@ for counter, req in enumerate(requirements):
 logger.info(f"Currently required activities for the process are: {logger.get_activities()}")
 logger.info(f"Currently missing activities for the process are: {logger.get_missing_activities()}")
 xes_log = transform_log(log)
+print(f'Final Log: {xes_log}')
 pprint(xes_log, sort_dicts=False, width=120)

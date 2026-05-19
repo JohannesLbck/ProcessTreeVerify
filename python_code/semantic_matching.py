@@ -39,10 +39,22 @@ LABEL_ARGUMENTS = {
     'failure_eventually_follows': [1, 2],
 }
 
+# Special process tree labels that should never be replaced with semantic matching
+# These are reserved system elements from annotated_verification.py exists() method
+SPECIAL_LABELS = {
+    'end activity',
+    'start activity',
+    'terminate',
+}
+
 
 def _best_label_match(candidate_label, labels, tree_label_embeddings, verbose=False):
     """Return best semantic label match or None if no confident replacement exists."""
     if not isinstance(candidate_label, str) or not candidate_label.strip():
+        return None
+    
+    # Skip special process tree labels that should never be replaced
+    if candidate_label.lower() in SPECIAL_LABELS:
         return None
 
     quoted_embedding = model.encode(candidate_label)
