@@ -100,20 +100,31 @@ async def Subscriber(request: Request):
         except:
             logger.info("No save attribute was passed, previous version will only be stored in memory and not written to disk")
             #logger.info("If a save attribute was passed, and this message still shows, there is a internal server error")
-        try: 
-            semantic_matching = notification["content"]["attributes"]["semantic_matching"]
-            print("reached1")
-            if semantic_matching:
-                print("reached2")
-                logger.info("Semantic matching is enabled, this may lead to longer processing times and is not guaranteed to be correct")
-                labels = extract_labels(ET.fromstring(notification["content"]["description"]))
-                print("reached3")
-        except:
-            semantic_matching = False
+        description_xml = notification["content"].get("description")
+        try:
+            xml = ET.fromstring(description_xml)
+        except Exception as exc:
+            logger.exception(f"Failed to parse process description XML: {exc}")
+            return
+
+        labels = {'labels': [], 'embeddings': None}
+        semantic_matching_raw = notification["content"].get("attributes", {}).get("semantic_matching", False)
+        if isinstance(semantic_matching_raw, str):
+            semantic_matching = semantic_matching_raw.strip().lower() == "true"
+        else:
+            semantic_matching = bool(semantic_matching_raw)
+
+        if semantic_matching:
+            logger.info("Semantic matching is enabled, this may lead to longer processing times and is not guaranteed to be correct")
+            try:
+                labels = extract_labels(xml)
+            except Exception as exc:
+                semantic_matching = False
+                logger.exception(f"Semantic matching initialization failed, falling back to exact label matching: {exc}")
+        else:
             logger.info("No semantic_matching attribute was passed, defaulting to exact label matching")
         config.set_id(notification["instance"])
         requirements = parse_requirements(req)
-        xml = ET.fromstring(notification["content"]["description"])
         xml = add_start_end(xml)
         xml= combine_sub_trees(xml)
         pre_parsing_assurance = logger.get_assurance_level()
