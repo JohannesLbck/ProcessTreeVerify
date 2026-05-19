@@ -57,6 +57,32 @@ Complete local deployment requires setting up a server / configuring a firewall.
 
 The above example tests the running example process also used throughout the paper, but you can also verify any other process xml found in the Composite Dataset, the two survey processes as well as any processes created in the process hub (as long as you add requirements to them)
 
+### Semantic Matching Option
+
+By default, test_script.py performs verification using the exact activity labels from the process model. For datasets with slightly perturbed or paraphrased activity labels, you can enable semantic matching to resolve labels based on semantic similarity:
+
+```bash
+# Enable semantic matching
+python3 test_script.py ../CompositeDataset/HaarmannetAL2021adjusted.xml -semantic
+
+# Without semantic matching (default)
+python3 test_script.py ../CompositeDataset/HaarmannetAL2021adjusted.xml
+```
+
+When semantic matching is enabled, the tool will use a pre-trained multilingual embedding model to match requirement activity labels to the closest semantically similar activity labels in the process model. This can be tested with the Composite Dataset's adjusted XML files that contain intentionally perturbed activity labels.
+
+**Perturbation Strategy**: Activity labels in these adjusted files have been intentionally modified to test the semantic matching capability. For example, an activity labeled "Review Application" might be renamed to "Check Application Form" or "Examine Request". The requirements are encoded as Abstract Syntax Trees (ASTs) and remain unchanged. These datasets allow you to test whether semantic matching can successfully resolve these slightly different labels to the correct activities.
+
+To test an adjusted file with semantic matching enabled:
+```bash
+python3 test_script.py ../CompositeDataset/HaarmannetAL2021adjusted.xml -semantic
+```
+
+To test the same file without semantic matching (which may result in unmatched labels):
+```bash
+python3 test_script.py ../CompositeDataset/HaarmannetAL2021adjusted.xml
+```
+
 
 ## (D) Custom Deployment
 Finally, you can also deploy the PTV locally, which we recommend in case you want to add additional functionality or simply run different tests.

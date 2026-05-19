@@ -13,6 +13,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+from python_code.semantic_matching import extract_labels, replace_labels
 import uvicorn
 import time
 import os
@@ -98,6 +99,13 @@ async def Subscriber(request: Request):
         except:
             logger.info("No save attribute was passed, previous version will only be stored in memory and not written to disk")
             #logger.info("If a save attribute was passed, and this message still shows, there is a internal server error")
+        try: 
+            semantic_matching = notification["content"]["attributes"]["semantic_matching"]
+            if semantic_matching:
+                logger.info("Semantic matching is enabled, this may lead to longer processing times and is not guaranteed to be correct")
+                labels = extract_labels(notification["content"]["description"])
+        except:
+            logger.info("No semantic_matching attribute was passed, defaulting to exact label matching")
         config.set_id(notification["instance"])
         requirements = parse_requirements(req)
         xml = ET.fromstring(notification["content"]["description"])
@@ -111,6 +119,8 @@ async def Subscriber(request: Request):
         event = form["event"]
         verified_requirements = []
         for counter, req in enumerate(requirements):
+            if semantic_matching:
+                req = replace_labels(req, labels)
             logger.info(f"Verifying Requirement R{counter}: {req}")
             result, assurance = verify(req, tree=xml)
             ## Message with Assurance Level

@@ -1,0 +1,850 @@
+<testset xmlns="http://cpee.org/ns/properties/2.0">
+  <executionhandler>ruby</executionhandler>
+  <dataelements>
+    <post_processing_resource>clerk</post_processing_resource>
+  </dataelements>
+  <endpoints>
+    <timeout>https://cpee.org/services/timeout.php</timeout>
+    <subprocess>https://cpee.org/flow/start/url/</subprocess>
+  </endpoints>
+    <attributes>
+    <guarded>none</guarded>
+    <modeltype>CPEE</modeltype>
+    <theme>extended</theme>
+    <guarded_id/>
+    <creator>Christine Ashcreek</creator>
+    <author>Christine Ashcreek</author>
+    <info>CRL</info>
+    <model_uuid>612fc473-e64f-479f-95e7-c7f662238abb</model_uuid>
+    <model_version/>
+    <design_stage>development</design_stage>
+    <design_dir>Staff.dir/Loebbi.dir/Compliance.dir/CompositeDataSet.dir</design_dir>
+    <requirements>{"R1":"parallel('send automated email', 'check credit worthiness')", "R2":"precedence('evaluate loan risk', 'customer bank privilege check') and precedence('evaluate loan risk', 'check credit worthiness') and leads_to('customer bank privilege check', 'check credit worthiness')", "R3":"executed_by('customer bank privilege check', 'credit broker') or executed_by('customer bank privilege check', 'supervisor') and executed_by('check credit worthiness', 'data.post_processing_resource') and executed_by_return('customer bank privilege check') != executed_by_return('credit worthiness check')", "R4":"executed_by('evaluate loan risk', 'manager') and executed_by('officially sign loan contract', 'manager')", "R5":"max_time_between('officially sign loan contract', 'perform loan settlement', 604800)", "R6":"condition_eventually_follows('data.loan_amount &gt; 1000000', 'assign post processing to supervisor')", "R7":"not condition_eventually_follows('data.customer_status == gold &amp;&amp; data.loan_amount &lt; 1000000','evaluate loan risk','global')"}</requirements>
+    <semantic_matching>true</semantic_matching>
+  </attributes>
+  <description>
+    <description xmlns="http://cpee.org/ns/description/1.0">
+      <call id="a1" endpoint="">
+        <parameters>
+          <label>Recieve Loan Request</label>
+          <method>:post</method>
+          <arguments/>
+        </parameters>
+        <code>
+          <prepare/>
+          <finalize output="result">data.loan_file = result
+data.loan_amount = result.amount</finalize>
+          <update output="result"/>
+          <rescue output="result"/>
+        </code>
+        <annotations>
+          <_generic/>
+          <_timing>
+            <_timing_weight/>
+            <_timing_avg/>
+            <explanations/>
+          </_timing>
+          <_shifting>
+            <_shifting_type>Duration</_shifting_type>
+          </_shifting>
+          <_context_data_analysis>
+            <probes/>
+            <ips/>
+          </_context_data_analysis>
+          <report>
+            <url/>
+          </report>
+          <_notes>
+            <_notes_general/>
+          </_notes>
+        </annotations>
+        <documentation>
+          <input/>
+          <output/>
+          <implementation>
+            <description/>
+          </implementation>
+          <code>
+            <description/>
+          </code>
+        </documentation>
+      </call>
+      <call id="a2" endpoint="">
+        <parameters>
+          <label>Cretae Loan File</label>
+          <method>:post</method>
+          <arguments>
+            <file>loan_file</file>
+          </arguments>
+        </parameters>
+        <code>
+          <prepare/>
+          <finalize output="result"/>
+          <update output="result"/>
+          <rescue output="result"/>
+        </code>
+        <annotations>
+          <_generic/>
+          <_timing>
+            <_timing_weight/>
+            <_timing_avg/>
+            <explanations/>
+          </_timing>
+          <_shifting>
+            <_shifting_type>Duration</_shifting_type>
+          </_shifting>
+          <_context_data_analysis>
+            <probes/>
+            <ips/>
+          </_context_data_analysis>
+          <report>
+            <url/>
+          </report>
+          <_notes>
+            <_notes_general/>
+          </_notes>
+        </annotations>
+        <documentation>
+          <input/>
+          <output/>
+          <implementation>
+            <description/>
+          </implementation>
+          <code>
+            <description/>
+          </code>
+        </documentation>
+      </call>
+      <call id="a3" endpoint="">
+        <parameters>
+          <label>Chek Customer Bank Privilege</label>
+          <method>:post</method>
+          <arguments/>
+        </parameters>
+        <code>
+          <prepare/>
+          <finalize output="result">data.bank_privilege_suspended = !result.privilege_status</finalize>
+          <update output="result"/>
+          <rescue output="result"/>
+        </code>
+        <annotations>
+          <_generic>
+            <Resource>Credit Broker</Resource>
+          </_generic>
+          <_timing>
+            <_timing_weight/>
+            <_timing_avg/>
+            <explanations/>
+          </_timing>
+          <_shifting>
+            <_shifting_type>Duration</_shifting_type>
+          </_shifting>
+          <_context_data_analysis>
+            <probes/>
+            <ips/>
+          </_context_data_analysis>
+          <report>
+            <url/>
+          </report>
+          <_notes>
+            <_notes_general/>
+          </_notes>
+        </annotations>
+        <documentation>
+          <input/>
+          <output/>
+          <implementation>
+            <description/>
+          </implementation>
+          <code>
+            <description/>
+          </code>
+        </documentation>
+      </call>
+      <choose mode="exclusive">
+        <alternative condition="!data.bank_privilege_suspended">
+          <_probability>
+            <_probability_min/>
+            <_probability_max/>
+            <_probability_avg/>
+          </_probability>
+          <call id="a4" endpoint="">
+            <parameters>
+              <label>Request Bank Information task</label>
+              <method>:post</method>
+              <arguments/>
+            </parameters>
+            <code>
+              <prepare/>
+              <finalize output="result"/>
+              <update output="result"/>
+              <rescue output="result"/>
+            </code>
+            <annotations>
+              <_generic>
+                <Resource>Credit Broker</Resource>
+              </_generic>
+              <_timing>
+                <_timing_weight/>
+                <_timing_avg/>
+                <explanations/>
+              </_timing>
+              <_shifting>
+                <_shifting_type>Duration</_shifting_type>
+              </_shifting>
+              <_context_data_analysis>
+                <probes/>
+                <ips/>
+              </_context_data_analysis>
+              <report>
+                <url/>
+              </report>
+              <_notes>
+                <_notes_general/>
+              </_notes>
+            </annotations>
+            <documentation>
+              <input/>
+              <output/>
+              <implementation>
+                <description/>
+              </implementation>
+              <code>
+                <description/>
+              </code>
+            </documentation>
+          </call>
+          <choose mode="exclusive">
+            <alternative condition="data.bank_information_valid">
+              <choose mode="exclusive">
+                <alternative condition="data.loan_amount &gt; 1000000">
+                  <_probability>
+                    <_probability_min/>
+                    <_probability_max/>
+                    <_probability_avg/>
+                  </_probability>
+                  <manipulate id="a8" label="Assign post processing to supervisor">data.post_processing_resource = supervisor</manipulate>
+                </alternative>
+                <otherwise></otherwise>
+              </choose>
+              <call id="a9" endpoint="subprocess">
+                <parameters>
+                  <label>Chek Credit Worthiness</label>
+                  <method>:post</method>
+                  <arguments>
+                    <behavior>wait_running</behavior>
+                    <url/>
+                    <init/>
+                    <endpoints/>
+                    <attributes/>
+                    <customization/>
+                  </arguments>
+                </parameters>
+                <code>
+                  <prepare/>
+                  <finalize output="result">data.risk_report = result
+data.credit_worthiness = result.credit_worthiness</finalize>
+                  <update output="result"/>
+                  <rescue output="result"/>
+                </code>
+                <annotations>
+                  <_generic>
+                    <resource>data.post_processing_resource</resource>
+                  </_generic>
+                  <_timing>
+                    <_timing_weight/>
+                    <_timing_avg/>
+                    <explanations/>
+                  </_timing>
+                  <_shifting>
+                    <_shifting_type>Duration</_shifting_type>
+                  </_shifting>
+                  <_context_data_analysis>
+                    <probes/>
+                    <ips/>
+                  </_context_data_analysis>
+                  <report>
+                    <url/>
+                  </report>
+                  <_notes>
+                    <_notes_general/>
+                  </_notes>
+                </annotations>
+                <documentation>
+                  <input/>
+                  <output/>
+                  <implementation>
+                    <description/>
+                  </implementation>
+                  <code>
+                    <description/>
+                  </code>
+                </documentation>
+              </call>
+              <choose mode="exclusive">
+                <alternative condition="data.credit_worthiness">
+                  <_probability>
+                    <_probability_min/>
+                    <_probability_max/>
+                    <_probability_avg/>
+                  </_probability>
+                </alternative>
+                <otherwise>
+                  <call id="a17" endpoint="">
+                    <parameters>
+                      <label>Decline due to bad credit worthniness task</label>
+                      <method>:post</method>
+                      <arguments/>
+                    </parameters>
+                    <code>
+                      <prepare/>
+                      <finalize output="result"/>
+                      <update output="result"/>
+                      <rescue output="result"/>
+                    </code>
+                    <annotations>
+                      <_generic>
+                        <Resource>data.post_processing_resource</Resource>
+                      </_generic>
+                      <_timing>
+                        <_timing_weight/>
+                        <_timing_avg/>
+                        <explanations/>
+                      </_timing>
+                      <_shifting>
+                        <_shifting_type>Duration</_shifting_type>
+                      </_shifting>
+                      <_context_data_analysis>
+                        <probes/>
+                        <ips/>
+                      </_context_data_analysis>
+                      <report>
+                        <url/>
+                      </report>
+                      <_notes>
+                        <_notes_general/>
+                      </_notes>
+                    </annotations>
+                    <documentation>
+                      <input/>
+                      <output/>
+                      <implementation>
+                        <description/>
+                      </implementation>
+                      <code>
+                        <description/>
+                      </code>
+                    </documentation>
+                  </call>
+                  <terminate/>
+                </otherwise>
+              </choose>
+              <call id="a16" endpoint="">
+                <parameters>
+                  <label>Evaluate LoanRisk task</label>
+                  <method>:post</method>
+                  <arguments/>
+                </parameters>
+                <code>
+                  <prepare/>
+                  <finalize output="result">data.low_risk = result.low_risk</finalize>
+                  <update output="result"/>
+                  <rescue output="result"/>
+                </code>
+                <annotations>
+                  <_generic/>
+                  <_timing>
+                    <_timing_weight/>
+                    <_timing_avg/>
+                    <explanations/>
+                  </_timing>
+                  <_shifting>
+                    <_shifting_type>Duration</_shifting_type>
+                  </_shifting>
+                  <_context_data_analysis>
+                    <probes/>
+                    <ips/>
+                  </_context_data_analysis>
+                  <report>
+                    <url/>
+                  </report>
+                  <_notes>
+                    <_notes_general/>
+                  </_notes>
+                </annotations>
+                <documentation>
+                  <input/>
+                  <output/>
+                  <implementation>
+                    <description/>
+                  </implementation>
+                  <code>
+                    <description/>
+                  </code>
+                </documentation>
+              </call>
+              <choose mode="exclusive">
+                <alternative condition="!data.low_risk">
+                  <call id="a10" endpoint="">
+                    <parameters>
+                      <label>Judge High-Risk Loan task</label>
+                      <method>:post</method>
+                      <arguments/>
+                    </parameters>
+                    <code>
+                      <prepare/>
+                      <finalize output="result">data.approved = result.approved</finalize>
+                      <update output="result"/>
+                      <rescue output="result"/>
+                    </code>
+                    <annotations>
+                      <_generic>
+                        <Resource>Manager</Resource>
+                      </_generic>
+                      <_timing>
+                        <_timing_weight/>
+                        <_timing_avg/>
+                        <explanations/>
+                      </_timing>
+                      <_shifting>
+                        <_shifting_type>Duration</_shifting_type>
+                      </_shifting>
+                      <_context_data_analysis>
+                        <probes/>
+                        <ips/>
+                      </_context_data_analysis>
+                      <report>
+                        <url/>
+                      </report>
+                      <_notes>
+                        <_notes_general/>
+                      </_notes>
+                    </annotations>
+                    <documentation>
+                      <input/>
+                      <output/>
+                      <implementation>
+                        <description/>
+                      </implementation>
+                      <code>
+                        <description/>
+                      </code>
+                    </documentation>
+                  </call>
+                  <_probability>
+                    <_probability_min/>
+                    <_probability_max/>
+                    <_probability_avg/>
+                  </_probability>
+                </alternative>
+                <otherwise>
+                  <manipulate id="a11" label="Approve Loan Contract due to low risk">data.approved = true</manipulate>
+                </otherwise>
+              </choose>
+              <choose mode="exclusive">
+                <alternative condition="data.approved">
+                  <call id="a12" endpoint="">
+                    <parameters>
+                      <label>Initialize Loan Contract task</label>
+                      <method>:post</method>
+                      <arguments/>
+                    </parameters>
+                    <code>
+                      <prepare/>
+                      <finalize output="result"/>
+                      <update output="result"/>
+                      <rescue output="result"/>
+                    </code>
+                    <annotations>
+                      <_generic/>
+                      <_timing>
+                        <_timing_weight/>
+                        <_timing_avg/>
+                        <explanations/>
+                      </_timing>
+                      <_shifting>
+                        <_shifting_type>Duration</_shifting_type>
+                      </_shifting>
+                      <_context_data_analysis>
+                        <probes/>
+                        <ips/>
+                      </_context_data_analysis>
+                      <report>
+                        <url/>
+                      </report>
+                      <_notes>
+                        <_notes_general/>
+                      </_notes>
+                    </annotations>
+                    <documentation>
+                      <input/>
+                      <output/>
+                      <implementation>
+                        <description/>
+                      </implementation>
+                      <code>
+                        <description/>
+                      </code>
+                    </documentation>
+                  </call>
+                  <call id="a13" endpoint="">
+                    <parameters>
+                      <label>Sign officially Loan Contract task</label>
+                      <method>:post</method>
+                      <arguments/>
+                    </parameters>
+                    <code>
+                      <prepare/>
+                      <finalize output="result"/>
+                      <update output="result"/>
+                      <rescue output="result"/>
+                    </code>
+                    <annotations>
+                      <_generic>
+                        <Resource>Manager</Resource>
+                      </_generic>
+                      <_timing>
+                        <_timing_weight/>
+                        <_timing_avg/>
+                        <explanations/>
+                      </_timing>
+                      <_shifting>
+                        <_shifting_type>Duration</_shifting_type>
+                      </_shifting>
+                      <_context_data_analysis>
+                        <probes/>
+                        <ips/>
+                      </_context_data_analysis>
+                      <report>
+                        <url/>
+                      </report>
+                      <_notes>
+                        <_notes_general/>
+                      </_notes>
+                    </annotations>
+                    <documentation>
+                      <input/>
+                      <output/>
+                      <implementation>
+                        <description/>
+                      </implementation>
+                      <code>
+                        <description/>
+                      </code>
+                    </documentation>
+                  </call>
+                  <parallel wait="-1" cancel="first">
+                    <parallel_branch>
+                      <call id="a15" endpoint="">
+                        <parameters>
+                          <label>Perform Loan Settlement task</label>
+                          <method>:post</method>
+                          <arguments/>
+                        </parameters>
+                        <code>
+                          <prepare/>
+                          <finalize output="result"/>
+                          <update output="result"/>
+                          <rescue output="result"/>
+                        </code>
+                        <annotations>
+                          <_generic/>
+                          <_timing>
+                            <_timing_weight/>
+                            <_timing_avg/>
+                            <explanations/>
+                          </_timing>
+                          <_shifting>
+                            <_shifting_type>Duration</_shifting_type>
+                          </_shifting>
+                          <_context_data_analysis>
+                            <probes/>
+                            <ips/>
+                          </_context_data_analysis>
+                          <report>
+                            <url/>
+                          </report>
+                          <_notes>
+                            <_notes_general/>
+                          </_notes>
+                        </annotations>
+                        <documentation>
+                          <input/>
+                          <output/>
+                          <implementation>
+                            <description/>
+                          </implementation>
+                          <code>
+                            <description/>
+                          </code>
+                        </documentation>
+                      </call>
+                    </parallel_branch>
+                    <parallel_branch>
+                      <call id="a14" endpoint="timeout">
+                        <parameters>
+                          <label/>
+                          <method>:post</method>
+                          <arguments>
+                            <timeout>604800</timeout>
+                          </arguments>
+                        </parameters>
+                        <code>
+                          <prepare/>
+                          <finalize output="result"/>
+                          <update output="result"/>
+                          <rescue output="result"/>
+                        </code>
+                        <annotations>
+                          <_generic/>
+                          <_timing>
+                            <_timing_weight/>
+                            <_timing_avg/>
+                            <explanations/>
+                          </_timing>
+                          <_shifting>
+                            <_shifting_type>Duration</_shifting_type>
+                          </_shifting>
+                          <_context_data_analysis>
+                            <probes/>
+                            <ips/>
+                          </_context_data_analysis>
+                          <report>
+                            <url/>
+                          </report>
+                          <_notes>
+                            <_notes_general/>
+                          </_notes>
+                        </annotations>
+                        <documentation>
+                          <input/>
+                          <output/>
+                          <implementation>
+                            <description/>
+                          </implementation>
+                          <code>
+                            <description/>
+                          </code>
+                        </documentation>
+                      </call>
+                    </parallel_branch>
+                  </parallel>
+                  <_probability>
+                    <_probability_min/>
+                    <_probability_max/>
+                    <_probability_avg/>
+                  </_probability>
+                </alternative>
+                <otherwise>
+                  <call id="a18" endpoint="">
+                    <parameters>
+                      <label>Decline due to high risk task</label>
+                      <method>:post</method>
+                      <arguments/>
+                    </parameters>
+                    <code>
+                      <prepare/>
+                      <finalize output="result"/>
+                      <update output="result"/>
+                      <rescue output="result"/>
+                    </code>
+                    <annotations>
+                      <_generic>
+                        <Resource>Manager</Resource>
+                      </_generic>
+                      <_timing>
+                        <_timing_weight/>
+                        <_timing_avg/>
+                        <explanations/>
+                      </_timing>
+                      <_shifting>
+                        <_shifting_type>Duration</_shifting_type>
+                      </_shifting>
+                      <_context_data_analysis>
+                        <probes/>
+                        <ips/>
+                      </_context_data_analysis>
+                      <report>
+                        <url/>
+                      </report>
+                      <_notes>
+                        <_notes_general/>
+                      </_notes>
+                    </annotations>
+                    <documentation>
+                      <input/>
+                      <output/>
+                      <implementation>
+                        <description/>
+                      </implementation>
+                      <code>
+                        <description/>
+                      </code>
+                    </documentation>
+                  </call>
+                </otherwise>
+              </choose>
+              <_probability>
+                <_probability_min/>
+                <_probability_max/>
+                <_probability_avg/>
+              </_probability>
+            </alternative>
+            <otherwise>
+              <call id="a7" endpoint="">
+                <parameters>
+                  <label>Decline due to unsatisfied Condition task</label>
+                  <method>:post</method>
+                  <arguments/>
+                </parameters>
+                <code>
+                  <prepare/>
+                  <finalize output="result"/>
+                  <update output="result"/>
+                  <rescue output="result"/>
+                </code>
+                <annotations>
+                  <_generic>
+                    <Resource>Credit Broker</Resource>
+                  </_generic>
+                  <_timing>
+                    <_timing_weight/>
+                    <_timing_avg/>
+                    <explanations/>
+                  </_timing>
+                  <_shifting>
+                    <_shifting_type>Duration</_shifting_type>
+                  </_shifting>
+                  <_context_data_analysis>
+                    <probes/>
+                    <ips/>
+                  </_context_data_analysis>
+                  <report>
+                    <url/>
+                  </report>
+                  <_notes>
+                    <_notes_general/>
+                  </_notes>
+                </annotations>
+                <documentation>
+                  <input/>
+                  <output/>
+                  <implementation>
+                    <description/>
+                  </implementation>
+                  <code>
+                    <description/>
+                  </code>
+                </documentation>
+              </call>
+            </otherwise>
+          </choose>
+        </alternative>
+        <otherwise>
+          <call id="a5" endpoint="">
+            <parameters>
+              <label>Decline due to suspended Privilege task</label>
+              <method>:post</method>
+              <arguments/>
+            </parameters>
+            <code>
+              <prepare/>
+              <finalize output="result"/>
+              <update output="result"/>
+              <rescue output="result"/>
+            </code>
+            <annotations>
+              <_generic>
+                <Resource>Credit Broker</Resource>
+              </_generic>
+              <_timing>
+                <_timing_weight/>
+                <_timing_avg/>
+                <explanations/>
+              </_timing>
+              <_shifting>
+                <_shifting_type>Duration</_shifting_type>
+              </_shifting>
+              <_context_data_analysis>
+                <probes/>
+                <ips/>
+              </_context_data_analysis>
+              <report>
+                <url/>
+              </report>
+              <_notes>
+                <_notes_general/>
+              </_notes>
+            </annotations>
+            <documentation>
+              <input/>
+              <output/>
+              <implementation>
+                <description/>
+              </implementation>
+              <code>
+                <description/>
+              </code>
+            </documentation>
+          </call>
+        </otherwise>
+      </choose>
+      <call id="a6" endpoint="">
+        <parameters>
+          <label>Notify Customer task</label>
+          <method>:post</method>
+          <arguments/>
+        </parameters>
+        <code>
+          <prepare/>
+          <finalize output="result"/>
+          <update output="result"/>
+          <rescue output="result"/>
+        </code>
+        <annotations>
+          <_generic/>
+          <_timing>
+            <_timing_weight/>
+            <_timing_avg/>
+            <explanations/>
+          </_timing>
+          <_shifting>
+            <_shifting_type>Duration</_shifting_type>
+          </_shifting>
+          <_context_data_analysis>
+            <probes/>
+            <ips/>
+          </_context_data_analysis>
+          <report>
+            <url/>
+          </report>
+          <_notes>
+            <_notes_general/>
+          </_notes>
+        </annotations>
+        <documentation>
+          <input/>
+          <output/>
+          <implementation>
+            <description/>
+          </implementation>
+          <code>
+            <description/>
+          </code>
+        </documentation>
+      </call>
+    </description>
+  </description>
+  <transformation>
+    <description type="copy"/>
+    <dataelements type="none"/>
+    <endpoints type="none"/>
+  </transformation>
+  <subscriptions xmlns="http://riddl.org/ns/common-patterns/notifications-producer/2.0">
+    <subscription xmlns="http://riddl.org/ns/common-patterns/notifications-producer/2.0" id="_compliance" url="https://power.bpm.cit.tum.de/compliance/Subscriber">
+      <topic id="description">
+        <event>change</event>
+      </topic>
+    </subscription>
+  </subscriptions>
+</testset>

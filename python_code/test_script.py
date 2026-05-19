@@ -21,10 +21,12 @@ import sys
 import json
 import re
 import logging
+from pprint import pprint
 import assurancelogger 
 import xml.etree.ElementTree as ET
 
 from LogHandler import LogHandler
+from semantic_matching import extract_labels, replace_labels
 from util import transform_log, exists_by_label, get_ancestors, compare_ele, add_start_end, combine_sub_trees
 from tester import run_tests
 from reqparser import parse_requirements
@@ -46,18 +48,34 @@ logging.basicConfig(
 parser = argparse.ArgumentParser()
 
 parser.add_argument('process', help="Path to the process tree .xml file")
+parser.add_argument('-semantic', action='store_true', help="Enable semantic matching for activity label resolution")
 args = parser.parse_args()
 
 ## File Loading
-xml = ET.parse(args.process)
+xml_tree = ET.parse(args.process)
 
 ## data preparation
 namespace1 = {"ns0": "http://cpee.org/ns/description/1.0"}
 namespace2 = {"ns1": "http://cpee.org/ns/properties/2.0"} 
 
-req = xml.find('.//ns1:requirements', namespace2)
-xml = xml.find('.//ns0:description', namespace1)
+req = xml_tree.find('.//ns1:requirements', namespace2)
+xml = xml_tree.find('.//ns0:description', namespace1)
+if req is None or req.text is None:
+    raise ValueError("No requirements found in input XML under properties namespace")
 requirements = parse_requirements(req.text)
+
+# Semantic matching can be enabled via command-line flag or XML attribute
+semantic_matching = args.semantic
+if not semantic_matching:
+    semantic_matching_attr = xml_tree.find('.//ns1:attributes/ns1:semantic_matching', namespace2)
+    if semantic_matching_attr is not None and semantic_matching_attr.text:
+        semantic_matching = semantic_matching_attr.text.strip().lower() == 'true'
+
+labels_data = {'labels': [], 'embeddings': None}
+if semantic_matching:
+    logger.info("Semantic matching is enabled for this dataset")
+    labels_data = extract_labels(xml)
+
 xml = add_start_end(xml)
 xml = combine_sub_trees(xml)
 ## Check if combining sub trees reduces assurance level
@@ -66,10 +84,12 @@ logger.info(f"The global assurance level is {pre_parsing_assurance}")
 logger.reset_assurance_level()
 verified_requirements = []
 for counter, req in enumerate(requirements):
-    logger.info(f"Verifying Requirement R{counter}: {req}")
+    if semantic_matching:
+        req = replace_labels(req, labels_data, verbose=True)
+    logger.info(f"Verifying Requirement R{counter+1}: {req}")
     result, assurance = verify(req, tree=xml)
     ## Message with Assurance Level
-    message = f"Requirement R{counter} is {bool(result)} with assurance level {assurance}"
+    message = f"Requirement R{counter+1} is {bool(result)} with assurance level {assurance}"
     ## Message without Assurance level
     ##message = f"Result: Requirement R{counter} is {bool(result)}"
     logger.info(message)
@@ -78,4 +98,4 @@ for counter, req in enumerate(requirements):
 logger.info(f"Currently required activities for the process are: {logger.get_activities()}")
 logger.info(f"Currently missing activities for the process are: {logger.get_missing_activities()}")
 xes_log = transform_log(log)
-print(xes_log)
+pprint(xes_log, sort_dicts=False, width=120)
