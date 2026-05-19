@@ -4,8 +4,6 @@ from sentence_transformers import SentenceTransformer
 from sentence_transformers.util import cos_sim
 import logging
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize the model once at module level for efficiency

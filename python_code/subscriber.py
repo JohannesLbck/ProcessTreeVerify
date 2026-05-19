@@ -85,7 +85,8 @@ async def Subscriber(request: Request):
         logging.basicConfig(
                 level = logging.INFO,
                 format='%(asctime)s.%(msecs)03d - %(name)s - %(funcName)s - %(message)s',
-                handlers = [handler]
+            handlers = [handler],
+            force=True
                 )
         try:
             req = notification["content"]["attributes"]["requirements"]

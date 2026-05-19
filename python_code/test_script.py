@@ -42,7 +42,8 @@ logging.basicConfig(
             format='%(asctime)s.%(msecs)03d - %(name)s - %(funcName)s - %(message)s',
             ## Handler for local logging below
             handlers=[handler 
-            ]
+            ],
+            force=True
         )
 
 
@@ -100,5 +101,4 @@ for counter, req in enumerate(requirements):
 logger.info(f"Currently required activities for the process are: {logger.get_activities()}")
 logger.info(f"Currently missing activities for the process are: {logger.get_missing_activities()}")
 xes_log = transform_log(log)
-print(f'Final Log: {xes_log}')
 pprint(xes_log, sort_dicts=False, width=120)
