@@ -72,8 +72,7 @@ async def main():
     return HTMLResponse(content=content)
 
 log = []
-@app.post("/Subscriber")
-async def Subscriber(request: Request):
+async def _handle_subscription(request: Request, use_semantic_matching: bool = False):
     call_id = str(uuid.uuid4())
     async with request.form() as form:
         notification = json.loads(form["notification"])
@@ -107,11 +106,7 @@ async def Subscriber(request: Request):
             return
 
         labels = {'labels': [], 'embeddings': None}
-        semantic_matching_raw = notification["content"].get("attributes", {}).get("semantic_matching", False)
-        if isinstance(semantic_matching_raw, str):
-            semantic_matching = semantic_matching_raw.strip().lower() == "true"
-        else:
-            semantic_matching = bool(semantic_matching_raw)
+        semantic_matching = use_semantic_matching
 
         if semantic_matching:
             logger.info("Semantic matching is enabled, this may lead to longer processing times and is not guaranteed to be correct")
@@ -121,7 +116,7 @@ async def Subscriber(request: Request):
                 semantic_matching = False
                 logger.exception(f"Semantic matching initialization failed, falling back to exact label matching: {exc}")
         else:
-            logger.info("No semantic_matching attribute was passed, defaulting to exact label matching")
+            logger.info("Semantic matching is disabled for this endpoint, using exact label matching")
         config.set_id(notification["instance"])
         requirements = parse_requirements(req)
         xml = add_start_end(xml)
@@ -162,6 +157,16 @@ async def Subscriber(request: Request):
         print("Status:", response.status_code)
         print("Response:", response.text)
     return
+
+
+@app.post("/Subscriber")
+async def Subscriber(request: Request):
+    return await _handle_subscription(request, use_semantic_matching=False)
+
+
+@app.post("/SubscriberSemantic")
+async def SubscriberSemantic(request: Request):
+    return await _handle_subscription(request, use_semantic_matching=True)
 
 def run_server():
     uvicorn.run("subscriber:app", port=9321, log_level="info")
