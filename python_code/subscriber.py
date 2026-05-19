@@ -33,7 +33,6 @@ import uuid
 from LogHandler import LogHandler
 from fastapi import FastAPI, File, UploadFile, Request, Form
 from pydantic import BaseModel
-from multiprocessing import Process
 from fastapi.responses import HTMLResponse, JSONResponse
 from hashmap import hash_t
 from util import exists_by_label,transform_log, get_ancestors, compare_ele, add_start_end, combine_sub_trees
@@ -165,11 +164,6 @@ async def Subscriber(request: Request):
     return
 
 def run_server():
-    pid = os.fork()
-    if pid != 0:
-        return
-    print('Starting ' + str(os.getpid()))
-    print(os.getpid(), file=open('subscriber.pid', 'w'))
     uvicorn.run("subscriber:app", port=9321, log_level="info")
 
 if __name__ == "__main__":
@@ -179,7 +173,12 @@ if __name__ == "__main__":
       os.remove('subscriber.pid')
       os.kill(int(pid),signal.SIGINT)
     else:
-      proc = Process(target=run_server, args=(), daemon=True)
-      proc.start()
-      proc.join()
+      pid = os.getpid()
+      print('Starting ' + str(pid))
+      print(pid, file=open('subscriber.pid', 'w'))
+      try:
+          run_server()
+      finally:
+          if os.path.exists('subscriber.pid'):
+              os.remove('subscriber.pid')
 

@@ -6,8 +6,17 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-# Initialize the model once at module level for efficiency
-model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
+# Lazily initialize the model in-process to avoid CUDA/fork initialization issues.
+_MODEL = None
+
+
+def _get_model():
+    global _MODEL
+    if _MODEL is None:
+        _MODEL = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
+    return _MODEL
+
+
 SIMILARITY_THRESHOLD = 0.6
 
 # Argument indices (including leading tree argument) that represent activity labels.
@@ -55,7 +64,7 @@ def _best_label_match(candidate_label, labels, tree_label_embeddings, verbose=Fa
     if candidate_label.lower() in SPECIAL_LABELS:
         return None
 
-    quoted_embedding = model.encode(candidate_label)
+    quoted_embedding = _get_model().encode(candidate_label)
     similarities = cos_sim(quoted_embedding, tree_label_embeddings)[0]
 
     if verbose:
@@ -160,7 +169,7 @@ def extract_labels(xml):
                         labels.append(label_text)
     
     # Precompute embeddings for all labels
-    embeddings = model.encode(labels) if labels else None
+    embeddings = _get_model().encode(labels) if labels else None
     
     return {'labels': labels, 'embeddings': embeddings}
 
