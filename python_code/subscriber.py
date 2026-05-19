@@ -14,11 +14,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from semantic_matching import extract_labels, replace_labels
+import argparse
 import uvicorn
 import time
 import os
 import signal
 import sys
+import subprocess
 import json
 from share import config
 import re
@@ -171,19 +173,92 @@ async def SubscriberSemantic(request: Request):
 def run_server():
     uvicorn.run("subscriber:app", port=9321, log_level="info")
 
-if __name__ == "__main__":
-    if os.path.exists('subscriber.pid'):
-      with open("subscriber.pid","r") as f: pid =f.read()
-      print('Killing ' + str(int(pid)))
-      os.remove('subscriber.pid')
-      os.kill(int(pid),signal.SIGINT)
+
+PID_FILE = "subscriber.pid"
+LOG_FILE = "subscriber.log"
+
+
+def _read_pid(pid_file=PID_FILE):
+    if not os.path.exists(pid_file):
+        return None
+    try:
+        with open(pid_file, "r") as f:
+            return int(f.read().strip())
+    except Exception:
+        return None
+
+
+def _is_running(pid):
+    if not pid:
+        return False
+    try:
+        os.kill(pid, 0)
+        return True
+    except OSError:
+        return False
+
+
+def _start_daemon():
+    existing_pid = _read_pid()
+    if _is_running(existing_pid):
+        print(f"Subscriber already running with PID {existing_pid}")
+        return
+    if existing_pid and os.path.exists(PID_FILE):
+        os.remove(PID_FILE)
+
+    log_path = os.path.join(os.path.dirname(__file__), LOG_FILE)
+    with open(log_path, "a") as log_file:
+        proc = subprocess.Popen(
+            [sys.executable, "-m", "uvicorn", "subscriber:app", "--port", "9321", "--log-level", "info"],
+            cwd=os.path.dirname(__file__),
+            stdout=log_file,
+            stderr=log_file,
+            start_new_session=True,
+        )
+    with open(PID_FILE, "w") as f:
+        f.write(str(proc.pid))
+    print(f"Started subscriber daemon with PID {proc.pid}")
+
+
+def _stop_daemon():
+    pid = _read_pid()
+    if not pid:
+        print("No subscriber.pid found. Subscriber is not running.")
+        return
+    if not _is_running(pid):
+        print(f"Stale PID file found for PID {pid}. Removing it.")
+        if os.path.exists(PID_FILE):
+            os.remove(PID_FILE)
+        return
+
+    print(f"Stopping subscriber daemon PID {pid}")
+    os.kill(pid, signal.SIGINT)
+    if os.path.exists(PID_FILE):
+        os.remove(PID_FILE)
+
+
+def _status_daemon():
+    pid = _read_pid()
+    if _is_running(pid):
+        print(f"Subscriber is running with PID {pid}")
+    elif pid:
+        print(f"Subscriber is not running (stale PID {pid})")
     else:
-      pid = os.getpid()
-      print('Starting ' + str(pid))
-      print(pid, file=open('subscriber.pid', 'w'))
-      try:
-          run_server()
-      finally:
-          if os.path.exists('subscriber.pid'):
-              os.remove('subscriber.pid')
+        print("Subscriber is not running")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Manage the compliance subscriber service")
+    parser.add_argument("--stop", action="store_true", help="Stop the background subscriber daemon")
+    parser.add_argument("--status", action="store_true", help="Show subscriber daemon status")
+    parser.add_argument("--foreground", action="store_true", help="Run in foreground for debugging")
+    args = parser.parse_args()
+
+    if args.stop:
+        _stop_daemon()
+    elif args.status:
+        _status_daemon()
+    elif args.foreground:
+        run_server()
+    else:
+        _start_daemon()
 
