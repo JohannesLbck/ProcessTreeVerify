@@ -13,7 +13,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-from python_code.semantic_matching import extract_labels, replace_labels
+from semantic_matching import extract_labels, replace_labels
 import uvicorn
 import time
 import os
@@ -101,10 +101,14 @@ async def Subscriber(request: Request):
             #logger.info("If a save attribute was passed, and this message still shows, there is a internal server error")
         try: 
             semantic_matching = notification["content"]["attributes"]["semantic_matching"]
+            print("reached1")
             if semantic_matching:
+                print("reached2")
                 logger.info("Semantic matching is enabled, this may lead to longer processing times and is not guaranteed to be correct")
-                labels = extract_labels(notification["content"]["description"])
+                labels = extract_labels(ET.fromstring(notification["content"]["description"]))
+                print("reached3")
         except:
+            semantic_matching = False
             logger.info("No semantic_matching attribute was passed, defaulting to exact label matching")
         config.set_id(notification["instance"])
         requirements = parse_requirements(req)
