@@ -24,11 +24,25 @@ If you want to try out the verification yourself, you can also create a new mode
 
 1. Navigate to the following [cpee directory](https://cpee.org/hub/?stage=development&dir=Staff.dir/Loebbi.dir/Compliance.dir/PTVPlayground.dir/) and create a New Model
 2. Use the CPEE functionality "save testset" to download the XML test set.
-3. Add the Compliance Subscriber to the test by copy-pasting the following at the end of the XML. (You can also check the xml files of the composite dataset for examples with the subscriber added ) and we will add a button for this in the future
+3. Add the Compliance Subscriber to the test by copy-pasting one of the following subscriptions at the end of the XML. (You can also check the xml files of the composite dataset for examples with the subscriber added.)
+
+Use this endpoint for exact label matching:
 
 ```
   <subscriptions xmlns="http://riddl.org/ns/common-patterns/notifications-producer/2.0">
     <subscription xmlns="http://riddl.org/ns/common-patterns/notifications-producer/2.0" id="_compliance" url="https://power.bpm.cit.tum.de/compliance/Subscriber">
+      <topic id="description">
+        <event>change</event>
+      </topic>
+    </subscription>
+  </subscriptions>
+```
+
+Use this endpoint for semantic label matching:
+
+```
+  <subscriptions xmlns="http://riddl.org/ns/common-patterns/notifications-producer/2.0">
+    <subscription xmlns="http://riddl.org/ns/common-patterns/notifications-producer/2.0" id="_compliance" url="https://power.bpm.cit.tum.de/compliance/SubscriberSemantic">
       <topic id="description">
         <event>change</event>
       </topic>
@@ -59,7 +73,7 @@ The above example tests the running example process also used throughout the pap
 
 ### Semantic Matching Option
 
-By default, test_script.py performs verification using the exact activity labels from the process model. For datasets with slightly perturbed or paraphrased activity labels, you can enable semantic matching to resolve labels based on semantic similarity:
+By default, test_script.py performs verification using the exact activity labels from the process model. For datasets with slightly perturbed or paraphrased activity labels, you can enable semantic matching with -semantic to resolve labels based on semantic similarity:
 
 ```bash
 # Enable semantic matching
@@ -69,7 +83,7 @@ python3 test_script.py ../CompositeDataset/HaarmannetAL2021adjusted.xml -semanti
 python3 test_script.py ../CompositeDataset/HaarmannetAL2021adjusted.xml
 ```
 
-When semantic matching is enabled, the tool will use a pre-trained multilingual embedding model to match requirement activity labels to the closest semantically similar activity labels in the process model. This can be tested with the Composite Dataset's adjusted XML files that contain intentionally perturbed activity labels.
+When semantic matching is enabled, the tool uses a pre-trained multilingual embedding model to match requirement activity labels to the closest semantically similar activity labels in the process model. This can be tested with the Composite Dataset adjusted XML files that contain intentionally perturbed activity labels.
 
 **Perturbation Strategy**: Activity labels in these adjusted files have been intentionally modified to test the semantic matching capability. For example, an activity labeled "Review Application" might be renamed to "Check Application Form" or "Examine Request". The requirements are encoded as Abstract Syntax Trees (ASTs) and remain unchanged. These datasets allow you to test whether semantic matching can successfully resolve these slightly different labels to the correct activities.
 
@@ -93,11 +107,13 @@ To actually launch the project follow these steps:
 1. Clone the Repository `git clone https://github.com/JohannesLbck/ProcessTreeVerify.git`
 2. Navigate to the python\_code dictionary `cd python_code`. Optionally set up a virtual enviroment.
 3. Install all dependencies `pip install -r requirements.txt`
-4. Launch the Application using `python3 subscriber.py` (launches as a daemon, short explanation below)
+4. Launch the application daemon using `python3 subscriber.py`
 5. Either use the endpoint at local host (127.0.0.1:9321) or set up port forwarding by setting up your firewall and webserver (we recommend using nginx and also setting up let's encrypt)
-6. End the Daemon after using by executing `python3 subscriber.py` again
+6. Check daemon status using `python3 subscriber.py --status`
+7. End the daemon after using by executing `python3 subscriber.py --stop`
+8. For foreground/debug mode, execute `python3 subscriber.py --foreground`
 
-subscriber.py also contains a little script (def run\_server():) to ensure that the subscriber is started as a daemon. We are unsure how this will work on Windows/Mac so if you encounter any issues on these systems you can remove that codepiece and use the "normal" way to run fastapi rest services using `uvicorn.run subscriber:app port=9321`. If you still encounter any issues on these systems you can contact us or just try out the example scripts presented in Section (C).
+subscriber.py supports daemon management with a PID file and writes server output to subscriber.log in python\_code. If you encounter platform-specific issues, you can still run it directly in the foreground mode described above. If you still encounter any issues on these systems you can contact us or just try out the example scripts presented in Section (C).
 Technially you can also set up a local deployment of the CPEE as well, but this can be somewhat challenging. For instructions on a locally deployed CPEE we refer to the official documentation at [cpee.org].
 
 ## Comparative Eval
