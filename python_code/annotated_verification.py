@@ -179,15 +179,13 @@ def precedence(tree, a, b):
             elif compare == 2:
                 logger.info(f'Activity "{b}" was found before "{a}". Ensuring that {b} is not on an exclusive branch which could lead to violations in some traces')
                 ancestors_a, ancestors_b, shared = get_shared_ancestors(tree, a_ele, b_ele)
-                if any(elem.tag.endswith("choose") for elem in ancestors_b):
-                    LCA = shared[0].tag
-                    if LCA.endswith("alternative") or LCA.endswith("otherwise"):
-                        logger.info(f'Activity "{a}" and Activity "{b} are on the same branch in the correct order')
-                        return True
-                    logger.info(f'Activity "{b} was found before "{a}, but it is in a different exclusive branch, so precedence can not be guaranteed in every trace')
-                    
+                lca = shared[0]
+                lca_idx = ancestors_b.index(lca)
+                b_below_lca = ancestors_b[:lca_idx]  # strictly between b and LCA
+                if any(elem.tag.endswith("choose") for elem in b_below_lca):
+                    logger.info(f'Activity "{b}" was found before "{a}", but it is in a different exclusive branch, so precedence cannot be guaranteed in every trace')
                     return False
-                logger.info(f'Activity "{b}" was found before "{a}", and "{b}" is not on an exclusive branch, so precedence "{a}" requires "{b}" before is True')
+                logger.info(f'Activity "{b}" was found before "{a}", and "{b}" is not on an exclusive branch relative to LCA, so precedence is True')
                 return True
         else:
             logger.add_missing_activity(b)
