@@ -42,7 +42,7 @@ from tester import run_tests
 from reqparser import parse_requirements
 from verificationAST import verify
 
-url = "https://cpee.org/comp-log/receiver/"
+url = "https://cpee.org/comp-log/receiver/" ## Points towards run/comp-receiver on cpee demo server. For production, please use your own endpoint.
 
 headers = {
         "Content-Type": "application/x-yaml",
