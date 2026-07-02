@@ -1,0 +1,11 @@
+// AST for R2
+digraph {
+	fontname=Helvetica fontsize=11 label="R2: leads_to('verify symptoms', 'diagnosis')" labelloc=t
+	node [fontname=Helvetica fontsize=10]
+	edge [fontname=Helvetica fontsize=9]
+	n1 [label=leads_to fillcolor=lightblue shape=box style=filled]
+	n2 [label="verify symptoms" fillcolor=lightgreen shape=ellipse style=filled]
+	n1 -> n2
+	n3 [label=diagnosis fillcolor=lightgreen shape=ellipse style=filled]
+	n1 -> n3
+}

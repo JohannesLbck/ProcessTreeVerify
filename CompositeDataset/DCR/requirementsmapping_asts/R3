@@ -1,0 +1,11 @@
+// AST for R3
+digraph {
+	fontname=Helvetica fontsize=11 label="R3: precedence('prescribe medicine', 'verify symptoms')" labelloc=t
+	node [fontname=Helvetica fontsize=10]
+	edge [fontname=Helvetica fontsize=9]
+	n1 [label=precedence fillcolor=lightblue shape=box style=filled]
+	n2 [label="prescribe medicine" fillcolor=lightgreen shape=ellipse style=filled]
+	n1 -> n2
+	n3 [label="verify symptoms" fillcolor=lightgreen shape=ellipse style=filled]
+	n1 -> n3
+}

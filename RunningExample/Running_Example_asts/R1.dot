@@ -1,0 +1,19 @@
+// AST for R1
+digraph {
+	fontname=Helvetica fontsize=11 label="R1: precedence('obtain consent', 'provide information') and data_value_alternative_directly_follows('not data.consented', 'terminate')" labelloc=t
+	node [fontname=Helvetica fontsize=10]
+	edge [fontname=Helvetica fontsize=9]
+	n1 [label=and fillcolor=lightyellow shape=diamond style=filled]
+	n2 [label=precedence fillcolor=lightblue shape=box style=filled]
+	n3 [label="obtain consent" fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n3
+	n4 [label="provide information" fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n4
+	n1 -> n2
+	n5 [label=data_value_alternative_directly_follows fillcolor=lightblue shape=box style=filled]
+	n6 [label="not data.consented" fillcolor=lightgreen shape=ellipse style=filled]
+	n5 -> n6
+	n7 [label=terminate fillcolor=lightgreen shape=ellipse style=filled]
+	n5 -> n7
+	n1 -> n5
+}

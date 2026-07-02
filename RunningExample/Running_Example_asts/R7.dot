@@ -1,0 +1,19 @@
+// AST for R7
+digraph {
+	fontname=Helvetica fontsize=11 label="R7: activity_receives('conduct interview and questionnaire', 'assessment_status') and activity_receives('direct questions', 'assessment_status')" labelloc=t
+	node [fontname=Helvetica fontsize=10]
+	edge [fontname=Helvetica fontsize=9]
+	n1 [label=and fillcolor=lightyellow shape=diamond style=filled]
+	n2 [label=activity_receives fillcolor=lightblue shape=box style=filled]
+	n3 [label="conduct interview and questionnaire" fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n3
+	n4 [label=assessment_status fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n4
+	n1 -> n2
+	n5 [label=activity_receives fillcolor=lightblue shape=box style=filled]
+	n6 [label="direct questions" fillcolor=lightgreen shape=ellipse style=filled]
+	n5 -> n6
+	n7 [label=assessment_status fillcolor=lightgreen shape=ellipse style=filled]
+	n5 -> n7
+	n1 -> n5
+}

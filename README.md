@@ -119,6 +119,56 @@ Technially you can also set up a local deployment of the CPEE as well, but this 
 ## Comparative Eval
 Guidance on how to replicate the results of the comparative evaluation is in the ComparativeEval directory ReadMe file.
 
+## Visualising Requirement ASTs (`drawast.py`)
+
+`drawast.py` is a utility script that reads compliance requirements from either a JSON requirements file or a CPEE tree XML file and renders each requirement expression as an Abstract Syntax Tree (AST) diagram using [Graphviz](https://graphviz.org/).
+
+**Prerequisites**: the Graphviz Python bindings and (for rendering) the Graphviz system package:
+
+```bash
+pip install graphviz
+sudo apt install graphviz   # Debian/Ubuntu
+sudo dnf install graphviz   # Fedora/RHEL
+```
+
+### Usage
+
+```bash
+# From a plain JSON requirements file  {"R1": "precedence(...)", ...}
+python drawast.py CompositeDataset/DCR/requirementsmapping.json
+
+# From a CPEE tree XML file (reads requirements from <attributes><requirements>)
+python drawast.py RunningExample/Running_Example.xml
+
+# Custom output directory and rendered format
+python drawast.py myprocess.xml --output-dir /tmp/asts --format pdf
+```
+
+Output is written to `<input_stem>_asts/` by default, containing one `.dot` source file and one rendered image per requirement.
+
+### Flags
+
+| Flag | Description |
+|---|---|
+| *(none)* | Draws the requirement expression AST only — compliance-pattern calls, boolean operators, and literal arguments. |
+| `--full-tree` | Expands each compliance-pattern call with a dashed cluster subgraph showing its full implementation AST from `annotated_verification.py`. `logger.*` calls are omitted for clarity. Output directory: `<stem>_asts_full/`. |
+| `--full-tree-with-logs` | Like `--full-tree` but also includes `logger.info/warning/…` nodes in the clusters. Output directory: `<stem>_asts_full_with_logs/`. Less pretty, can help with understanability|
+| `--av-path PATH` | Path to `annotated_verification.py` used by the full-tree modes. Defaults to `python_code/annotated_verification.py` relative to the script. |
+| `--format FMT` | Graphviz output format (`png`, `pdf`, `svg`, …). Default: `png`. |
+| `--output-dir DIR` | Override the auto-generated output directory. |
+
+### Node colours
+
+| Colour | Shape | Meaning |
+|---|---|---|
+| Blue | Box | Compliance-pattern function call (`precedence`, `leads_to`, …) |
+| Yellow | Diamond | Boolean operator (`and`, `or`, `not`) · `if` branch in implementation |
+| Green | Ellipse | String or numeric argument |
+| Pink | Box | `return` statement in implementation |
+| Cyan | Diamond | `for` / `while` loop in implementation |
+| Purple | Box | `try/except` in implementation |
+| Dashed | Box | Expression statement (`logger.*` or similar) in implementation |
+
 ## General Guidance & Best Practices
 
 ### Process Modeling Tips

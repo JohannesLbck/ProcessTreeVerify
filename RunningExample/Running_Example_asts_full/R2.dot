@@ -1,0 +1,59 @@
+// AST for R2
+digraph {
+	fontname=Helvetica fontsize=11 label="R2 [full tree]: executed_by('conduct interview and questionnaire', 'physician') or executed_by('conduct interview and questionnaire', 'trained assistant')" labelloc=t
+	node [fontname=Helvetica fontsize=10]
+	edge [fontname=Helvetica fontsize=9]
+	n1 [label=or fillcolor=lightyellow shape=diamond style=filled]
+	n2 [label=executed_by fillcolor=lightblue shape=box style=filled]
+	n3 [label="conduct interview and questionnaire" fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n3
+	n4 [label=physician fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n4
+	subgraph cluster_impl_executed_by_n2 {
+		color=gray50 fontname=Helvetica fontsize=10 label="impl: executed_by" style=dashed
+		node [fontname=Helvetica]
+		in2_s5 [label="apath = exists(tree, a)" fontsize=9 shape=box]
+		in2_s6 [label="if apath is not None" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in2_s7 [label="resources = executed_by_annotated(apath, tree)" fontsize=9 shape=box]
+		in2_s6 -> in2_s7 [label=T]
+		in2_s8 [label="for a_resource in resources if resources is n..." fillcolor="#c9e8f0" fontsize=9 shape=diamond style=filled]
+		in2_s9 [label="if a_resource.strip() == resource.strip()" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in2_s10 [label="return True" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in2_s9 -> in2_s10 [label=T]
+		in2_s8 -> in2_s9 [label=""]
+		in2_s7 -> in2_s8 [label=""]
+		in2_s11 [label="return False" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in2_s8 -> in2_s11 [label=""]
+		in2_s12 [label="return False" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in2_s6 -> in2_s12 [label=F]
+		in2_s5 -> in2_s6 [label=""]
+	}
+	n2 -> in2_s5 [label=impl color=gray50 style=dashed]
+	n1 -> n2
+	n13 [label=executed_by fillcolor=lightblue shape=box style=filled]
+	n14 [label="conduct interview and questionnaire" fillcolor=lightgreen shape=ellipse style=filled]
+	n13 -> n14
+	n15 [label="trained assistant" fillcolor=lightgreen shape=ellipse style=filled]
+	n13 -> n15
+	subgraph cluster_impl_executed_by_n13 {
+		color=gray50 fontname=Helvetica fontsize=10 label="impl: executed_by" style=dashed
+		node [fontname=Helvetica]
+		in13_s16 [label="apath = exists(tree, a)" fontsize=9 shape=box]
+		in13_s17 [label="if apath is not None" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in13_s18 [label="resources = executed_by_annotated(apath, tree)" fontsize=9 shape=box]
+		in13_s17 -> in13_s18 [label=T]
+		in13_s19 [label="for a_resource in resources if resources is n..." fillcolor="#c9e8f0" fontsize=9 shape=diamond style=filled]
+		in13_s20 [label="if a_resource.strip() == resource.strip()" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in13_s21 [label="return True" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in13_s20 -> in13_s21 [label=T]
+		in13_s19 -> in13_s20 [label=""]
+		in13_s18 -> in13_s19 [label=""]
+		in13_s22 [label="return False" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in13_s19 -> in13_s22 [label=""]
+		in13_s23 [label="return False" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in13_s17 -> in13_s23 [label=F]
+		in13_s16 -> in13_s17 [label=""]
+	}
+	n13 -> in13_s16 [label=impl color=gray50 style=dashed]
+	n1 -> n13
+}

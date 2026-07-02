@@ -1,0 +1,21 @@
+// AST for R4
+digraph {
+	fontname=Helvetica fontsize=11 label="R4: timed_alternative('monitor patient', 'assess donor', 900) and executed_by('assess donor', 'physician')" labelloc=t
+	node [fontname=Helvetica fontsize=10]
+	edge [fontname=Helvetica fontsize=9]
+	n1 [label=and fillcolor=lightyellow shape=diamond style=filled]
+	n2 [label=timed_alternative fillcolor=lightblue shape=box style=filled]
+	n3 [label="monitor patient" fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n3
+	n4 [label="assess donor" fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n4
+	n5 [label=900 fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n5
+	n1 -> n2
+	n6 [label=executed_by fillcolor=lightblue shape=box style=filled]
+	n7 [label="assess donor" fillcolor=lightgreen shape=ellipse style=filled]
+	n6 -> n7
+	n8 [label=physician fillcolor=lightgreen shape=ellipse style=filled]
+	n6 -> n8
+	n1 -> n6
+}

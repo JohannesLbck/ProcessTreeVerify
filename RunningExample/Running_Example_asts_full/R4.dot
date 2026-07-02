@@ -1,0 +1,75 @@
+// AST for R4
+digraph {
+	fontname=Helvetica fontsize=11 label="R4 [full tree]: timed_alternative('monitor patient', 'assess donor', 900) and executed_by('assess donor', 'physician')" labelloc=t
+	node [fontname=Helvetica fontsize=10]
+	edge [fontname=Helvetica fontsize=9]
+	n1 [label=and fillcolor=lightyellow shape=diamond style=filled]
+	n2 [label=timed_alternative fillcolor=lightblue shape=box style=filled]
+	n3 [label="monitor patient" fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n3
+	n4 [label="assess donor" fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n4
+	n5 [label=900 fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n5
+	subgraph cluster_impl_timed_alternative_n2 {
+		color=gray50 fontname=Helvetica fontsize=10 label="impl: timed_alternative" style=dashed
+		node [fontname=Helvetica]
+		in2_s6 [label="a_ele = exists(tree, a)" fontsize=9 shape=box]
+		in2_s7 [label="if a_ele is not None" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in2_s8 [label="b_ele = exists(tree, b)" fontsize=9 shape=box]
+		in2_s7 -> in2_s8 [label=T]
+		in2_s9 [label="if b_ele is not None" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in2_s10 [label="for timeout in timeouts_exists(tree)" fillcolor="#c9e8f0" fontsize=9 shape=diamond style=filled]
+		in2_s11 [label="parallel = cancel_first(tree, timeout[0], a_ele)" fontsize=9 shape=box]
+		in2_s10 -> in2_s11 [label=""]
+		in2_s12 [label="if parallel is not None" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in2_s13 [label="if timeout[1] is not None" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in2_s14 [label="if not timeout[1].isdigit()" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in2_s15 [label="return exists(timeout[0], a)" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in2_s14 -> in2_s15 [label=T]
+		in2_s16 [label="if time == int(timeout[1])" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in2_s17 [label="return exists(parallel, a)" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in2_s16 -> in2_s17 [label=T]
+		in2_s18 [label="return False" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in2_s16 -> in2_s18 [label=F]
+		in2_s14 -> in2_s16 [label=F]
+		in2_s13 -> in2_s14 [label=T]
+		in2_s12 -> in2_s13 [label=T]
+		in2_s11 -> in2_s12 [label=""]
+		in2_s9 -> in2_s10 [label=T]
+		in2_s19 [label="return False" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in2_s10 -> in2_s19 [label=""]
+		in2_s8 -> in2_s9 [label=""]
+		in2_s20 [label="return False" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in2_s7 -> in2_s20 [label=F]
+		in2_s6 -> in2_s7 [label=""]
+	}
+	n2 -> in2_s6 [label=impl color=gray50 style=dashed]
+	n1 -> n2
+	n21 [label=executed_by fillcolor=lightblue shape=box style=filled]
+	n22 [label="assess donor" fillcolor=lightgreen shape=ellipse style=filled]
+	n21 -> n22
+	n23 [label=physician fillcolor=lightgreen shape=ellipse style=filled]
+	n21 -> n23
+	subgraph cluster_impl_executed_by_n21 {
+		color=gray50 fontname=Helvetica fontsize=10 label="impl: executed_by" style=dashed
+		node [fontname=Helvetica]
+		in21_s24 [label="apath = exists(tree, a)" fontsize=9 shape=box]
+		in21_s25 [label="if apath is not None" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in21_s26 [label="resources = executed_by_annotated(apath, tree)" fontsize=9 shape=box]
+		in21_s25 -> in21_s26 [label=T]
+		in21_s27 [label="for a_resource in resources if resources is n..." fillcolor="#c9e8f0" fontsize=9 shape=diamond style=filled]
+		in21_s28 [label="if a_resource.strip() == resource.strip()" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in21_s29 [label="return True" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in21_s28 -> in21_s29 [label=T]
+		in21_s27 -> in21_s28 [label=""]
+		in21_s26 -> in21_s27 [label=""]
+		in21_s30 [label="return False" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in21_s27 -> in21_s30 [label=""]
+		in21_s31 [label="return False" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in21_s25 -> in21_s31 [label=F]
+		in21_s24 -> in21_s25 [label=""]
+	}
+	n21 -> in21_s24 [label=impl color=gray50 style=dashed]
+	n1 -> n21
+}

@@ -1,0 +1,71 @@
+// AST for R7
+digraph {
+	fontname=Helvetica fontsize=11 label="R7 [full tree]: activity_receives('conduct interview and questionnaire', 'assessment_status') and activity_receives('direct questions', 'assessment_status')" labelloc=t
+	node [fontname=Helvetica fontsize=10]
+	edge [fontname=Helvetica fontsize=9]
+	n1 [label=and fillcolor=lightyellow shape=diamond style=filled]
+	n2 [label=activity_receives fillcolor=lightblue shape=box style=filled]
+	n3 [label="conduct interview and questionnaire" fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n3
+	n4 [label=assessment_status fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n4
+	subgraph cluster_impl_activity_receives_n2 {
+		color=gray50 fontname=Helvetica fontsize=10 label="impl: activity_receives" style=dashed
+		node [fontname=Helvetica]
+		in2_s5 [label="apath = exists(tree, a)" fontsize=9 shape=box]
+		in2_s6 [label="if 'data.' in data" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in2_s7 [label="data = data.split('.', 1)" fontsize=9 shape=box]
+		in2_s6 -> in2_s7 [label=T]
+		in2_s5 -> in2_s6 [label=""]
+		in2_s8 [label="if apath is not None" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in2_s9 [label="a_dict = activity_data_checks(tree, apath)" fontsize=9 shape=box]
+		in2_s8 -> in2_s9 [label=T]
+		in2_s10 [label="finalize = a_dict['finalize']" fontsize=9 shape=box]
+		in2_s9 -> in2_s10 [label=""]
+		in2_s11 [label="for occurance in finalize" fillcolor="#c9e8f0" fontsize=9 shape=diamond style=filled]
+		in2_s12 [label="if occurance == data" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in2_s13 [label="return True" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in2_s12 -> in2_s13 [label=T]
+		in2_s11 -> in2_s12 [label=""]
+		in2_s10 -> in2_s11 [label=""]
+		in2_s14 [label="return False" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in2_s11 -> in2_s14 [label=""]
+		in2_s15 [label="return True" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in2_s8 -> in2_s15 [label=F]
+		in2_s6 -> in2_s8 [label=""]
+	}
+	n2 -> in2_s5 [label=impl color=gray50 style=dashed]
+	n1 -> n2
+	n16 [label=activity_receives fillcolor=lightblue shape=box style=filled]
+	n17 [label="direct questions" fillcolor=lightgreen shape=ellipse style=filled]
+	n16 -> n17
+	n18 [label=assessment_status fillcolor=lightgreen shape=ellipse style=filled]
+	n16 -> n18
+	subgraph cluster_impl_activity_receives_n16 {
+		color=gray50 fontname=Helvetica fontsize=10 label="impl: activity_receives" style=dashed
+		node [fontname=Helvetica]
+		in16_s19 [label="apath = exists(tree, a)" fontsize=9 shape=box]
+		in16_s20 [label="if 'data.' in data" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in16_s21 [label="data = data.split('.', 1)" fontsize=9 shape=box]
+		in16_s20 -> in16_s21 [label=T]
+		in16_s19 -> in16_s20 [label=""]
+		in16_s22 [label="if apath is not None" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in16_s23 [label="a_dict = activity_data_checks(tree, apath)" fontsize=9 shape=box]
+		in16_s22 -> in16_s23 [label=T]
+		in16_s24 [label="finalize = a_dict['finalize']" fontsize=9 shape=box]
+		in16_s23 -> in16_s24 [label=""]
+		in16_s25 [label="for occurance in finalize" fillcolor="#c9e8f0" fontsize=9 shape=diamond style=filled]
+		in16_s26 [label="if occurance == data" fillcolor="#ffe699" fontsize=9 shape=diamond style=filled]
+		in16_s27 [label="return True" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in16_s26 -> in16_s27 [label=T]
+		in16_s25 -> in16_s26 [label=""]
+		in16_s24 -> in16_s25 [label=""]
+		in16_s28 [label="return False" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in16_s25 -> in16_s28 [label=""]
+		in16_s29 [label="return True" fillcolor="#ffb3b3" fontsize=9 shape=box style=filled]
+		in16_s22 -> in16_s29 [label=F]
+		in16_s20 -> in16_s22 [label=""]
+	}
+	n16 -> in16_s19 [label=impl color=gray50 style=dashed]
+	n1 -> n16
+}

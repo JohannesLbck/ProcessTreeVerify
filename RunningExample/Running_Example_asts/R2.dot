@@ -1,0 +1,19 @@
+// AST for R2
+digraph {
+	fontname=Helvetica fontsize=11 label="R2: executed_by('conduct interview and questionnaire', 'physician') or executed_by('conduct interview and questionnaire', 'trained assistant')" labelloc=t
+	node [fontname=Helvetica fontsize=10]
+	edge [fontname=Helvetica fontsize=9]
+	n1 [label=or fillcolor=lightyellow shape=diamond style=filled]
+	n2 [label=executed_by fillcolor=lightblue shape=box style=filled]
+	n3 [label="conduct interview and questionnaire" fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n3
+	n4 [label=physician fillcolor=lightgreen shape=ellipse style=filled]
+	n2 -> n4
+	n1 -> n2
+	n5 [label=executed_by fillcolor=lightblue shape=box style=filled]
+	n6 [label="conduct interview and questionnaire" fillcolor=lightgreen shape=ellipse style=filled]
+	n5 -> n6
+	n7 [label="trained assistant" fillcolor=lightgreen shape=ellipse style=filled]
+	n5 -> n7
+	n1 -> n5
+}
