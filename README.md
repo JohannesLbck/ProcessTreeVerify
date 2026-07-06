@@ -12,7 +12,7 @@ The Process Tree Verifier (PTV) is a subscription-based REST service for verifyi
 
 A live instance is available at:
 
-**[https://cpee.org/flow/compliance.html?monitor=https://cpee.org/flow/engine/82014/](https://cpee.org/flow/compliance.html?monitor=https://cpee.org/flow/engine/82014/)**
+**[https://cpee.org/hub/server/Staff.dir/Loebbi.dir/Compliance.dir/Running%20Example.xml/open-new?stage=compliance](https://cpee.org/hub/server/Staff.dir/Loebbi.dir/Compliance.dir/Running%20Example.xml/open-new?stage=compliance)**
 
 Open the link, navigate to the **Compliance** tab, and press **Verify** to run verification against the pre-loaded process and requirements. The results panel shows per-requirement verdicts with detailed reasoning steps, and links to the full compliance log.
 
