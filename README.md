@@ -1,207 +1,114 @@
 # PTV - Process Tree Verifier
 
-This is the Github of the Process Tree Verification tool developed for *Tree-based Compliance Verification: Bridging the Gap between Compliance Requirements and Process Execution* as part of the *TRPro project* Project funded by the DFG under the project number 514769482. The Process Tree Verifier is a Subscribtion based Rest Service that can be used to verify regulatory requirements on processes represented as process trees in the [cpee](https://www.cpee.org)-tree format.
+The Process Tree Verifier (PTV) is a subscription-based REST service for verifying regulatory requirements on processes represented as process trees in the [CPEE](https://cpee.org) format. It was developed as part of *Tree-based Compliance Verification: Bridging the Gap between Compliance Requirements and Process Execution* (TRPro project, DFG project no. 514769482).
 
-This ReadMe contains instructions on how to use the developed tool as well as the processes used during the evaluation and all artifacts of the user study with additional documentation in the respective subfolders. The tool can be tested (A) with an existing process to see the functionality directly, (B) with new processes/requirements to show how it affects process modeling, (C) with a small testing script locally, and (D) with a locally deployed copy of the PTV for future development.
+- Full method documentation: [annotated_verification_methods.md](https://github.com/JohannesLbck/ProcessTreeVerify/blob/master/python_code/annotated_verification_methods.md)
+- Compliance log format: [log_doc.md](https://github.com/JohannesLbck/ProcessTreeVerify/blob/master/log_doc.md)
+- Quick method reference: [methods_doc_concise.md](python_code/methods_doc_concise.md)
 
-The prompts used for generating ASTs out of Natural Language / Textual Process Descriptions are in the ExtractionPrototype Directory.
+---
 
-The dataset used for evaluation as XML files is in the CompositeDataset directory which also contains an additional README explaining how the dataset was createtd. The XML files already contain the requirement ASTs so they can be loaded into the CPEE and verified as described in (B). Furthermore they can be directly tested according to (A) using the already loaded models which can be found [here](https://cpee.org/hub/?stage=development&dir=Staff.dir/Loebbi.dir/Compliance.dir/CompositeDataSet.dir/).
+## Quick Demo
 
-The complete Documentation of the PTV can be found in the [annotated_verification_methods.md](https://github.com/JohannesLbck/ProcessTreeVerify/blob/master/python_code/annotated_verification_methods.md) file.
+A live instance is available at:
 
-A documentation of the XES-compatible compliance logs [log_doc.md](https://github.com/JohannesLbck/ProcessTreeVerify/blob/master/log_doc.md) file.
+**[https://cpee.org/flow/compliance.html?monitor=https://cpee.org/flow/engine/82014/](https://cpee.org/flow/compliance.html?monitor=https://cpee.org/flow/engine/82014/)**
 
-## (A) Testing with existing Processes
+Open the link, navigate to the **Compliance** tab, and press **Verify** to run verification against the pre-loaded process and requirements. The results panel shows per-requirement verdicts with detailed reasoning steps, and links to the full compliance log.
 
-1. Navigate to the cpee directory containing the processes used as running example, for the user study and the composite dataset: [https://cpee.org/hub/?stage=development&dir=Staff.dir/Loebbi.dir/Compliance.dir]
-2. Open any of the example processes. For example, simply click on the "Running Example", and accept the terms of use (no user data is collected).
-3. The example process is already connected to the PTV running on our server, so you can view resulting logs [here](https://power.bpm.cit.tum.de/PTVLogs/) or in XES format on the [cpee](https://cpee.org/comp-log/) while editing the process. We recommend the XES format logs, as the other logs often break and are deprecated. Simply look for the log in that directory where the instance number matches your number. You can find your instance number in the URL after opening a model as well as on the top right next to the cpee logo. Any edit in the model will trigger a rerun of the verification. So, for example you can add a additionl activity by right clicking on any activity and selecting "Service call with scripts". If you want to change an existing activity, left click the activity and change the values on the right. You can choose to save these to the repository, but we will regularily revert these changes to keep reproducibiltiy. If you want to fully play around with these or own models, we suggest loading the XML into a own model as described in (B).
+---
 
-## (B) Adding the subscription to a new Process
+## (A) Testing with Existing Processes
 
-If you want to try out the verification yourself, you can also create a new model on the CPEE and connect it to the compliance subscriber. For this, follow the following steps:
+Pre-loaded example processes (running example, user study, composite dataset) are available in the [CPEE hub](https://cpee.org/hub/?stage=development&dir=Staff.dir/Loebbi.dir/Compliance.dir). Open any model, accept the terms of use, and any edit to the process triggers a verification run. Results appear in the [compliance log directory](https://cpee.org/comp-log/) — match the log by the instance UUID shown in the URL. The composite dataset XML files are also available [here](https://cpee.org/hub/?stage=development&dir=Staff.dir/Loebbi.dir/Compliance.dir/CompositeDataSet.dir/). Add **compliance.html** before the ?monitor in the URL when you are in a particular instance and press verify to test. It is possible you will have to edit the process/requirements first before verification results appear.
 
-1. Navigate to the following [cpee directory](https://cpee.org/hub/?stage=development&dir=Staff.dir/Loebbi.dir/Compliance.dir/PTVPlayground.dir/) and create a New Model
-2. Use the CPEE functionality "save testset" to download the XML test set.
-3. Add the Compliance Subscriber to the test by copy-pasting one of the following subscriptions at the end of the XML. (You can also check the xml files of the composite dataset for examples with the subscriber added.)
+---
 
-Use this endpoint for exact label matching:
+## (B) Adding the Subscriber to a New Process
 
-```
-  <subscriptions xmlns="http://riddl.org/ns/common-patterns/notifications-producer/2.0">
-    <subscription xmlns="http://riddl.org/ns/common-patterns/notifications-producer/2.0" id="_compliance" url="https://power.bpm.cit.tum.de/compliance/Subscriber">
-      <topic id="description">
-        <event>change</event>
-      </topic>
-    </subscription>
-  </subscriptions>
-```
+1. Create a new model in the [PTV playground](https://cpee.org/hub/?stage=development&dir=Staff.dir/Loebbi.dir/Compliance.dir/PTVPlayground.dir/).
+2. Download the testset via **save testset**, add one of the subscriptions below, then reload it via **load testset**.
+3. Add compliance requirements as ASTs in the **Attributes → requirements** field.
 
-Use this endpoint for semantic label matching:
+Any subsequent change to the model triggers verification. Logs appear at [cpee.org/comp-log](https://cpee.org/comp-log/).
 
-```
-  <subscriptions xmlns="http://riddl.org/ns/common-patterns/notifications-producer/2.0">
-    <subscription xmlns="http://riddl.org/ns/common-patterns/notifications-producer/2.0" id="_compliance" url="https://power.bpm.cit.tum.de/compliance/SubscriberSemantic">
-      <topic id="description">
-        <event>change</event>
-      </topic>
-    </subscription>
-  </subscriptions>
+**Exact label matching:**
+```xml
+<subscriptions xmlns="http://riddl.org/ns/common-patterns/notifications-producer/2.0">
+  <subscription id="_compliance" url="https://power.bpm.cit.tum.de/compliance/Subscriber">
+    <topic id="description"><event>change</event></topic>
+  </subscription>
+</subscriptions>
 ```
 
-4. Now, use the "load testset" button to load the edited XML into the process. Save the model for safety.
-5. To actually verify anything you have to still add compliance requirements. The compliance requirements are sent to the subscriber via the Attributes fields. Accordingly, add any requirements encoded as an AST you want into it like so:
+**Semantic label matching:**
+```xml
+<subscriptions xmlns="http://riddl.org/ns/common-patterns/notifications-producer/2.0">
+  <subscription id="_compliance" url="https://power.bpm.cit.tum.de/compliance/SubscriberSemantic">
+    <topic id="description"><event>change</event></topic>
+  </subscription>
+</subscriptions>
+```
 
-![Add Requirements](DemoImages/3.png)
+---
 
-6. Now any change to the process model will send a message to the subscriber, so you can again check the compliance log as described in (A)
-
-For a complete overview of all verification methods, you can check the source code in the python\_code dictionary or the Documentation linked above. 
-
-
-## (C) Local Testing Scripts
-Complete local deployment requires setting up a server / configuring a firewall. In order to simplify local testing for users who do not want to spend that time but do want to test the PTV locally, we prepared a simple script interface for the PTV. To use the testing script, you first have to clone the repository and install dependencies. Instructions were tested on a fresh Fedora 43 installation but should work on other distributions and Windows/Mac as well.
-
-1. Clone the Repository `git clone https://github.com/JohannesLbck/ProcessTreeVerify.git`
-2. Navigate to the python\_code dictionary `cd python_code`. Optionally set up a virtual enviroment (This tool has barely any dependencies)
-3. (This was optional on Fedora): Install all dependencies `pip install -r requirements.txt`
-4. On Linux: Launch the testing script `python3 test_script.py ../RunningExample/Running_Example.xml`
-5. On Windows: Launch the testing script `python3 test_script.py ..\RunningExample\Running_Example.xml`
-
-The above example tests the running example process also used throughout the paper, but you can also verify any other process xml found in the Composite Dataset, the two survey processes as well as any processes created in the process hub (as long as you add requirements to them)
-
-### Semantic Matching Option
-
-By default, test_script.py performs verification using the exact activity labels from the process model. For datasets with slightly perturbed or paraphrased activity labels, you can enable semantic matching with -semantic to resolve labels based on semantic similarity:
+## (C) Local Testing Script
 
 ```bash
-# Enable semantic matching
-python3 test_script.py ../CompositeDataset/HaarmannetAL2021adjusted.xml -semantic
-
-# Without semantic matching (default)
-python3 test_script.py ../CompositeDataset/HaarmannetAL2021adjusted.xml
+git clone https://github.com/JohannesLbck/ProcessTreeVerify.git
+cd python_code
+pip install -r requirements.txt          # optional venv recommended
+python3 test_script.py ../RunningExample/Running_Example.xml
 ```
 
-When semantic matching is enabled, the tool uses a pre-trained multilingual embedding model to match requirement activity labels to the closest semantically similar activity labels in the process model. This can be tested with the Composite Dataset adjusted XML files that contain intentionally perturbed activity labels.
+Any XML from the composite dataset or hub can be used in place of the running example. Add `-semantic` to enable semantic label matching (useful for the `*adjusted.xml` dataset files which contain intentionally perturbed activity labels):
 
-**Perturbation Strategy**: Activity labels in these adjusted files have been intentionally modified to test the semantic matching capability. For example, an activity labeled "Review Application" might be renamed to "Check Application Form" or "Examine Request". The requirements are encoded as Abstract Syntax Trees (ASTs) and remain unchanged. These datasets allow you to test whether semantic matching can successfully resolve these slightly different labels to the correct activities.
-
-To test an adjusted file with semantic matching enabled:
 ```bash
 python3 test_script.py ../CompositeDataset/HaarmannetAL2021adjusted.xml -semantic
 ```
 
-To test the same file without semantic matching (which may result in unmatched labels):
+---
+
+## (D) Deployment
+
 ```bash
-python3 test_script.py ../CompositeDataset/HaarmannetAL2021adjusted.xml
+git clone https://github.com/JohannesLbck/ProcessTreeVerify.git
+cd python_code
+pip install -r requirements.txt
+python3 subscriber.py                    # start daemon (port 9321)
+python3 subscriber.py --status           # check status
+python3 subscriber.py --stop             # stop daemon
+python3 subscriber.py --foreground       # debug/foreground mode
 ```
 
+Point the subscription URL at your endpoint instead of the hosted one. We recommend nginx for port forwarding and Let's Encrypt for TLS.
 
-## (D) Custom Deployment
-Finally, you can also deploy the PTV locally, which we recommend in case you want to add additional functionality or simply run different tests.
-The CPEE side would be handled the same as before, with the only change being that the URL needs to point toward your own endpoint. We recommend using a server such as nginx to forward the port (default is port 9321, which can be changed in python\_code/subscriber.py) towards a URL. These instructions were tested on a fresh Fedora 43 Installation but should work on different systems as well. Depending on your distribution or Windows/Mac, you might have to install additional packages such as python3 and pip (any current version should do; all required packages are standard libraries).
+---
 
-To actually launch the project follow these steps:
+## Comparative Evaluation
 
-1. Clone the Repository `git clone https://github.com/JohannesLbck/ProcessTreeVerify.git`
-2. Navigate to the python\_code dictionary `cd python_code`. Optionally set up a virtual enviroment.
-3. Install all dependencies `pip install -r requirements.txt`
-4. Launch the application daemon using `python3 subscriber.py`
-5. Either use the endpoint at local host (127.0.0.1:9321) or set up port forwarding by setting up your firewall and webserver (we recommend using nginx and also setting up let's encrypt)
-6. Check daemon status using `python3 subscriber.py --status`
-7. End the daemon after using by executing `python3 subscriber.py --stop`
-8. For foreground/debug mode, execute `python3 subscriber.py --foreground`
+Replication instructions are in the `ComparativeEval/` directory.
 
-subscriber.py supports daemon management with a PID file and writes server output to subscriber.log in python\_code. If you encounter platform-specific issues, you can still run it directly in the foreground mode described above. If you still encounter any issues on these systems you can contact us or just try out the example scripts presented in Section (C).
-Technially you can also set up a local deployment of the CPEE as well, but this can be somewhat challenging. For instructions on a locally deployed CPEE we refer to the official documentation at [cpee.org].
-
-## Comparative Eval
-Guidance on how to replicate the results of the comparative evaluation is in the ComparativeEval directory ReadMe file.
+---
 
 ## Visualising Requirement ASTs (`drawast.py`)
 
-`drawast.py` is a utility script that reads compliance requirements from either a JSON requirements file or a CPEE tree XML file and renders each requirement expression as an Abstract Syntax Tree (AST) diagram using [Graphviz](https://graphviz.org/).
+Renders requirements from a JSON file or CPEE XML as AST diagrams via [Graphviz](https://graphviz.org/).
 
-**Prerequisites**: the Graphviz Python bindings and (for rendering) the Graphviz system package:
-
-```bash
-pip install graphviz
-sudo apt install graphviz   # Debian/Ubuntu
-sudo dnf install graphviz   # Fedora/RHEL
-```
-
-### Usage
+**Prerequisites:** `pip install graphviz` + the Graphviz system package (`apt`/`dnf install graphviz`).
 
 ```bash
-# From a plain JSON requirements file  {"R1": "precedence(...)", ...}
 python drawast.py CompositeDataset/DCR/requirementsmapping.json
-
-# From a CPEE tree XML file (reads requirements from <attributes><requirements>)
 python drawast.py RunningExample/Running_Example.xml
-
-# Custom output directory and rendered format
 python drawast.py myprocess.xml --output-dir /tmp/asts --format pdf
 ```
 
-Output is written to `<input_stem>_asts/` by default, containing one `.dot` source file and one rendered image per requirement.
-
-### Flags
-
 | Flag | Description |
 |---|---|
-| *(none)* | Draws the requirement expression AST only — compliance-pattern calls, boolean operators, and literal arguments. |
-| `--full-tree` | Expands each compliance-pattern call with a dashed cluster subgraph showing its full implementation AST from `annotated_verification.py`. `logger.*` calls are omitted for clarity. Output directory: `<stem>_asts_full/`. |
-| `--full-tree-with-logs` | Like `--full-tree` but also includes `logger.info/warning/…` nodes in the clusters. Output directory: `<stem>_asts_full_with_logs/`. Less pretty, can help with understanability|
-| `--av-path PATH` | Path to `annotated_verification.py` used by the full-tree modes. Defaults to `python_code/annotated_verification.py` relative to the script. |
-| `--format FMT` | Graphviz output format (`png`, `pdf`, `svg`, …). Default: `png`. |
+| *(none)* | Draws the requirement expression AST only. |
+| `--full-tree` | Expands each compliance-pattern call with its implementation AST. |
+| `--full-tree-with-logs` | Like `--full-tree` but includes `logger.*` nodes. |
+| `--av-path PATH` | Path to `annotated_verification.py` (default: `python_code/annotated_verification.py`). |
+| `--format FMT` | Output format (`png`, `pdf`, `svg`, …). Default: `png`. |
 | `--output-dir DIR` | Override the auto-generated output directory. |
-
-### Node colours
-
-| Colour | Shape | Meaning |
-|---|---|---|
-| Blue | Box | Compliance-pattern function call (`precedence`, `leads_to`, …) |
-| Yellow | Diamond | Boolean operator (`and`, `or`, `not`) · `if` branch in implementation |
-| Green | Ellipse | String or numeric argument |
-| Pink | Box | `return` statement in implementation |
-| Cyan | Diamond | `for` / `while` loop in implementation |
-| Purple | Box | `try/except` in implementation |
-| Dashed | Box | Expression statement (`logger.*` or similar) in implementation |
-
-## General Guidance & Best Practices
-
-### Process Modeling Tips
-- **Clear Activity Labels**: Use descriptive, unique names for activities to ensure requirements can properly reference them
-- **Resource Annotations**: Explicitly annotate resource assignments for segregation of duty requirements
-- **Data Objects**: Clearly define and name data objects that flow through the process
-- **Exception Handling**: Use rescue activities and compensation mechanisms for failure handling requirements
-
-### Requirement Specification Tips
-- **AST Syntax**: Ensure requirements are correctly encoded as Abstract Syntax Trees (ASTs) with proper method calls and parameters
-- **Testing Requirements**: Start with simpler requirements (control flow) before adding complex constraints (time, data, resources)
-- **Reference Documentation**: Consult `methods_doc_concise.md` for quick reference or `annotated_verification_methods.md` for detailed documentation
-- **Logical Combinations**: Use `and`, `or`, and `not` operators to combine multiple verification checks
-
-### Contributing & Extending
-
-The codebase is organized as follows:
-- **`annotated_verification.py`**: Core verification methods for all compliance patterns
-- **`verificationAST.py`**: AST parsing and requirement evaluation
-- **`assurancelogger.py`**: Custom logging with assurance tracking
-- **`util.py`**: Utility functions for XML tree traversal and analysis
-- **`python_code/utils/`**: Specialized utilities for control, data, resources, and time handling
-
-To add new verification methods:
-1. Implement the verification logic in `annotated_verification.py`
-2. Document the method signature in both `annotated_verification_methods.md` and `methods_doc_concise.md`
-3. Add the newly added method to the allowed methods dict in `verificationAST.py` 
-4. Update `util.py` interface if necessary
-
-
-
-This project is licensed under a GNU GENERAL PUBLIC LICENSE license so you are allowed to reuse the code of this project under its copy left specifications. In addition if you use this project for any publication you can cite the associated paper as follows:
-
-   
-
 
