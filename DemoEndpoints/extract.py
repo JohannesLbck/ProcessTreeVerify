@@ -113,7 +113,7 @@ def _start_daemon():
     log_path = os.path.join(os.path.dirname(__file__), LOG_FILE)
     with open(log_path, "a") as log_file:
         proc = subprocess.Popen(
-            [sys.executable, "-m", "uvicorn", "extract:app", "--port", "9321", "--log-level", "info"],
+            [sys.executable, "-m", "uvicorn", "extract:app", "--port", "3591", "--log-level", "info"],
             cwd=os.path.dirname(__file__),
             stdout=log_file,
             stderr=log_file,
