@@ -20,6 +20,34 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+def readable(node):
+    if node is None:
+        return "None"
+    if isinstance(node, str):
+        return node
+    if not isinstance(node, ET.Element):
+        return str(node)
+
+    tag = node.tag.split("}")[-1]
+
+    if tag == "call":
+        label = node.find("./{*}parameters/{*}label")
+        if label is None:
+            label = node.find("./{*}label")
+        if label is not None and label.text:
+            return label.text.strip()
+
+    if tag in ("alternative", "otherwise", "choose"):
+        cond = node.attrib.get("condition")
+        if cond:
+            return f'condition="{cond}"'
+
+    label = node.find("./{*}label")
+    if label is not None and label.text:
+        return label.text.strip()
+
+    return tag
+
 def transform_log(log, call_id = "local testing", cpee_instance = "local testing"):
     instance = None
     event_log = []
