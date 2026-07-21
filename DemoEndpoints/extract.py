@@ -27,10 +27,12 @@ import xml.etree.ElementTree as ET
 import requests
 import yaml
 import uuid
+from typing import Dict, List, Optional, Union
 
 
 from rulesextract import SingleRequirementModel, extract_asts_from_text, extract_asts_from_rules, extract_single_rule
 from fastapi import FastAPI, File, UploadFile, Request, Form
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi.responses import HTMLResponse, JSONResponse
 
@@ -40,12 +42,22 @@ headers = {
         }
 
 class RulesModel(BaseModel):
-    rules: dict
+    rules: Union[Dict[str, str], List[str]]
     
 class TextModel(BaseModel):
-    rule: str
+    rule: Optional[str] = None
+    text: Optional[str] = None
     
 app = FastAPI()
+
+# Allow browser-based clients (e.g. compliance UI) to call this API from other origins.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def main():
@@ -68,19 +80,38 @@ async def extract_single_rule_endpoint(rule: SingleRequirementModel):
     print(f"Extracted AST: {ast}")
     return JSONResponse(content={"ast": ast})
 
+@app.get("/singlerule")
+async def singlerule_endpoint_info():
+    return JSONResponse(content={"message": "Use POST /singlerule with JSON body {\"rule\": \"...\"}"})
+
 @app.post("/rules")
 async def extract_endpoint(rules: RulesModel):
     print(f"Received rules: {rules.rules}")
-    asts = extract_asts_from_rules(rules.rules)
+    if isinstance(rules.rules, dict):
+        texts = list(rules.rules.values())
+    else:
+        texts = rules.rules
+    asts = extract_asts_from_rules(texts)
     print(f"Extracted ASTs: {asts}")
     return JSONResponse(content={"asts": asts})
 
+@app.get("/rules")
+async def rules_endpoint_info():
+    return JSONResponse(content={"message": "Use POST /rules with JSON body {\"rules\": {\"R1\": \"...\"}}"})
+
 @app.post("/text")
 async def extract_text_endpoint(text: TextModel):
-    print(f"Received text: {text.rule}")
-    asts = extract_asts_from_text(text.rule)
+    value = text.rule or text.text
+    if not value:
+        return JSONResponse(status_code=400, content={"detail": "Provide either 'rule' or 'text'."})
+    print(f"Received text: {value}")
+    asts = extract_asts_from_text(value)
     print(f"Extracted ASTs: {asts}")
     return JSONResponse(content={"asts": asts})
+
+@app.get("/text")
+async def text_endpoint_info():
+    return JSONResponse(content={"message": "Use POST /text with JSON body {\"text\": \"...\"} or {\"rule\": \"...\"}"})
 
 
 def run_server():
