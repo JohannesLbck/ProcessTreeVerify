@@ -65,12 +65,14 @@ log = []
 async def extract_endpoint(rules: RulesModel):
     print(f"Received rules: {rules.rules}")
     asts = extract_asts_from_rules(rules.rules)
+    print(f"Extracted ASTs: {asts}")
     return JSONResponse(content={"asts": asts})
 
 @app.post("/text")
 async def extract_text_endpoint(text: TextModel):
     print(f"Received text: {text.text}")
     asts = extract_asts_from_text(text.text)
+    print(f"Extracted ASTs: {asts}")
     return JSONResponse(content={"asts": asts})
 
 
