@@ -130,7 +130,7 @@ def extract_asts_from_text(text: str) -> str:
     return  response.text
 
 
-def single_rule(text: str) -> str:
+def extract_single_rule(text: str) -> str:
     doc = Path("../methods_doc_concise.md").read_text(encoding="utf-8")
     prompt = (
                     "TASK: Extract compliance requirements from text and convert to AST expressions.\n"

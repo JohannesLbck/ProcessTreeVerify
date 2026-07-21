@@ -29,7 +29,7 @@ import yaml
 import uuid
 
 
-from rulesextract import SingleRequirementModel, extract_asts_from_text, extract_asts_from_rules, single_rule
+from rulesextract import SingleRequirementModel, extract_asts_from_text, extract_asts_from_rules, extract_single_rule
 from fastapi import FastAPI, File, UploadFile, Request, Form
 from pydantic import BaseModel
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -63,8 +63,8 @@ log = []
 
 @app.post("/singlerule")
 async def extract_single_rule_endpoint(rule: SingleRequirementModel):
-    print(f"Received single rule: {rule.requirement}")
-    ast = single_rule(rule.requirement)
+    print(f"Received single rule: {rule.rule}")
+    ast = extract_single_rule(rule.rule)
     print(f"Extracted AST: {ast}")
     return JSONResponse(content={"ast": ast})
 
@@ -77,8 +77,8 @@ async def extract_endpoint(rules: RulesModel):
 
 @app.post("/text")
 async def extract_text_endpoint(text: TextModel):
-    print(f"Received text: {text.text}")
-    asts = extract_asts_from_text(text.text)
+    print(f"Received text: {text.rule}")
+    asts = extract_asts_from_text(text.rule)
     print(f"Extracted ASTs: {asts}")
     return JSONResponse(content={"asts": asts})
 
