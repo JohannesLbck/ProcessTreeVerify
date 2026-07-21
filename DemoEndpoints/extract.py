@@ -162,6 +162,6 @@ if __name__ == "__main__":
     elif args.status:
         _status_daemon()
     elif args.foreground:
-        from extract import app
+        run_server()
     else:
         _start_daemon()
