@@ -15,10 +15,12 @@
 
 import logging
 import re
+
 from share import config
 #from hashmap import constraints_t # Future Work :) 
 import xml.etree.ElementTree as ET
-from util import * 
+from util import *
+from utils.general_util import readable
 ## Check util which is an interface to all other methods if you want all method names
 
 ## Load the Hashmap for run time voting
@@ -46,7 +48,7 @@ def exists(tree, a):#
         logger.add_activity(a)
         a_ele = exists_by_label(tree, a)
         if a_ele is None:
-            logger.info(f'Activity "{a}" existence was checked but not found')
+            logger.info(f'Activity "{readable(a)}" existence was checked but not found')
         return a_ele
 
 ## Absence: opposite of exists, returns a Boolean 
@@ -59,9 +61,9 @@ def loop(tree, a):
     for loop in loops:
         apath = exists(loop, a)
         if apath is not None:
-            logger.info(f'Found Activity "{a}" in a loop {loop}')
+            logger.info(f'Found Activity "{readable(a)}" in a loop {readable(loop)}')
             return loop 
-    logger.info(f'Found no Loop with Activity {a} in it')
+    logger.info(f'Found no Loop with Activity {readable(a)} in it')
     return None
 
 
@@ -71,37 +73,37 @@ def directly_follows(tree, a, b):
     if apath is not None:
         if bpath is not None:
             if a =="terminate":
-                logger.info(f'terminate can never lead to another activity, "{b}" directly follows "{a}" is False')
+                logger.info(f'terminate can never lead to another activity, "{readable(b)}" directly follows "{readable(a)}" is False')
             elif b == "terminate":
                 bpaths = tree.findall(".//ns0:terminate", namespace)
                 for bpath in bpaths:
                     ## For terminates only must directly follows is accepted, since can directly follows makes no sense
                     must = directly_follows_must(tree, apath, bpath)
                     if must:
-                        logger.info(f'Found a terminate that directly follows "{a}"')
+                        logger.info(f'Found a terminate that directly follows "{readable(a)}"')
                         return True
-                logger.info(f'Found no terminate that directly follows "{a}"')
+                logger.info(f'Found no terminate that directly follows "{readable(a)}"')
                 return False
             else:
                 must = directly_follows_must(tree, apath, bpath)
                 if must:
-                    logger.info(f'Activity "{b}" directly follows Activity "{a}" is True')
+                    logger.info(f'Activity "{readable(b)}" directly follows Activity "{readable(a)}" is True')
                     return True
                 else:
                     can = directly_follows_can(tree, apath, bpath)
                     if can:
-                        logger.info(f'Activity "{b}" CAN directly follow "{a}": True, but does not have to')
+                        logger.info(f'Activity "{readable(b)}" CAN directly follow "{readable(a)}": True, but does not have to')
                         return True
                     else:
-                        logger.info(f'Activity "{b}" does not directly follow "{a}"')
+                        logger.info(f'Activity "{readable(b)}" does not directly follow "{readable(a)}"')
                         return False
         else:
             logger.add_missing_activity(b)
-            logger.info(f'Activity "{b}" is missing in the process')
+            logger.info(f'Activity "{readable(b)}" is missing in the process')
             return False
     else:
         logger.add_missing_activity(a)
-        logger.info(f'Activity "{a}" is missing in the process')
+        logger.info(f'Activity "{readable(a)}" is missing in the process')
         return False
 
 def exclusive(tree, a, b):
@@ -111,18 +113,18 @@ def exclusive(tree, a, b):
         if bpath is not None:
             compare = compare_ele(tree, apath, bpath)
             if compare == 0:
-                logger.info(f'Activity "{a}" and Activity "{b}" are on different exclusive branches')
+                logger.info(f'Activity "{readable(a)}" and Activity "{readable(b)}" are on different exclusive branches')
                 return True
             else:
-                logger.info(f'Activity "{a}" and Activity "{b}" are not on different exclusive branches')
+                logger.info(f'Activity "{readable(a)}" and Activity "{readable(b)}" are not on different exclusive branches')
                 return False
         else:
             logger.add_missing_activity(b)
-            logger.info(f'Activity "{b}" is missing in the process')
+            logger.info(f'Activity "{readable(b)}" is missing in the process')
             return False
     else:
         logger.add_missing_activity(a)
-        logger.info(f'Activity "{a}" is missing in the process')
+        logger.info(f'Activity "{readable(a)}" is missing in the process')
         return False
 
 ## Leads To: Checks if an activity a exists and if it does if the activity it leads to exists after
@@ -133,30 +135,30 @@ def leads_to(tree, a, b):
         if bpath is not None:
             compare = compare_ele(tree, apath, bpath)
             if compare == 0:
-                logger.info(f'Activity "{a}" and Activity "{b}" are on different exclusive branches')
+                logger.info(f'Activity "{readable(a)}" and Activity "{readable(b)}" are on different exclusive branches')
                 return False
             elif compare == -1:
-                logger.info(f'Activity "{a}" and Activity "{b}" are in parrallel')
+                logger.info(f'Activity "{readable(a)}" and Activity "{readable(b)}" are in parrallel')
                 return False
             elif compare == 1:
-                logger.info(f'Activity "{a}" is before Activity "{b}, checking if {b} is on a different exclusive branch"')
+                logger.info(f'Activity "{readable(a)}" is before Activity "{readable(b)}", checking if {readable(b)} is on a different exclusive branch"')
                 ancestors_a, ancestors_b, shared = get_shared_ancestors(tree, apath, bpath)
                 if any(elem.tag.endswith("choose") for elem in ancestors_b):
                     MCA = shared[-1].tag
                     if MCA.endswith("alternative") or MCA.endswith("otherwise") or MCA.endswith("parallel_branch"):
-                        logger.info(f'Activity "{a}" and Activity "{b}" are on the same branch in the correct order')
+                        logger.info(f'Activity "{readable(a)}" and Activity "{readable(b)}" are on the same branch in the correct order')
                         return True
-                    logger.info(f'Activity "{a} was found before "{b}, but it is in a different exclusive branch, so leads_to can not be guaranteed in every trace')
+                    logger.info(f'Activity "{readable(a)} was found before "{readable(b)}, but it is in a different exclusive branch, so leads_to can not be guaranteed in every trace')
                     return False
             elif compare == 2:
-                logger.info(f'Activity "{b}" is before Activity "{a}"')
+                logger.info(f'Activity "{readable(b)}" is before Activity "{readable(a)}"')
                 return False
         else:
-            logger.info(f'Activity "{b}" is not found in the tree')
+            logger.info(f'Activity "{readable(b)}" is not found in the tree')
             return False 
     else:
         logger.add_missing_activity(a)
-        logger.info(f'Activity "{a}" is not found in the tree')
+        logger.info(f'Activity "{readable(a)}" is not found in the tree')
         return True
 
 
@@ -168,32 +170,32 @@ def precedence(tree, a, b):
         if b_ele is not None:
             compare = compare_ele(tree, a_ele, b_ele)
             if compare == 0:
-                logger.info(f'Activities "{a}" and "{b}" are in different exclusive branches and accordingly cannot be compared using precedence')
+                logger.info(f'Activities "{readable(a)}" and "{readable(b)}" are in different exclusive branches and accordingly cannot be compared using precedence')
                 return False
             elif compare == -1:
-                logger.info(f'Activities "{a}" and "{b}" are in parrallel and accordingly cannot be compared using precedence')
+                logger.info(f'Activities "{readable(a)}" and "{readable(b)}" are in parrallel and accordingly cannot be compared using precedence')
                 return False
             elif compare == 1:
-                logger.info(f'Activity "{a}" was found before "{b}", so precedence "{a}" requires "{b}" before is False')
+                logger.info(f'Activity "{readable(a)}" was found before "{readable(b)}", so precedence "{readable(a)}" requires "{readable(b)}" before is False')
                 return False 
             elif compare == 2:
-                logger.info(f'Activity "{b}" was found before "{a}". Ensuring that {b} is not on an exclusive branch which could lead to violations in some traces')
+                logger.info(f'Activity "{readable(b)}" was found before "{readable(a)}". Ensuring that {readable(b)} is not on an exclusive branch which could lead to violations in some traces')
                 ancestors_a, ancestors_b, shared = get_shared_ancestors(tree, a_ele, b_ele)
                 lca = shared[0]
                 lca_idx = ancestors_b.index(lca)
                 b_below_lca = ancestors_b[:lca_idx]  # strictly between b and LCA
                 if any(elem.tag.endswith("choose") for elem in b_below_lca):
-                    logger.info(f'Activity "{b}" was found before "{a}", but it is in a different exclusive branch, so precedence cannot be guaranteed in every trace')
+                    logger.info(f'Activity "{readable(b)}" was found before "{readable(a)}", but it is in a different exclusive branch, so precedence cannot be guaranteed in every trace')
                     return False
-                logger.info(f'Activity "{b}" was found before "{a}", and "{b}" is not on an exclusive branch relative to LCA, so precedence is True')
+                logger.info(f'Activity "{readable(b)}" was found before "{readable(a)}", and "{readable(b)}" is not on an exclusive branch relative to LCA, so precedence is True')
                 return True
         else:
             logger.add_missing_activity(b)
-            logger.info(f'Activity "{a}" was found but Activity "{b}" was not found, so precedence "{a}" requires "{b}" before it is false')
+            logger.info(f'Activity "{readable(a)}" was found but Activity "{readable(b)}" was not found, so precedence "{readable(a)}" requires "{readable(b)}" before it is false')
             return False
     else:
         logger.add_missing_activity(a)
-        logger.info(f'Activity "{a}" was not found in the process so precedence "{a}" requires "{b}" before it is true')
+        logger.info(f'Activity "{readable(a)}" was not found in the process so precedence "{readable(a)}" requires "{readable(b)}" before it is true')
         return True
 
 
@@ -244,19 +246,19 @@ def parallel(tree, a, b):
         if bpath is not None:
             compare = compare_ele(tree, apath, bpath)
             if compare == -1:
-                logger.info(f'Activities "{a}" and "{b}" are in parallel')
+                logger.info(f'Activities "{readable(a)}" and "{readable(b)}" are in parallel')
                 return True
             else:
-                logger.info(f'Activities "{a}" and "{b}" are not in parallel')
+                logger.info(f'Activities "{readable(a)}" and "{readable(b)}" are not in parallel')
                 return False
         else:
             logger.add_missing_activity(b)
-            logger.info(f'Activity "{b}" is missing in the process')
+            logger.info(f'Activity "{readable(b)}" is missing in the process')
             return False
 
     else:
         logger.add_missing_activity(a)
-        logger.info(f'Activity "{a}" is missing in the process')
+        logger.info(f'Activity "{readable(a)}" is missing in the process')
         return False
 
 
@@ -273,7 +275,7 @@ def executed_by_identify(tree, resource):
                     label = call.find('.//ns0:parameters/ns0:label', namespace).text
                     logger.info(f'Activity "{label}" was found which is executed by resource {resource}')
                     return label 
-    logger.info(f'No Activity was found where resource "{resource}" is annotatet as Resource')
+    logger.info(f'No Activity was found where resource "{resource}" is annotated as Resource')
     return None
 ## Executed By Annotation: checks if an activity a exists, and if it does if it is executed by resource, by checking the annotation for Input Name: Resource
 def executed_by(tree, a, resource,):
@@ -282,13 +284,13 @@ def executed_by(tree, a, resource,):
         resources = executed_by_annotated(apath, tree)
         for a_resource in resources if resources is not None else []:
             if a_resource.strip() == resource.strip():
-                logger.info(f'Activity "{a}" is executed by Resource "{resource}"')
+                logger.info(f'Activity "{readable(a)}" is executed by Resource "{resource}"')
                 return True
-        logger.info(f'Activity "{a}" does not have an annotation Resource "{resource}"')
+        logger.info(f'Activity "{readable(a)}" does not have an annotation Resource "{resource}"')
         return False
     else:
         logger.add_missing_activity(a)
-        logger.info(f'Activity "{a}" is missing in the process')
+        logger.info(f'Activity "{readable(a)}" is missing in the process')
         return False
 
 ## Returns the FIRST resource that is executing activity a, used to compare resources for segregation type requirements
@@ -297,11 +299,11 @@ def executed_by_return(tree, a):
     if apath is not None:
         resources = executed_by_annotated(apath, tree)
         for resource in resources if resources is not None else []:
-            logger.info(f'Activity "{a}" is executed by resource "{resource}"')
+            logger.info(f'Activity "{readable(a)}" is executed by resource "{resource}"')
             return resource 
     else:
         logger.add_missing_activity(a)
-        logger.info("Activity " + a + " does not exist.")
+        logger.info("Activity " + readable(a) + " does not exist.")
         return None 
 
 
@@ -319,17 +321,17 @@ def recurring(tree, a, t):
                         logger.warning('timeout in the loop uses a dataobject timestamp or is not passed a digit, correct dataobject is assumed, but this is a dynamic data requirement')
                         return leads_to(loop_ele, a_ele, timeout[0])
                     else:
-                        logger.info(f'Identified a timeout in a loop with "{a}"')
+                        logger.info(f'Identified a timeout in a loop with "{readable(a)}"')
                         if t == int(timeout[1]):
-                            logger.info(f'Verifying existence of "{a} in {loop_ele}')
+                            logger.info(f'Verifying existence of "{readable(a)} in {loop_ele}')
                             return leads_to(loop_ele, a_ele, timeout[0])
             logger.info('No timeout was found to enforce the recurring requirement')
             return False
         else:
-            logger.info(f'Activity "{a}" is not in a loop and accordingly can not be recurring')
+            logger.info(f'Activity "{readable(a)}" is not in a loop and accordingly can not be recurring')
             return False
     else:
-        logger.info(f'Activity "{a}" is missing in the process, so the recurring requirement is trivially false')
+        logger.info(f'Activity "{readable(a)}" is missing in the process, so the recurring requirement is trivially false')
 
 # timed_alternative: checks if two activities are in a cancel branch relationship, with a timeout before the time_alternative b, if either is missing its false
 def timed_alternative(tree, a, b, time):
@@ -345,9 +347,9 @@ def timed_alternative(tree, a, b, time):
                               logger.warning('timeout in the parallel cancel uses a dataobject timestamp or is not passed a digit, correct dataobject is assumed, but this is a dynamic data requirement')
                               return exists(timeout[0], a)
                           else:
-                              logger.info(f'Identified a timeout in a parallal cancel with "{b}"')
+                              logger.info(f'Identified a timeout in a parallal cancel with "{readable(b)}"')
                               if time == int(timeout[1]):
-                                  logger.info(f'Verifying existence of "{a} in {parallel}')
+                                  logger.info(f'Verifying existence of "{readable(a)} in {readable(parallel)}')
                                   return exists(parallel, a)
                               else:
                                   logger.info(f'timeout: "{timeout[1]}", while time required is: "{time}"')
@@ -355,9 +357,9 @@ def timed_alternative(tree, a, b, time):
             logger.info('No timeout was found to enforce the timed_alternative requirement')
             return False
         else:
-            logger.info(f'Activity {b} is missing so the timed_alternative relationship is False')
+            logger.info(f'Activity {readable(b)} is missing so the timed_alternative relationship is False')
     else:
-        logger.info(f'Activity "{a}" is missing so the timed_alternative relationship is False')
+        logger.info(f'Activity "{readable(a)}" is missing so the timed_alternative relationship is False')
         return False
 
 ## Min Time between two activities, enforced via Voting
@@ -369,7 +371,7 @@ def min_time_between(tree, a, b, time, c = None):
         ## Original Method had errors, but this pattern never appears in practice, so fix this later
         return True
     else:
-        logger.info(f'Activities "{a}" and "{b}" are not in a leads_to relationship, so the min_time_between requirement is False')
+        logger.info(f'Activities "{readable(a)}" and "{readable(b)}" are not in a leads_to relationship, so the min_time_between requirement is False')
         return False 
 ## By Due Date: annotated, 
 ## This simply reads the annotation whether the due date is set correctly in the annotation, it does not check actual implementation, could be extended with voting later then it would even work during execution
@@ -380,13 +382,13 @@ def by_due_date_annotated(tree, a, timestamp):
             annotation = call.find('.//ns0:annotations/ns0:_generic/ns0:DueDate', namespace)
             if annotation is not None:
                 if int(annotation.text) <= int(timestamp):
-                    logger.info(f'Annotation for Activity "{a}" which equals the timestamp or is smaller was found')
+                    logger.info(f'Annotation for Activity "{readable(a)}" which equals the timestamp or is smaller was found')
                     return True
                 else:
-                    logger.info(f'Activity "{a}" has a annotation for a due date but it is empty')
+                    logger.info(f'Activity "{readable(a)}" has a annotation for a due date but it is empty')
                     return False
             else:
-                logger.info(f'Activity "{a}" does not have a annotation for a due date, add it using the generic annotations DueDate with a unix timestamp')
+                logger.info(f'Activity "{readable(a)}" does not have a annotation for a due date, add it using the generic annotations DueDate with a unix timestamp')
     logger.add_missing_activity(a)
     logger.info(f'Activity "{a}" does not exist in the tree, and can accordingly never be executed before its due data')
     return False 
@@ -397,13 +399,13 @@ def by_due_date_explicit(tree, a, timestamp):
         for call in due_date_exists(tree):
             if int(call[1]) <= int(timestamp):
                 condition = f"data.{call[2]}"
-                logger.info(f'found a due date activity that enforces the date requirement, check for alternative branch with condition: "{condition}" that eventually leads to "{a}"')
+                logger.info(f'found a due date activity that enforces the date requirement, check for alternative branch with condition: "{readable(condition)}" that eventually leads to "{readable(a)}"')
                 return condition_directly_follows(tree, condition, a)
         logger.info(f'no due date activity was found to enforce the due date requirement')
         return False
     else:
         logger.add_missing_activity(a)
-        logger.info(f'Activity "{a}" does not exist in the tree, and can accordingly never be executed before its due data')
+        logger.info(f'Activity "{readable(a)}" does not exist in the tree, and can accordingly never be executed before its due data')
         return False
 
 ## checks both annotated and explicit, returns true if either
@@ -432,7 +434,7 @@ def max_time_between(tree, a, b, time, c = None):
                             logger.warning('timeout in the parallel with cancel uses a dataobject timestamp or is not passed a digit')
                             return True 
                         else:
-                            logger.info(f'Identified a timeout in a parrallel with cancel relationship with "{b}"')
+                            logger.info(f'Identified a timeout in a parrallel with cancel relationship with "{readable(b)}"')
                             return time == int(timeout[1])## only works as long as all times are parsed as seconds
                     else:
                         logger.info('timeout in the parallel with cancel is not passed a argument or 0')
@@ -442,10 +444,10 @@ def max_time_between(tree, a, b, time, c = None):
             return False
         else:
             logger.add_missing_activity(b)
-            logger.info(f'Activity "{b}" is missing in the process')
+            logger.info(f'Activity "{readable(b)}" is missing in the process')
     else:
         logger.add_missing_activity(a)
-        logger.info(f'Activity "{a}" is missing in the process')
+        logger.info(f'Activity "{readable(a)}" is missing in the process')
         return False
 
 
@@ -498,16 +500,16 @@ def activity_sends(tree, a, data):
         prepare = a_dict["prepare"]
         for occurance in arguments:
             if occurance == data:
-                logger.info(f'data object "{data}" is sent in the arguments of activity "{a}"')
+                logger.info(f'data object "{data}" is sent in the arguments of activity "{readable(a)}"')
                 return True
         for occurance in prepare:
             if occurance == data:
-                logger.info(f'data object "{data}" is prepared for sending in prepare of activity "{a}"')
+                logger.info(f'data object "{data}" is prepared for sending in prepare of activity "{readable(a)}"')
                 return True
-        logger.info(f'data object "{data}" is not found in neither prepare nor arguments of Activity "{a}"')
+        logger.info(f'data object "{data}" is not found in neither prepare nor arguments of Activity "{readable(a)}"')
         return False
     else:
-        logger.info(f'Activity "{a}" does not exist in the tree, accordingly the send is trivally true')
+        logger.info(f'Activity "{readable(a)}" does not exist in the tree, accordingly the send is trivially true')
         return True
 def activity_receives(tree, a, data):
     apath = exists(tree, a)
@@ -518,13 +520,13 @@ def activity_receives(tree, a, data):
         finalize = a_dict["finalize"]
         for occurance in finalize:
             if occurance == data:
-                logger.info(f'data object "{data}" is finalized from Activity "{a}"')
+                logger.info(f'data object "{data}" is finalized from Activity "{readable(a)}"')
                 return True
-        logger.info(f'data object "{data}" is not found in finalize of Activity "{a}"')
+        logger.info(f'data object "{data}" is not found in finalize of Activity "{readable(a)}"')
         return False
     else:
         logger.add_missing_activity(a)
-        logger.info(f'Activity "{a}" does not exist in the tree, accordingly the receive is trivally true')
+        logger.info(f'Activity "{readable(a)}" does not exist in the tree, accordingly the receive is trivially true')
         return True
     
 def condition(tree, condition):
@@ -552,17 +554,17 @@ def condition_directly_follows(tree, condition , a):
         onbranch = False
         counter = 0
         if apath is None:
-            logger.info(f'Activity "{a}" did not exist in the branch of condition: "{condition}"')
+            logger.info(f'Activity "{readable(a)}" did not exist in the branch of condition: "{condition}"')
             return False
         ## This is highly inefficient (3 Iterations instead of 1) but it works and is easy to understand)
         elements = [elem for elem in branch.iter() if elem.tag.endswith('call') or elem.tag.endswith("terminate")]
         for ele in elements:
             if counter == 1:
-                logger.info(f'Activity "{a}" did not directly follow the data condition "{condition}"')
+                logger.info(f'Activity "{readable(a)}" did not directly follow the data condition "{condition}"')
                 return False
             if ele == apath:
                 parent_map = {c:p for p in tree.iter() for c in p}
-                logger.info(f'Activity "{a}" directly followed the data_condition "{condition}"')
+                logger.info(f'Activity "{readable(a)}" directly followed the data_condition "{condition}"')
                 if len(impacts) == 0:
                     logger.info(f'Found no activity that impacts the condition, so the branch has to be the first branch to directly follow')
                     return siblings(exists(tree, "Start Activity"), parent_map[branch], parent_map)
@@ -587,10 +589,10 @@ def condition_directly_follows(tree, condition , a):
                 elements = [elem for elem in branches[i].iter() if elem.tag.endswith('call') or elem.tag.endswith("terminate")]
                 for ele in elements:
                     if counter == 1:
-                        logger.info(f'Activity "{a}" did not directly follow the data condition "{condition}"')
+                        logger.info(f'Activity "{readable(a)}" did not directly follow the data condition "{condition}"')
                         return False
                     if ele == apath:
-                        logger.info(f'Activity "{a}" directly followed the data_condition "{condition}"')
+                        logger.info(f'Activity "{readable(a)}" directly followed the data_condition "{condition}"')
                         logger.info(f'Comparing if the branch directly follows after the condition is impacted')
                         return siblings(impacts[i], parent_map[branches[i]], parent_map)
                     counter += 1
@@ -607,19 +609,19 @@ def failure_eventually_follows(tree, a, b):
             dataobjects = activity_data_checks(tree,apath)
             for data_object in dataobjects["rescue"]:
                 condition = f"data.{data_object}"
-                logger.info(f'Found a dataobject "{data_object}" that is used in a rescue of "{a}", checking if there is a branch with condition: "{condition}" that eventually leads to "{b}"')
+                logger.info(f'Found a dataobject "{data_object}" that is used in a rescue of "{readable(a)}", checking if there is a branch with condition: "{condition}" that eventually leads to "{readable(b)}"')
                 if condition_eventually_follows(tree, condition, b):
-                    logger.info(f'Activity "{b}" eventually follows the failure of "{a}" through the dataobject "{data_object}"')
+                    logger.info(f'Activity "{readable(b)}" eventually follows the failure of "{readable(a)}" through the dataobject "{data_object}"')
                     return True
-            logger.info(f'No dataobject in rescue of "{a}" is used in a branch condition, so failure eventually follows can not be guaranteed')
+            logger.info(f'No dataobject in rescue of "{readable(a)}" is used in a branch condition, so failure eventually follows can not be guaranteed')
             return False
         else:
             logger.add_missing_activity(b)
-            logger.info(f'Activity "{b}" is missing in the process, so failure eventually follows can not be guaranteed')
+            logger.info(f'Activity "{readable(b)}" is missing in the process, so failure eventually follows can not be guaranteed')
             return False
     else:
         logger.add_missing_activity(a)
-        logger.info(f'Activity "{a}" is missing in the process, so failure eventually follows is trivially true')
+        logger.info(f'Activity "{readable(a)}" is missing in the process, so failure eventually follows is trivially true')
         return True
 
 ## activity failure directly follows: If an activity a fails then b has to be executed directly after. Checks for existence of a and b and then checks if a has a dataobject rescue that then has to exist in a condition towards a branch b that directly follows
@@ -631,19 +633,19 @@ def failure_directly_follows(tree, a, b):
             dataobjects = activity_data_checks(tree, apath)
             for data_object in dataobjects["rescue"]:
                 condition = f"data.{data_object}"
-                logger.info(f'Found a dataobject "{data_object}" that is used in a rescue of "{a}", checking if there is a branch with condition: "{condition}" that directly leads to "{b}"')
+                logger.info(f'Found a dataobject "{data_object}" that is used in a rescue of "{readable(a)}", checking if there is a branch with condition: "{condition}" that directly leads to "{readable(b)}"')
                 if condition_directly_follows(tree, condition, b):
-                    logger.info(f'Activity "{b}" directly follows the failure of "{a}" through the dataobject "{data_object}"')
+                    logger.info(f'Activity "{readable(b)}" directly follows the failure of "{readable(a)}" through the dataobject "{data_object}"')
                     return True
-            logger.info(f'No dataobject in rescue of "{a}" is used in a branch condition, so failure directly follows can not be guaranteed')
+            logger.info(f'No dataobject in rescue of "{readable(a)}" is used in a branch condition, so failure directly follows can not be guaranteed')
             return False
         else:
             logger.add_missing_activity(b)
-            logger.info(f'Activity "{b}" is missing in the process, so failure directly follows can not be guaranteed')
+            logger.info(f'Activity "{readable(b)}" is missing in the process, so failure directly follows can not be guaranteed')
             return False
     else:
         logger.add_missing_activity(a)
-        logger.info(f'Activity "{a}" is missing in the process, so failure directly follows is trivially true')
+        logger.info(f'Activity "{readable(a)}" is missing in the process, so failure directly follows is trivially true')
         return True
 
 
@@ -653,38 +655,38 @@ def condition_eventually_follows(tree, condition, a, scope = "branch"):
     if branch is not None:
         apath = exists(branch,a)
         if apath is not None:
-            logger.info(f'Activity "{a}" was found on branch following condition "{condition}"')
+            logger.info(f'Activity "{readable(a)}" was found on branch following condition "{condition}"')
             impacts = condition_impacts(tree, condition)
             logger.info(f'Found {len(impacts)} calls that influence condition "{condition}. Checking if both are prior to branch"')
             for call in impacts:
                 if not leads_to(tree, call, branch):
-                    logger.warning(f"Found a call {call} that is not prior to the identified branch, so compliance can be violated if said call can cause the condition to evaluate to true")
+                    logger.warning(f"Found a call {readable(call)} that is not prior to the identified branch, so compliance can be violated if said call can cause the condition to evaluate to true")
                     return False
             logger.info(f"All calls that influence the condition are prior to the condition, so eventually follows is satisfied")
             return True
         else:
             if scope == "branch":
-                logger.info(f'While Branch following condition "{condition}" was found, the Activity "{a}" was not found on the branch')
+                logger.info(f'While Branch following condition "{condition}" was found, the Activity "{readable(a)}" was not found on the branch')
                 return False
             else: ## Scope is global or misspelled
-                logger.info(f'Branch following condition"{condition} was found, however the Activity "{a}" was not found on the branch, since the scope is global, the two elements are compared')
+                logger.info(f'Branch following condition"{condition} was found, however the Activity "{readable(a)}" was not found on the branch, since the scope is global, the two elements are compared')
                 apath = exists(tree, a)
                 if a is not None:
                     compare = compare_ele(tree, branch, apath)
                     if compare == 0: ## ele and branch are exclusive different branches
-                        logger.info(f'branch and "{a}" are on different exclusive branches')
+                        logger.info(f'branch and "{readable(a)}" are on different exclusive branches')
                         return False
                     elif compare == -1:
-                        logger.info(f'branch and "{a}" are on different parallel branches')
+                        logger.info(f'branch and "{readable(a)}" are on different parallel branches')
                         return False
                     elif compare == 1:
-                        logger.info(f'branch is before "{a}", True')
+                        logger.info(f'branch is before "{readable(a)}", True')
                         return True
                     elif compare == 2:
-                        logger.info(f'branch is after "{a}", False')
+                        logger.info(f'branch is after "{readable(a)}", False')
                         return False
                 else:
-                    logger.info(f'Activity "{a}" does not exist in the process, eventually follows is False')
+                    logger.info(f'Activity "{readable(a)}" does not exist in the process, eventually follows is False')
                     return False
 
     else:
