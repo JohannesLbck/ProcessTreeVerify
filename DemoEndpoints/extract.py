@@ -19,19 +19,11 @@ import os
 import signal
 import sys
 import subprocess
-import json
-import re
-import uuid
-import logging
-import xml.etree.ElementTree as ET
-import requests
-import yaml
-import uuid
 from typing import Dict, List, Optional, Union
 
 
 from rulesextract import SingleRequirementModel, extract_asts_from_text, extract_asts_from_rules, extract_single_rule
-from fastapi import FastAPI, File, UploadFile, Request, Form
+import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -48,7 +40,7 @@ class TextModel(BaseModel):
     rule: Optional[str] = None
     text: Optional[str] = None
     
-app = FastAPI()
+app = fastapi.FastAPI()
 
 # Allow browser-based clients (e.g. compliance UI) to call this API from other origins.
 app.add_middleware(
