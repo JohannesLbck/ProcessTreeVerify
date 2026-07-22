@@ -54,6 +54,9 @@ def extract_asts_from_rules(texts: List[str]) -> str:
                     "8. failure_* patterns: ONLY for system execution failures, not negative results.\n"
                     "   ✗ 'check fails' (negative result) → ✓ condition_eventually_follows(tree, 'checkFailed == true', ...)\n"
                     "   ✓ 'system fails to send' (cannot execute) → failure_eventually_follows(...)\n\n"
+                    
+                    "9. Consider multiple interpretations of the text.\n\n"
+                    " If, for example, an activity should follow as a consequence, consider if, in this case, it can be either a consequence of another activity or a dataobject state. Cover both cases using disjunctions.\n\n"
 
                     "COMPLIANCE PATTERN REFERENCE\n"
                     f"{doc}\n\n"
@@ -112,6 +115,9 @@ def extract_asts_from_text(text: str) -> str:
                     "8. failure_* patterns: ONLY for system execution failures, not negative results.\n"
                     "   ✗ 'check fails' (negative result) → ✓ condition_eventually_follows(tree, 'checkFailed == true', ...)\n"
                     "   ✓ 'system fails to send' (cannot execute) → failure_eventually_follows(...)\n\n"
+                    
+                    "9. Consider multiple interpretations of the text.\n\n"
+                    " If, for example, an activity should follow as a consequence, consider if, in this case, it can be either a consequence of another activity or a dataobject state. Cover both cases using disjunctions.\n\n"
 
                     "COMPLIANCE PATTERN REFERENCE\n"
                     f"{doc}\n\n"
@@ -170,6 +176,9 @@ def extract_single_rule(text: str) -> str:
                     "8. failure_* patterns: ONLY for system execution failures, not negative results.\n"
                     "   ✗ 'check fails' (negative result) → ✓ condition_eventually_follows(tree, 'checkFailed == true', ...)\n"
                     "   ✓ 'system fails to send' (cannot execute) → failure_eventually_follows(...)\n\n"
+                    
+                    "9. Consider multiple interpretations of the text.\n\n"
+                    " If, for example, an activity should follow as a consequence, consider if, in this case, it can be either a consequence of another activity or a dataobject state. Cover both cases using disjunctions.\n\n"
 
                     "COMPLIANCE PATTERN REFERENCE\n"
                     f"{doc}\n\n"
