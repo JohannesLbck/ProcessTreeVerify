@@ -83,7 +83,7 @@ def _best_label_match(candidate_label, labels, tree_label_embeddings, verbose=Fa
     if len(above_threshold) > 1:
         logger.warning(f"Multiple candidates found for label '{candidate_label}': {above_threshold}")
 
-    if best_similarity > SIMILARITY_THRESHOLD and best_match.lower() != candidate_label.lower():
+    if best_similarity > SIMILARITY_THRESHOLD:
         logger.info(f"Replace '{candidate_label}' with semantically similar label '{best_match}'")
         return best_match
 
