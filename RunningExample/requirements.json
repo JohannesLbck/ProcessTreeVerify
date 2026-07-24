@@ -3,7 +3,7 @@
 	"R2": "executed_by('conduct interview and questionnaire', 'physician') or executed_by('conduct interview and questionnaire', 'trained assistant')",
 	"R3": "parallel('retract consent', 'direct questions') and directly_follows('retract consent', 'terminate') ",
 	"R4": "timed_alternative('monitor patient', 'assess donor', 900) and executed_by('assess donor', 'physician')",
-	"R5": "executed_by_identify(‘prepare for venepuncture’) == executed_by_identify(‘venepuncture’)",
-        "R5": "data_value_alternative_eventually_follows('assessment_status == \"rejected\" ', 'inform of rejection') and directly_follows('inform of rejection', 'terminate') ",
+	"R5": "executed_by('venepuncture', executed_by_return('prepare for venepuncture'))",
+        "R6": "data_value_alternative_eventually_follows('assessment_status == \"rejected\" ', 'inform of rejection') and directly_follows('inform of rejection', 'terminate') ",
 	"R7": "activity_receives('conduct interview and questionnaire', 'assessment_status') and activity_receives('direct questions', 'assessment_status')"
 }

@@ -29,10 +29,7 @@ method_dict = {
 def parse_requirements(req):
     req = re.sub(r'=>', ':', req)
     req = json.loads(req)
-    eval_req = []
-    for tag, content in req.items():
-        eval_req.append(parse_req(content))
-    return eval_req
+    return req
 
 ## enables writing an ast without the tree in every method as it would be in a proper object oriented implementation 
 def parse_req(string):
@@ -42,4 +39,3 @@ def parse_req(string):
         result.append(word)
     result = " ".join(result)
     return result[7:]
-

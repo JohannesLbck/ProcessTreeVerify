@@ -39,7 +39,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from hashmap import hash_t
 from util import exists_by_label,transform_log, get_ancestors, compare_ele, add_start_end, combine_sub_trees
 from tester import run_tests
-from reqparser import parse_requirements
+from reqparser import parse_requirements, parse_req
 from verificationAST import verify
 
 url = "https://cpee.org/comp-log/receiver/" ## Points towards run/comp-receiver on cpee demo server. For production, please use your own endpoint.
@@ -120,23 +120,28 @@ async def _handle_subscription(request: Request, use_semantic_matching: bool = F
         else:
             logger.info("Semantic matching is disabled for this endpoint, using exact label matching")
         config.set_id(notification["instance"])
-        requirements = parse_requirements(req)
         xml = add_start_end(xml)
         xml= combine_sub_trees(xml)
         pre_parsing_assurance = logger.get_assurance_level()
         logger.info(f"The global assurance level is {pre_parsing_assurance}")
+        requirements = parse_requirements(req)
         logger.reset_assurance_level()
         typ3 = form["type"]
         topic = form["topic"]
         event = form["event"]
         verified_requirements = []
-        for counter, req in enumerate(requirements):
+        for tag, req in requirements.items():
             if semantic_matching:
                 req = replace_labels(req, labels)
-            logger.info(f"Verifying Requirement R{counter}: {req}")
-            result, assurance = verify(req, tree=xml)
+                
+            logger.info(f"Verifying Requirement {tag}: {req}")
+            try:
+                result, assurance = verify(req, tree=xml)
+            except Exception as exc:
+                req = parse_req(req)
+                result, assurance = verify(req, tree=xml)
             ## Message with Assurance Level
-            message = f"Requirement R{counter} is {bool(result)} with assurance level {assurance}"
+            message = f"Requirement {tag} is {bool(result)} with assurance level {assurance}"
             ## Message without Assurance level
             ##message = f"Result: Requirement R{counter} is {bool(result)}"
             logger.info(message)

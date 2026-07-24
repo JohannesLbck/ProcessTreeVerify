@@ -22,7 +22,7 @@ import subprocess
 from typing import Dict, List, Optional, Union
 
 
-from rulesextract import SingleRequirementModel, extract_asts_from_text, extract_asts_from_rules, extract_single_rule
+from rulesextract import SingleRequirementModel, extract_asts_from_text, extract_asts_from_rules, extract_single_rule, extract_single_rule_with_model
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -39,6 +39,11 @@ class RulesModel(BaseModel):
 class TextModel(BaseModel):
     rule: Optional[str] = None
     text: Optional[str] = None
+    
+    
+class SingleRuleAndModelModel(BaseModel):
+    rule: str
+    model: str
     
 app = fastapi.FastAPI()
 
@@ -64,6 +69,13 @@ async def main():
     return HTMLResponse(content=content)
 
 log = []
+
+@app.post("/singlerulemodel")
+async def extract_single_rule_with_model_endpoint(rule: SingleRuleAndModelModel):
+    print(f"Received single rule: {rule.rule} with model: {rule.model}")
+    ast = extract_single_rule_with_model(rule.rule, rule.model)
+    print(f"Extracted AST: {ast}")
+    return JSONResponse(content={"ast": ast})
 
 @app.post("/singlerule")
 async def extract_single_rule_endpoint(rule: SingleRequirementModel):
