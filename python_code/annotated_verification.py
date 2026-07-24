@@ -269,12 +269,13 @@ def executed_by_identify(tree, resource):
     for call in tree.findall(".//ns0:call", namespace):
         target = call.find('.//ns0:annotations/ns0:_generic/ns0:Resource', namespace)
         if target is not None:
-            resources_split = target.text.split(",")
-            for target_resource in resources_split:
-                if resource.strip() == target_resource.strip():
-                    label = call.find('.//ns0:parameters/ns0:label', namespace).text
-                    logger.info(f'Activity "{label}" was found which is executed by resource {resource}')
-                    return label 
+            if target.text is not None:
+                resources_split = target.text.split(",")
+                for target_resource in resources_split:
+                    if resource.strip() == target_resource.strip():
+                        label = call.find('.//ns0:parameters/ns0:label', namespace).text
+                        logger.info(f'Activity "{label}" was found which is executed by resource {resource}')
+                        return label 
     logger.info(f'No Activity was found where resource "{resource}" is annotated as Resource')
     return None
 ## Executed By Annotation: checks if an activity a exists, and if it does if it is executed by resource, by checking the annotation for Input Name: Resource
