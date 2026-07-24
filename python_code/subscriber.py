@@ -131,14 +131,15 @@ async def _handle_subscription(request: Request, use_semantic_matching: bool = F
         event = form["event"]
         verified_requirements = []
         for tag, req in requirements.items():
-            if semantic_matching:
-                req = replace_labels(req, labels)
-                
             logger.info(f"Verifying Requirement {tag}: {req}")
             try:
+                if semantic_matching:
+                    req = replace_labels(req, labels)
                 result, assurance = verify(req, tree=xml)
             except Exception as exc:
                 req = parse_req(req)
+                if semantic_matching:
+                    req = replace_labels(req, labels)
                 result, assurance = verify(req, tree=xml)
             ## Message with Assurance Level
             message = f"Requirement {tag} is {bool(result)} with assurance level {assurance}"
