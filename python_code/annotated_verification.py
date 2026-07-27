@@ -160,6 +160,33 @@ def leads_to(tree, a, b):
         logger.add_missing_activity(a)
         logger.info(f'Activity "{readable(a)}" is not found in the tree')
         return True
+    
+## leads_to_soft(tree, a, b): Alternative of leads to for condition checks, that accepts if they are in different exclusive branches
+def leads_to_soft(tree, a, b):
+    apath = exists(tree, a)
+    bpath = exists(tree, b)
+    if apath is not None:
+        if bpath is not None:
+            compare = compare_ele(tree, apath, bpath)
+            if compare == 0:
+                logger.info(f'Activity "{readable(a)}" and Activity "{readable(b)}" are on different exclusive branches')
+                return True
+            elif compare == -1:
+                logger.info(f'Activity "{readable(a)}" and Activity "{readable(b)}" are in parrallel')
+                return False
+            elif compare == 1:
+                logger.info(f'Activity "{readable(a)}" is before Activity "{readable(b)}", Exclusive branch check left out for data condition checks')
+                return True
+            elif compare == 2:
+                logger.info(f'Activity "{readable(b)}" is before Activity "{readable(a)}"')
+                return False
+        else:
+            logger.info(f'Activity "{readable(b)}" is not found in the tree')
+            return False 
+    else:
+        logger.add_missing_activity(a)
+        logger.info(f'Activity "{readable(a)}" is not found in the tree')
+        return True
 
 
 ## Precedence: Checks if an activity a exists, and if it does if the activity it requires as a precedence exists prior
@@ -660,7 +687,7 @@ def condition_eventually_follows(tree, condition, a, scope = "branch"):
             impacts = condition_impacts(tree, condition)
             logger.info(f'Found {len(impacts)} calls that influence condition "{condition}. Checking if both are prior to branch"')
             for call in impacts:
-                if not leads_to(tree, call, branch):
+                if not leads_to_soft(tree, call, branch):
                     logger.warning(f"Found a call {readable(call)} that is not prior to the identified branch, so compliance can be violated if said call can cause the condition to evaluate to true")
                     return False
             logger.info(f"All calls that influence the condition are prior to the condition, so eventually follows is satisfied")
